@@ -1,0 +1,226 @@
+import React, { useState } from 'react';
+import { ShoppingBag, Check } from 'lucide-react';
+import { Product } from '../../types';
+import { useCurrency } from '../../context/CurrencyContext';
+import { useCart } from '../../context/CartContext';
+
+interface ProductCardProps {
+  product: Product;
+  onNavigate: (path: string) => void;
+}
+
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate }) => {
+  const { formatPrice } = useCurrency();
+  const { addToCart } = useCart();
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(
+    product.variants.length > 0 ? product.variants[0].color : ''
+  );
+  const [addingVariantId, setAddingVariantId] = useState<number | null>(null);
+
+  // Group variants by color
+  const distinctColors = Array.from(
+    new Set(product.variants.map((v) => JSON.stringify({ name: v.color, code: v.color_code })))
+  ).map((str) => JSON.parse(str));
+
+  // Variants filtered by current selected color
+  const colorVariants = product.variants.filter((v) => v.color === selectedColor);
+
+  const handleQuickAdd = async (e: React.MouseEvent, variantId: number) => {
+    e.stopPropagation();
+    try {
+      setAddingVariantId(variantId);
+      await addToCart(variantId, 1);
+    } finally {
+      setAddingVariantId(null);
+    }
+  };
+
+  const discountPercent =
+    product.compare_at_price && product.compare_at_price > product.price
+      ? Math.round(((product.compare_at_price - product.price) / product.compare_at_price) * 100)
+      : null;
+
+  return (
+    <div
+      className="product-card"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        cursor: 'pointer',
+        position: 'relative',
+        backgroundColor: '#ffffff',
+      }}
+      onClick={() => onNavigate(`/products/${product.slug}`)}
+    >
+      {/* Image Container */}
+      <div className="product-image-container">
+        <img
+          src={product.cover_image}
+          alt={product.title}
+          className="product-image-primary"
+          loading="lazy"
+        />
+        {product.hover_image && (
+          <img
+            src={product.hover_image}
+            alt={`${product.title} alternative view`}
+            className="product-image-hover"
+            loading="lazy"
+          />
+        )}
+
+        {/* Badges */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '12px',
+            left: '12px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '6px',
+            zIndex: 10,
+          }}
+        >
+          {product.is_sale && discountPercent && (
+            <span className="badge-sale">
+              SAVE {discountPercent}%
+            </span>
+          )}
+          {product.is_new && !product.is_sale && (
+            <span className="badge-new">
+              NEW RELEASE
+            </span>
+          )}
+        </div>
+
+        {/* Quick-buy Action Trigger */}
+        <div className="quick-add-bar">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+            <span style={{ fontSize: '0.6875rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              SELECT SIZE FOR QUICK-BUY
+            </span>
+            <ShoppingBag size={14} />
+          </div>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+            {colorVariants.map((variant) => {
+              const isOutOfStock = variant.available_quantity <= 0;
+              const isAdding = addingVariantId === variant.id;
+
+              return (
+                <button
+                  key={variant.id}
+                  disabled={isOutOfStock || isAdding}
+                  onClick={(e) => handleQuickAdd(e, variant.id)}
+                  style={{
+                    backgroundColor: isOutOfStock ? '#333333' : '#ffffff',
+                    color: isOutOfStock ? '#777777' : '#0a0a0a',
+                    border: '1px solid #ffffff',
+                    padding: '4px 8px',
+                    fontSize: '0.6875rem',
+                    fontWeight: 800,
+                    cursor: isOutOfStock ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.15s ease',
+                    minWidth: '32px',
+                    textDecoration: isOutOfStock ? 'line-through' : 'none',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isOutOfStock) {
+                      e.currentTarget.style.backgroundColor = '#b51224';
+                      e.currentTarget.style.borderColor = '#b51224';
+                      e.currentTarget.style.color = '#ffffff';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isOutOfStock) {
+                      e.currentTarget.style.backgroundColor = '#ffffff';
+                      e.currentTarget.style.borderColor = '#ffffff';
+                      e.currentTarget.style.color = '#0a0a0a';
+                    }
+                  }}
+                  title={isOutOfStock ? 'Sold out' : `Stock: ${variant.available_quantity}`}
+                >
+                  {isAdding ? '...' : variant.size}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Meta Content */}
+      <div style={{ paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        {/* Color Swatches */}
+        {distinctColors.length > 1 && (
+          <div
+            style={{
+              display: 'flex',
+              gap: '6px',
+              marginBottom: '4px',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {distinctColors.map((c) => (
+              <button
+                key={c.name}
+                onClick={() => setSelectedColor(c.name)}
+                style={{
+                  width: '14px',
+                  height: '14px',
+                  borderRadius: '50%',
+                  backgroundColor: c.code,
+                  border: selectedColor === c.name ? '2px solid #b51224' : '1px solid #cccccc',
+                  padding: 0,
+                  cursor: 'pointer',
+                  outline: 'none',
+                }}
+                title={c.name}
+                aria-label={`Select color ${c.name}`}
+              />
+            ))}
+          </div>
+        )}
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '8px' }}>
+          <h3
+            style={{
+              fontSize: '0.8125rem',
+              fontWeight: 800,
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              color: '#0a0a0a',
+              lineHeight: 1.35,
+              flex: 1,
+            }}
+          >
+            {product.title}
+          </h3>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginTop: '2px' }}>
+          <span
+            style={{
+              fontSize: '0.875rem',
+              fontWeight: 800,
+              color: product.is_sale ? '#b51224' : '#0a0a0a',
+            }}
+          >
+            {formatPrice(product.price)}
+          </span>
+          {product.compare_at_price && (
+            <span
+              style={{
+                fontSize: '0.75rem',
+                color: '#6b6b6b',
+                textDecoration: 'line-through',
+              }}
+            >
+              {formatPrice(product.compare_at_price)}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};

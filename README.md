@@ -51,8 +51,8 @@ YoungINApparels/
 - **Interactive Lookbook with Shoppable Hotspots**: Campaign model with pulsating pins linking to garments with instant 1-click Add to Cart popovers.
 - **Faceted Collection Filters**: Filter by Category, Sizing, Colorway, Price Range, and In-Stock availability, plus multi-column responsive grid.
 - **Product Detail Page (PDP)**: Multi-photo gallery, interactive zoom, live inventory alerts, size selector with disabled states, interactive Size Guide matrix, and accordions.
-- **Slideout Cart Drawer**: Live free shipping progress meter ($150 threshold), promo code validator, quantity steppers, and express checkout trigger.
-- **Verified Checkout & Order Creation**: Server-calculated pricing, automated order number generation, inventory decrement transactions, and confirmation receipt.
+- **Slideout Cart Drawer**: Live free shipping progress meter (₹5,000 threshold), promo code validator (`RADIAN15`, `YOUNGIN1000`), quantity steppers, and express checkout trigger.
+- **Verified Checkout & Order Creation**: Server-calculated pricing in Indian Rupees (`₹` / `INR`), automated order number generation (`YIN-XXXX`), GST tax calculation, inventory decrement transactions, and confirmation receipt.
 - **Admin Management Portal**: Order fulfillment tracker, variant stock manager, promo code creator, and live homepage CMS text editor.
 
 ---
@@ -97,4 +97,3 @@ docker-compose up --build
 PYTHONPATH=backend python3 -m pytest backend/tests/test_api.py -v
 ```
 All 7 unit and integration tests verify catalog listings, slug lookups, search suggestions, atomic cart transactions, promo calculations, and orders.
-# YoungINApparels
