@@ -431,3 +431,195 @@ h1, h2, h3, .font-display {
     background-position: -200% 0;
   }
 }
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS & TOUCH OPTIMIZATIONS
+   ========================================================================== */
+
+/* Touch Scroll Utilities */
+.touch-scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.touch-scroll-x::-webkit-scrollbar {
+  display: none;
+}
+
+/* Responsive Table Scroll Container */
+.table-responsive-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.table-responsive-wrapper table {
+  min-width: 580px;
+}
+
+/* Responsive Product Grid */
+.responsive-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: clamp(1.25rem, 3vw, 2.75rem);
+}
+
+@media (max-width: 640px) {
+  .responsive-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.75rem !important;
+  }
+
+  .product-card {
+    font-size: 0.75rem;
+  }
+
+  .product-card h3 {
+    font-size: 0.8125rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .product-card .badge-sale,
+  .product-card .badge-new {
+    font-size: 0.5625rem !important;
+    padding: 0.2rem 0.4rem !important;
+  }
+
+  .quick-add-bar {
+    padding: 0.5rem !important;
+  }
+
+  .quick-add-bar button {
+    padding: 2px 6px !important;
+    min-width: 26px !important;
+    font-size: 0.625rem !important;
+  }
+}
+
+/* Admin Dashboard Mobile Rules */
+.admin-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 65px;
+}
+
+.admin-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.admin-card {
+  background-color: #ffffff;
+  border: 1px solid #e7e5e3;
+  padding: 1.75rem;
+}
+
+@media (max-width: 768px) {
+  .admin-header-container {
+    height: auto !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+    padding: 0.875rem 0 !important;
+  }
+
+  .admin-header-container > div:last-child {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .admin-metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .admin-metrics-grid .admin-metric-card {
+    padding: 1rem !important;
+  }
+
+  .admin-metrics-grid .admin-metric-card p {
+    font-size: 1.35rem !important;
+  }
+
+  .admin-card {
+    padding: 1.15rem !important;
+  }
+
+  /* Form inputs font-size 16px to prevent iOS auto-zoom */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Lookbook Hotspot Popover on Mobile */
+.lookbook-hotspot-popover {
+  position: absolute;
+  background-color: #141414;
+  color: #ffffff;
+  border: 1px solid #333333;
+  padding: 1.25rem;
+  width: 300px;
+  z-index: 50;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@media (max-width: 640px) {
+  .lookbook-hotspot-popover {
+    left: 50% !important;
+    top: auto !important;
+    bottom: 12px !important;
+    transform: translateX(-50%) !important;
+    width: calc(100% - 24px) !important;
+    max-width: 360px !important;
+    padding: 1rem !important;
+  }
+}
+
+/* Sticky Mobile Bottom Purchase Bar on PDP */
+.mobile-sticky-pdp-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-sticky-pdp-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 950;
+    background: rgba(10, 10, 10, 0.96);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid #262626;
+    padding: 0.75rem 1rem;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* Safe Area Insets for Modern Mobile Devices (iPhones notch / pill) */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .cart-drawer-footer {
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  }
+}
+

@@ -169,8 +169,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-              gap: 'clamp(2rem, 4vw, 4.5rem)',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
+              gap: 'clamp(1.5rem, 4vw, 4.5rem)',
               alignItems: 'start',
             }}
           >
@@ -396,10 +396,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                   4. PAYMENT ARCHITECTURE
                 </h3>
 
-                <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.625rem', marginBottom: '1.5rem' }}>
                   {[
                     { id: 'razorpay', label: 'RAZORPAY / UPI' },
-                    { id: 'credit_card', label: 'CREDIT / DEBIT CARD' },
+                    { id: 'credit_card', label: 'CARD' },
                     { id: 'net_banking', label: 'NET BANKING' },
                   ].map((p) => (
                     <button
@@ -407,14 +407,16 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                       type="button"
                       onClick={() => setPaymentMethod(p.id as any)}
                       style={{
-                        flex: 1,
-                        padding: '0.75rem',
+                        flex: '1 1 95px',
+                        minWidth: '85px',
+                        padding: '0.75rem 0.5rem',
                         border: paymentMethod === p.id ? '2px solid #0a0a0a' : '1px solid #e7e5e3',
                         backgroundColor: paymentMethod === p.id ? '#0a0a0a' : '#ffffff',
                         color: paymentMethod === p.id ? '#ffffff' : '#0a0a0a',
                         fontSize: '0.75rem',
                         fontWeight: 800,
                         cursor: 'pointer',
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {p.label}

@@ -57,6 +57,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
 
       {/* Floating Campaign Badge Top Right */}
       <div
+        className="hero-badge-floating"
         style={{
           position: 'absolute',
           top: '2.5rem',
@@ -92,7 +93,8 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
         style={{
           position: 'relative',
           zIndex: 10,
-          paddingBottom: 'clamp(3rem, 6vw, 5rem)',
+          paddingBottom: 'clamp(2.5rem, 5vw, 5rem)',
+          paddingTop: 'clamp(3rem, 6vw, 4rem)',
           color: '#ffffff',
           maxWidth: '900px',
         }}
@@ -102,7 +104,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
           style={{
             color: '#b51224',
             display: 'inline-block',
-            marginBottom: '1rem',
+            marginBottom: '0.75rem',
           }}
         >
           AUTUMN / WINTER 2026 CAMPAIGN
@@ -110,8 +112,8 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
 
         <h1
           style={{
-            fontSize: 'clamp(2.5rem, 6vw, 5.25rem)',
-            lineHeight: 0.95,
+            fontSize: 'clamp(2.15rem, 6.5vw, 5.25rem)',
+            lineHeight: 0.96,
             letterSpacing: '-0.02em',
             marginBottom: '1.25rem',
             color: '#ffffff',
@@ -122,22 +124,22 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
 
         <p
           style={{
-            fontSize: 'clamp(0.9rem, 1.3vw, 1.15rem)',
+            fontSize: 'clamp(0.875rem, 1.25vw, 1.15rem)',
             color: '#cccccc',
             maxWidth: '620px',
             lineHeight: 1.6,
-            marginBottom: '2.5rem',
+            marginBottom: '2rem',
           }}
         >
           {subtitle}
         </p>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
+        <div className="hero-actions-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.875rem', alignItems: 'center' }}>
           <button
             onClick={() => onNavigate(ctaLink)}
             className="btn-crimson"
             style={{
-              padding: '1.1rem 2.25rem',
+              padding: '1rem 2rem',
               fontSize: '0.8125rem',
             }}
           >
@@ -149,7 +151,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
             onClick={() => onNavigate('/lookbook')}
             className="btn-white"
             style={{
-              padding: '1.1rem 2rem',
+              padding: '1rem 1.75rem',
               fontSize: '0.8125rem',
               backgroundColor: 'rgba(255,255,255,0.1)',
               borderColor: 'rgba(255,255,255,0.3)',

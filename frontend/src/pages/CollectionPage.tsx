@@ -282,22 +282,16 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
       </div>
 
       {/* Main Content Area */}
-      <div className="container-custom" style={{ paddingTop: '3rem' }}>
+      <div className="container-custom" style={{ paddingTop: '2.5rem' }}>
         {loading ? (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-              gap: '2.5rem',
-            }}
-          >
+          <div className="responsive-product-grid">
             {[1, 2, 3, 4, 5, 6].map((n) => (
-              <div key={n} style={{ height: '420px' }} className="skeleton" />
+              <div key={n} style={{ height: '380px' }} className="skeleton" />
             ))}
           </div>
         ) : sortedProducts.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '6rem 1rem' }}>
-            <h3 style={{ fontSize: '1.5rem', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+          <div style={{ textAlign: 'center', padding: '5rem 1rem' }}>
+            <h3 style={{ fontSize: '1.35rem', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
               NO GARMENTS MATCH YOUR SELECTION
             </h3>
             <p style={{ color: '#6b6b6b', fontSize: '0.875rem', marginBottom: '2rem' }}>
@@ -309,13 +303,7 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
             </button>
           </div>
         ) : (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-              gap: 'clamp(1.5rem, 3vw, 2.75rem)',
-            }}
-          >
+          <div className="responsive-product-grid">
             {sortedProducts.map((p) => (
               <ProductCard key={p.id} product={p} onNavigate={onNavigate} />
             ))}

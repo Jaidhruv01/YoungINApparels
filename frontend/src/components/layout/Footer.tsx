@@ -149,8 +149,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-            gap: '2.5rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))',
+            gap: 'clamp(1.5rem, 3vw, 2.5rem)',
             marginBottom: '4rem',
           }}
         >

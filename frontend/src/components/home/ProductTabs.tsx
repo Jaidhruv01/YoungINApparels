@@ -59,11 +59,12 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ products, onNavigate }
 
           {/* Tab Buttons */}
           <div
+            className="touch-scroll-x"
             style={{
               display: 'flex',
-              flexWrap: 'wrap',
+              maxWidth: '100%',
               justifyContent: 'center',
-              gap: '0.5rem',
+              gap: '0.25rem',
               borderBottom: '1px solid #e7e5e3',
               paddingBottom: '0.25rem',
             }}
@@ -77,15 +78,17 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ products, onNavigate }
                   style={{
                     background: 'none',
                     border: 'none',
-                    padding: '0.75rem 1.5rem',
+                    padding: '0.75rem 1rem',
                     fontFamily: 'var(--font-display)',
-                    fontSize: '0.8125rem',
+                    fontSize: '0.75rem',
                     fontWeight: 800,
                     letterSpacing: '0.12em',
                     color: isActive ? '#0a0a0a' : '#888888',
                     cursor: 'pointer',
                     position: 'relative',
                     transition: 'color 0.2s ease',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
                   }}
                 >
                   {tab.label}
@@ -108,14 +111,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ products, onNavigate }
         </div>
 
         {/* Product Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: 'clamp(1.5rem, 3vw, 2.75rem)',
-            marginBottom: '3.5rem',
-          }}
-        >
+        <div className="responsive-product-grid" style={{ marginBottom: '3.5rem' }}>
           {filteredProducts.slice(0, 8).map((product) => (
             <ProductCard
               key={product.id}

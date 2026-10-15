@@ -45,8 +45,8 @@ export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavi
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '2.5rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+            gap: '2rem',
             alignItems: 'start',
           }}
         >
@@ -78,7 +78,7 @@ export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavi
                   FOUNDATIONAL PIECE
                 </span>
               </div>
-              <div style={{ padding: '2rem' }}>
+              <div style={{ padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
                 <span style={{ fontSize: '0.6875rem', fontWeight: 800, letterSpacing: '0.12em', color: '#b51224' }}>
                   CORE ANCHOR
                 </span>
@@ -101,7 +101,7 @@ export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavi
           )}
 
           {/* Right Column: Two Complementary Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '1.5rem' }}>
             {complementaryPieces.map((p) => (
               <div key={p.id} style={{ backgroundColor: '#ffffff', padding: '1rem', border: '1px solid #e7e5e3' }}>
                 <span style={{ fontSize: '0.6875rem', fontWeight: 800, color: '#888', display: 'block', marginBottom: '8px', letterSpacing: '0.08em' }}>

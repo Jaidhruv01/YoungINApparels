@@ -617,16 +617,17 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
           right: 0,
           backgroundColor: '#ffffff',
           borderTop: '1px solid #e7e5e3',
-          padding: '0.75rem 1.25rem',
+          padding: '0.75rem 1rem',
+          paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))',
           display: 'none',
           alignItems: 'center',
           justifyContent: 'space-between',
           zIndex: 850,
-          boxShadow: '0 -4px 20px rgba(0,0,0,0.08)',
+          boxShadow: '0 -4px 20px rgba(0,0,0,0.12)',
         }}
       >
-        <div>
-          <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', display: 'block' }}>
+        <div style={{ maxWidth: '60%', minWidth: 0 }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {product.title}
           </span>
           <span style={{ fontSize: '0.875rem', fontWeight: 900, color: '#b51224' }}>
@@ -637,7 +638,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
           onClick={handleAddToCart}
           disabled={isCurrentOutOfStock}
           className="btn-primary"
-          style={{ padding: '0.75rem 1.25rem', fontSize: '0.75rem' }}
+          style={{ padding: '0.75rem 1.25rem', fontSize: '0.75rem', flexShrink: 0 }}
         >
           {isCurrentOutOfStock ? 'SOLD OUT' : 'ADD TO BAG'}
         </button>

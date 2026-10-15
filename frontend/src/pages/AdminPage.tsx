@@ -128,17 +128,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
     <div style={{ backgroundColor: '#fcfbf9', minHeight: '90vh', paddingBottom: '6rem' }}>
       {/* Admin Top Navigation */}
       <div style={{ backgroundColor: '#0a0a0a', color: '#ffffff', borderBottom: '1px solid #222222' }}>
-        <div className="container-custom" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '65px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ backgroundColor: '#b51224', color: '#fff', padding: '4px 8px', fontSize: '0.6875rem', fontWeight: 900 }}>
+        <div className="container-custom admin-header-container">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ backgroundColor: '#b51224', color: '#fff', padding: '3px 8px', fontSize: '0.6875rem', fontWeight: 900 }}>
               ATELIER CONSOLE
             </div>
-            <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', fontWeight: 900, letterSpacing: '0.14em' }}>
-              YOUNGIN APPARELS CMS
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 900, letterSpacing: '0.12em' }}>
+              YOUNGIN CMS
             </span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <button
               onClick={() => onNavigate('/')}
               style={{
@@ -161,14 +161,19 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
               onClick={loadData}
               style={{
                 background: 'none',
-                border: 'none',
-                color: '#888888',
+                border: '1px solid #333333',
+                color: '#ffffff',
                 cursor: 'pointer',
-                padding: '6px',
+                padding: '6px 10px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                fontSize: '0.75rem',
               }}
               title="Refresh console"
             >
-              <RefreshCw size={16} />
+              <RefreshCw size={14} />
+              <span>REFRESH</span>
             </button>
           </div>
         </div>
@@ -176,7 +181,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
 
       {/* Tabs Sub-nav */}
       <div style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #e7e5e3' }}>
-        <div className="container-custom" style={{ display: 'flex', gap: '1.5rem', overflowX: 'auto' }}>
+        <div className="container-custom touch-scroll-x" style={{ display: 'flex', gap: '1.25rem', paddingBottom: 0 }}>
           {[
             { id: 'dashboard', label: 'METRICS DASHBOARD', icon: Shield },
             { id: 'orders', label: `CLIENT ORDERS (${orders.length})`, icon: ShoppingCart },
@@ -193,7 +198,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                 style={{
                   background: 'none',
                   border: 'none',
-                  padding: '1rem 0.5rem',
+                  padding: '1rem 0.25rem',
                   fontSize: '0.75rem',
                   fontWeight: 800,
                   letterSpacing: '0.1em',
@@ -204,6 +209,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                   gap: '6px',
                   borderBottom: isActive ? '2px solid #b51224' : '2px solid transparent',
                   whiteSpace: 'nowrap',
+                  flexShrink: 0,
                 }}
               >
                 <Icon size={14} />
@@ -214,53 +220,46 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      <div className="container-custom" style={{ paddingTop: '2.5rem' }}>
+      <div className="container-custom" style={{ paddingTop: '2rem' }}>
         {/* TAB 1: METRICS DASHBOARD */}
         {activeTab === 'dashboard' && metrics && (
           <div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                gap: '1.5rem',
-                marginBottom: '3rem',
-              }}
-            >
-              <div style={{ backgroundColor: '#ffffff', padding: '1.75rem', border: '1px solid #e7e5e3' }}>
+            <div className="admin-metrics-grid">
+              <div className="admin-card admin-metric-card">
                 <span style={{ fontSize: '0.6875rem', fontWeight: 800, color: '#6b6b6b', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                   TOTAL ATELIER SALES
                 </span>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 900, color: '#0a0a0a', marginTop: '6px' }}>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.85rem', fontWeight: 900, color: '#0a0a0a', marginTop: '6px' }}>
                   {formatPrice(metrics.total_revenue)}
                 </p>
                 <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700 }}>● Fully reconciled</span>
               </div>
 
-              <div style={{ backgroundColor: '#ffffff', padding: '1.75rem', border: '1px solid #e7e5e3' }}>
+              <div className="admin-card admin-metric-card">
                 <span style={{ fontSize: '0.6875rem', fontWeight: 800, color: '#6b6b6b', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                   DISPATCHED ORDERS
                 </span>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 900, color: '#0a0a0a', marginTop: '6px' }}>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.85rem', fontWeight: 900, color: '#0a0a0a', marginTop: '6px' }}>
                   {metrics.total_orders}
                 </p>
                 <span style={{ fontSize: '0.75rem', color: '#6b6b6b' }}>Lifetime customer volume</span>
               </div>
 
-              <div style={{ backgroundColor: '#ffffff', padding: '1.75rem', border: '1px solid #e7e5e3' }}>
+              <div className="admin-card admin-metric-card">
                 <span style={{ fontSize: '0.6875rem', fontWeight: 800, color: '#6b6b6b', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                   ACTIVE ARCHIVE PIECES
                 </span>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 900, color: '#0a0a0a', marginTop: '6px' }}>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.85rem', fontWeight: 900, color: '#0a0a0a', marginTop: '6px' }}>
                   {metrics.total_products}
                 </p>
-                <span style={{ fontSize: '0.75rem', color: '#6b6b6b' }}>Over 32 tailored variants</span>
+                <span style={{ fontSize: '0.75rem', color: '#6b6b6b' }}>32 tailored variants</span>
               </div>
 
-              <div style={{ backgroundColor: '#ffffff', padding: '1.75rem', border: '1px solid #e7e5e3' }}>
+              <div className="admin-card admin-metric-card">
                 <span style={{ fontSize: '0.6875rem', fontWeight: 800, color: '#6b6b6b', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                   LOW INVENTORY WARNINGS
                 </span>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 900, color: '#b51224', marginTop: '6px' }}>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.85rem', fontWeight: 900, color: '#b51224', marginTop: '6px' }}>
                   {metrics.low_stock_count}
                 </p>
                 <span style={{ fontSize: '0.75rem', color: '#b51224', fontWeight: 700 }}>Attention recommended</span>
@@ -268,7 +267,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
             </div>
 
             {/* Recent Orders Overview */}
-            <div style={{ backgroundColor: '#ffffff', border: '1px solid #e7e5e3', padding: '1.75rem' }}>
+            <div className="admin-card">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
                 <h3 style={{ fontSize: '1rem', textTransform: 'uppercase' }}>RECENT ORDER ACTIVITY</h3>
                 <button
@@ -279,46 +278,48 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                 </button>
               </div>
 
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8125rem' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid #e7e5e3', color: '#6b6b6b' }}>
-                    <th style={{ padding: '0.75rem 0' }}>ORDER #</th>
-                    <th style={{ padding: '0.75rem 0' }}>CLIENT</th>
-                    <th style={{ padding: '0.75rem 0' }}>TOTAL</th>
-                    <th style={{ padding: '0.75rem 0' }}>STATUS</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.slice(0, 5).map((o) => (
-                    <tr key={o.id} style={{ borderBottom: '1px solid #f5f4f2' }}>
-                      <td style={{ padding: '0.85rem 0', fontWeight: 800 }}>{o.order_number}</td>
-                      <td style={{ padding: '0.85rem 0' }}>{o.first_name} {o.last_name}</td>
-                      <td style={{ padding: '0.85rem 0', fontWeight: 800 }}>{formatPrice(o.total)}</td>
-                      <td style={{ padding: '0.85rem 0' }}>
-                        <span
-                          style={{
-                            fontSize: '0.6875rem',
-                            fontWeight: 800,
-                            padding: '3px 8px',
-                            backgroundColor: o.status === 'delivered' ? '#dcfce7' : o.status === 'shipped' ? '#dbeafe' : '#fef3c7',
-                            color: o.status === 'delivered' ? '#166534' : o.status === 'shipped' ? '#1e40af' : '#92400e',
-                            textTransform: 'uppercase',
-                          }}
-                        >
-                          {o.status}
-                        </span>
-                      </td>
+              <div className="table-responsive-wrapper">
+                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8125rem' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid #e7e5e3', color: '#6b6b6b' }}>
+                      <th style={{ padding: '0.75rem 0.5rem' }}>ORDER #</th>
+                      <th style={{ padding: '0.75rem 0.5rem' }}>CLIENT</th>
+                      <th style={{ padding: '0.75rem 0.5rem' }}>TOTAL</th>
+                      <th style={{ padding: '0.75rem 0.5rem' }}>STATUS</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {orders.slice(0, 5).map((o) => (
+                      <tr key={o.id} style={{ borderBottom: '1px solid #f5f4f2' }}>
+                        <td style={{ padding: '0.85rem 0.5rem', fontWeight: 800 }}>{o.order_number}</td>
+                        <td style={{ padding: '0.85rem 0.5rem' }}>{o.first_name} {o.last_name}</td>
+                        <td style={{ padding: '0.85rem 0.5rem', fontWeight: 800 }}>{formatPrice(o.total)}</td>
+                        <td style={{ padding: '0.85rem 0.5rem' }}>
+                          <span
+                            style={{
+                              fontSize: '0.6875rem',
+                              fontWeight: 800,
+                              padding: '3px 8px',
+                              backgroundColor: o.status === 'delivered' ? '#dcfce7' : o.status === 'shipped' ? '#dbeafe' : '#fef3c7',
+                              color: o.status === 'delivered' ? '#166534' : o.status === 'shipped' ? '#1e40af' : '#92400e',
+                              textTransform: 'uppercase',
+                            }}
+                          >
+                            {o.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
 
         {/* TAB 2: ORDERS MANAGEMENT */}
         {activeTab === 'orders' && (
-          <div style={{ backgroundColor: '#ffffff', border: '1px solid #e7e5e3', padding: '2rem' }}>
+          <div className="admin-card">
             <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', textTransform: 'uppercase' }}>
               CUSTOMER ORDERS & LOGISTICS
             </h3>
@@ -332,21 +333,21 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                     key={ord.id}
                     style={{
                       border: '1px solid #e7e5e3',
-                      padding: '1.5rem',
+                      padding: '1.25rem',
                       backgroundColor: '#faf9f8',
                     }}
                   >
-                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
                       <div>
-                        <span style={{ fontSize: '1.1rem', fontWeight: 900, fontFamily: 'var(--font-display)' }}>
+                        <span style={{ fontSize: '1.05rem', fontWeight: 900, fontFamily: 'var(--font-display)' }}>
                           {ord.order_number}
                         </span>
-                        <span style={{ fontSize: '0.75rem', color: '#6b6b6b', marginLeft: '12px' }}>
+                        <span style={{ fontSize: '0.75rem', color: '#6b6b6b', marginLeft: '10px', display: 'inline-block' }}>
                           Placed by {ord.first_name} {ord.last_name} ({ord.email})
                         </span>
                       </div>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                         <span style={{ fontSize: '1rem', fontWeight: 900 }}>
                           {formatPrice(ord.total)}
                         </span>
@@ -354,7 +355,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                           value={ord.status}
                           onChange={(e) => handleUpdateOrderStatus(ord.id, e.target.value)}
                           style={{
-                            padding: '6px 10px',
+                            padding: '6px 8px',
                             fontSize: '0.75rem',
                             fontWeight: 800,
                             border: '1px solid #0a0a0a',
@@ -371,12 +372,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                       </div>
                     </div>
 
-                    <div style={{ fontSize: '0.75rem', color: '#555555', marginBottom: '1rem' }}>
-                      Destination: {ord.address1}, {ord.city}, {ord.state} {ord.postal_code}, {ord.country} • Courier Tracking: <strong>{ord.tracking_number}</strong>
+                    <div style={{ fontSize: '0.75rem', color: '#555555', marginBottom: '0.75rem' }}>
+                      Destination: {ord.address1}, {ord.city}, {ord.state} {ord.postal_code}, {ord.country} • Tracking: <strong>{ord.tracking_number}</strong>
                     </div>
 
                     {/* Order items */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', borderTop: '1px solid #e7e5e3', paddingTop: '1rem' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', borderTop: '1px solid #e7e5e3', paddingTop: '0.75rem' }}>
                       {ord.items?.map((it: any) => (
                         <div key={it.id} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                           <img
@@ -400,7 +401,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
 
         {/* TAB 3: INVENTORY MANAGEMENT */}
         {activeTab === 'inventory' && (
-          <div style={{ backgroundColor: '#ffffff', border: '1px solid #e7e5e3', padding: '2rem' }}>
+          <div className="admin-card">
             <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', textTransform: 'uppercase' }}>
               VARIANT INVENTORY CONTROL
             </h3>
@@ -412,7 +413,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                     <img
                       src={p.cover_image}
                       alt=""
-                      style={{ width: '50px', height: '65px', objectFit: 'cover' }}
+                      style={{ width: '45px', height: '60px', objectFit: 'cover' }}
                     />
                     <div>
                       <h4 style={{ fontSize: '0.9375rem', fontWeight: 800, textTransform: 'uppercase' }}>
@@ -424,65 +425,71 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                     </div>
                   </div>
 
-                  {/* Variants Table */}
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8125rem' }}>
-                    <thead>
-                      <tr style={{ backgroundColor: '#faf9f8', color: '#6b6b6b' }}>
-                        <th style={{ padding: '6px 12px', textAlign: 'left' }}>SKU</th>
-                        <th style={{ padding: '6px 12px', textAlign: 'left' }}>COLOR</th>
-                        <th style={{ padding: '6px 12px', textAlign: 'left' }}>SIZE</th>
-                        <th style={{ padding: '6px 12px', textAlign: 'left' }}>STOCK ON HAND</th>
-                        <th style={{ padding: '6px 12px', textAlign: 'right' }}>QUICK ADJUST</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {p.variants?.map((v: any) => (
-                        <tr key={v.id} style={{ borderTop: '1px solid #f0efed' }}>
-                          <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>{v.sku}</td>
-                          <td style={{ padding: '8px 12px' }}>{v.color}</td>
-                          <td style={{ padding: '8px 12px', fontWeight: 700 }}>{v.size}</td>
-                          <td style={{ padding: '8px 12px' }}>
-                            <span
-                              style={{
-                                color: v.available_quantity <= 3 ? '#b51224' : '#0a0a0a',
-                                fontWeight: 800,
-                              }}
-                            >
-                              {v.available_quantity} units
-                            </span>
-                          </td>
-                          <td style={{ padding: '8px 12px', textAlign: 'right' }}>
-                            <div style={{ display: 'inline-flex', gap: '4px' }}>
-                              <button
-                                onClick={() => handleUpdateStock(v.id, v.available_quantity, -1)}
-                                style={{
-                                  border: '1px solid #ccc',
-                                  background: '#fff',
-                                  padding: '2px 8px',
-                                  cursor: 'pointer',
-                                  fontWeight: 800,
-                                }}
-                              >
-                                -1
-                              </button>
-                              <button
-                                onClick={() => handleUpdateStock(v.id, v.available_quantity, 5)}
-                                style={{
-                                  border: '1px solid #ccc',
-                                  background: '#fff',
-                                  padding: '2px 8px',
-                                  cursor: 'pointer',
-                                  fontWeight: 800,
-                                }}
-                              >
-                                +5
-                              </button>
-                            </div>
-                          </td>
+                  {/* Variants Table with Responsive Horizontal Scroll */}
+                  <div className="table-responsive-wrapper">
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8125rem' }}>
+                      <thead>
+                        <tr style={{ backgroundColor: '#faf9f8', color: '#6b6b6b' }}>
+                          <th style={{ padding: '8px 12px', textAlign: 'left' }}>SKU</th>
+                          <th style={{ padding: '8px 12px', textAlign: 'left' }}>COLOR</th>
+                          <th style={{ padding: '8px 12px', textAlign: 'left' }}>SIZE</th>
+                          <th style={{ padding: '8px 12px', textAlign: 'left' }}>STOCK ON HAND</th>
+                          <th style={{ padding: '8px 12px', textAlign: 'right' }}>QUICK ADJUST</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {p.variants?.map((v: any) => (
+                          <tr key={v.id} style={{ borderTop: '1px solid #f0efed' }}>
+                            <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>{v.sku}</td>
+                            <td style={{ padding: '8px 12px' }}>{v.color}</td>
+                            <td style={{ padding: '8px 12px', fontWeight: 700 }}>{v.size}</td>
+                            <td style={{ padding: '8px 12px' }}>
+                              <span
+                                style={{
+                                  color: v.available_quantity <= 3 ? '#b51224' : '#0a0a0a',
+                                  fontWeight: 800,
+                                }}
+                              >
+                                {v.available_quantity} units
+                              </span>
+                            </td>
+                            <td style={{ padding: '8px 12px', textAlign: 'right' }}>
+                              <div style={{ display: 'inline-flex', gap: '4px' }}>
+                                <button
+                                  onClick={() => handleUpdateStock(v.id, v.available_quantity, -1)}
+                                  style={{
+                                    border: '1px solid #ccc',
+                                    background: '#fff',
+                                    padding: '4px 10px',
+                                    cursor: 'pointer',
+                                    fontWeight: 800,
+                                    minWidth: '32px',
+                                  }}
+                                  aria-label="Decrease quantity by 1"
+                                >
+                                  -1
+                                </button>
+                                <button
+                                  onClick={() => handleUpdateStock(v.id, v.available_quantity, 5)}
+                                  style={{
+                                    border: '1px solid #ccc',
+                                    background: '#fff',
+                                    padding: '4px 10px',
+                                    cursor: 'pointer',
+                                    fontWeight: 800,
+                                    minWidth: '32px',
+                                  }}
+                                  aria-label="Increase quantity by 5"
+                                >
+                                  +5
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               ))}
             </div>
@@ -491,9 +498,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
 
         {/* TAB 4: PROMOTIONS */}
         {activeTab === 'promotions' && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
             {/* Create Promo */}
-            <div style={{ backgroundColor: '#ffffff', border: '1px solid #e7e5e3', padding: '2rem' }}>
+            <div className="admin-card">
               <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', textTransform: 'uppercase' }}>
                 ISSUE PROMOTIONAL CODE
               </h3>
@@ -551,7 +558,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
             </div>
 
             {/* Existing Codes */}
-            <div style={{ backgroundColor: '#ffffff', border: '1px solid #e7e5e3', padding: '2rem' }}>
+            <div className="admin-card">
               <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', textTransform: 'uppercase' }}>
                 ACTIVE DISCOUNT CODES
               </h3>
@@ -588,7 +595,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
 
         {/* TAB 5: HOMEPAGE CMS */}
         {activeTab === 'cms' && (
-          <div style={{ backgroundColor: '#ffffff', border: '1px solid #e7e5e3', padding: '2.5rem', maxWidth: '780px' }}>
+          <div className="admin-card" style={{ maxWidth: '780px' }}>
             <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', textTransform: 'uppercase' }}>
               HOMEPAGE EDITORIAL CONTENT CMS
             </h3>

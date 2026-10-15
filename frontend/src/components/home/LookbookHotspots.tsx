@@ -122,19 +122,11 @@ export const LookbookHotspots: React.FC<LookbookHotspotsProps> = ({ lookbookData
           {/* Active Hotspot Popover Card */}
           {activeHotspot && (
             <div
+              className="lookbook-hotspot-popover"
               style={{
-                position: 'absolute',
                 left: `${Math.min(75, Math.max(25, activeHotspot.x_percent))}%`,
                 top: `${Math.min(75, Math.max(25, activeHotspot.y_percent))}%`,
                 transform: 'translate(-50%, -120%)',
-                backgroundColor: '#141414',
-                color: '#ffffff',
-                border: '1px solid #333333',
-                padding: '1.25rem',
-                width: '300px',
-                zIndex: 50,
-                boxShadow: '0 20px 40px rgba(0,0,0,0.8)',
-                animation: 'fadeIn 0.2s ease-out',
               }}
               onClick={(e) => e.stopPropagation()}
             >
