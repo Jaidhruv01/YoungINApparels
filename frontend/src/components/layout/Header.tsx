@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Search, Menu, X, Shield, Globe } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Shield, Globe, Heart } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
+import { useWishlist } from '../../context/WishlistContext';
 
 interface HeaderProps {
   onOpenSearch: () => void;
@@ -11,6 +12,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNavigate }) => {
   const { cart, openCart } = useCart();
+  const { wishlistCount, openWishlist } = useWishlist();
   const { currency, currencySymbol } = useCurrency();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -36,12 +38,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
   }, [mobileMenuOpen]);
 
   const navLinks = [
-    { label: 'COLLECTIONS', path: '/collections' },
-    { label: 'OUTERWEAR', path: '/collections/outerwear' },
-    { label: 'FLEECE', path: '/collections/fleece-hoodies' },
-    { label: 'DENIM', path: '/collections/denim' },
-    { label: 'LOOKBOOK', path: '/lookbook' },
-    { label: 'ATELIER', path: '/about' },
+    { label: 'COLLECTIONS', path: '/collections', tag: 'ALL' },
+    { label: 'OUTERWEAR', path: '/collections/outerwear', tag: '850GSM' },
+    { label: 'FLEECE', path: '/collections/fleece-hoodies', tag: '500GSM' },
+    { label: 'DENIM', path: '/collections/denim', tag: '14OZ' },
+    { label: 'LOOKBOOK', path: '/lookbook', tag: 'CAMPAIGN' },
+    { label: 'ATELIER', path: '/about', tag: 'STORY' },
   ];
 
   const handleNav = (path: string) => {
@@ -124,6 +126,19 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               <span className="currency-label">INR (₹)</span>
             </div>
 
+            {/* Wishlist Button (Desktop & Tablet) */}
+            <button
+              onClick={openWishlist}
+              className="header-action-btn wishlist-header-btn"
+              title="View saved items"
+              aria-label="View saved items"
+            >
+              <Heart size={19} />
+              {wishlistCount > 0 && (
+                <span className="cart-badge">{wishlistCount}</span>
+              )}
+            </button>
+
             {/* Search Button */}
             <button
               onClick={onOpenSearch}
@@ -187,7 +202,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           left: 0,
           bottom: 0,
           width: '85%',
-          maxWidth: '340px',
+          maxWidth: '350px',
           backgroundColor: '#0a0a0a',
           color: '#ffffff',
           zIndex: 1001,
@@ -203,13 +218,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           boxShadow: mobileMenuOpen ? '10px 0 40px rgba(0,0,0,0.6)' : 'none',
         }}
       >
+        {/* Drawer Brand Bar */}
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: '2rem',
-            paddingBottom: '1rem',
+            marginBottom: '1.5rem',
+            paddingBottom: '0.875rem',
             borderBottom: '1px solid #1f1f1f',
           }}
         >
@@ -242,7 +258,37 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           </button>
         </div>
 
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        {/* Quick Search inside Drawer */}
+        <div style={{ marginBottom: '1.5rem' }}>
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              onOpenSearch();
+            }}
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '10px 14px',
+              backgroundColor: '#161616',
+              border: '1px solid #282828',
+              borderRadius: '2px',
+              color: '#888888',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              textAlign: 'left',
+              letterSpacing: '0.04em',
+            }}
+          >
+            <Search size={15} color="#b51224" />
+            <span>SEARCH ARCHIVE PIECES (⌘K)...</span>
+          </button>
+        </div>
+
+        {/* Nav Links */}
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
           {navLinks.map((link) => {
             const isActive = currentPath === link.path;
             return (
@@ -255,18 +301,81 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                   textAlign: 'left',
                   color: isActive ? '#b51224' : '#ffffff',
                   fontFamily: 'var(--font-display)',
-                  fontSize: '1.15rem',
+                  fontSize: '1.1rem',
                   fontWeight: 800,
                   letterSpacing: '0.06em',
                   cursor: 'pointer',
-                  padding: '6px 0',
+                  padding: '4px 0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
                   transition: 'color 0.15s ease',
                 }}
               >
-                {link.label}
+                <span>{link.label}</span>
+                {link.tag && (
+                  <span
+                    style={{
+                      fontSize: '0.5625rem',
+                      padding: '2px 6px',
+                      backgroundColor: '#181818',
+                      color: '#888888',
+                      borderRadius: '2px',
+                      fontFamily: 'var(--font-body)',
+                      letterSpacing: '0.08em',
+                      fontWeight: 700,
+                    }}
+                  >
+                    {link.tag}
+                  </span>
+                )}
               </button>
             );
           })}
+
+          {/* Saved Wishlist Drawer Link */}
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              openWishlist();
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              textAlign: 'left',
+              color: '#ffffff',
+              fontFamily: 'var(--font-display)',
+              fontSize: '1.1rem',
+              fontWeight: 800,
+              letterSpacing: '0.06em',
+              cursor: 'pointer',
+              padding: '4px 0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Heart size={16} color="#b51224" fill={wishlistCount > 0 ? '#b51224' : 'none'} />
+              <span>SAVED WISHLIST</span>
+            </span>
+            {wishlistCount > 0 && (
+              <span
+                style={{
+                  fontSize: '0.625rem',
+                  padding: '2px 8px',
+                  backgroundColor: '#b51224',
+                  color: '#ffffff',
+                  borderRadius: '10px',
+                  fontWeight: 800,
+                }}
+              >
+                {wishlistCount}
+              </span>
+            )}
+          </button>
+
+          {/* Admin Dashboard */}
           <button
             onClick={() => handleNav('/admin')}
             style={{
@@ -275,24 +384,57 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               textAlign: 'left',
               color: '#b51224',
               fontFamily: 'var(--font-display)',
-              fontSize: '0.95rem',
+              fontSize: '0.875rem',
               fontWeight: 800,
-              letterSpacing: '0.06em',
+              letterSpacing: '0.08em',
               cursor: 'pointer',
               padding: '6px 0',
-              marginTop: '0.75rem',
+              marginTop: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
             }}
           >
-            ADMIN DASHBOARD →
+            <Shield size={14} />
+            <span>ADMIN DASHBOARD →</span>
           </button>
         </nav>
 
-        <div style={{ marginTop: 'auto', borderTop: '1px solid #222222', paddingTop: '1.25rem' }}>
-          <p style={{ fontSize: '0.6875rem', color: '#888888', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-            AUTUMN / WINTER ARCHIVE 2026
-          </p>
+        {/* Concierge & Location Card in Drawer */}
+        <div style={{ marginTop: 'auto', borderTop: '1px solid #222222', paddingTop: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.6875rem', color: '#999999' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 800, color: '#ffffff' }}>
+              <Globe size={13} color="#b51224" />
+              <span>INDIA (₹ INR)</span>
+            </span>
+            <span style={{ color: '#10b981', fontWeight: 700 }}>FREE SHIPPING OVER ₹5,000</span>
+          </div>
+
+          <div
+            style={{
+              backgroundColor: '#141414',
+              border: '1px solid #222222',
+              padding: '0.75rem 1rem',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              cursor: 'pointer',
+            }}
+            onClick={() => handleNav('/contact')}
+          >
+            <div>
+              <p style={{ fontSize: '0.6875rem', fontWeight: 800, color: '#ffffff', textTransform: 'uppercase' }}>
+                ATELIER CONCIERGE
+              </p>
+              <p style={{ fontSize: '0.625rem', color: '#888888', marginTop: '2px' }}>
+                Direct Stylist Support & Sizing Assistance
+              </p>
+            </div>
+            <span style={{ color: '#b51224', fontSize: '0.875rem', fontWeight: 800 }}>→</span>
+          </div>
+
           <p style={{ fontSize: '0.625rem', color: '#666666', marginTop: '0.25rem' }}>
-            International D2C Atelier Flagship
+            Autumn / Winter Archive 2026 • International D2C Flagship
           </p>
         </div>
       </div>
@@ -381,6 +523,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
         .admin-btn {
           display: none;
         }
+        .wishlist-header-btn {
+          display: none;
+        }
         .header-action-btn {
           background: none;
           border: none;
@@ -425,6 +570,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           .brand-wordmark {
             font-size: 1.12rem;
             letter-spacing: 0.14em;
+          }
+        }
+
+        @media (min-width: 769px) {
+          .wishlist-header-btn {
+            display: flex;
           }
         }
 

@@ -7,8 +7,9 @@ import { SizeGuideModal } from '../components/product/SizeGuideModal';
 import { ProductCard } from '../components/product/ProductCard';
 import {
   ChevronDown, ChevronUp,
-  Ruler, ShoppingBag, Zap
+  Ruler, ShoppingBag, Zap, Heart
 } from 'lucide-react';
+import { useWishlist } from '../context/WishlistContext';
 
 interface ProductDetailProps {
   slug: string;
@@ -18,6 +19,7 @@ interface ProductDetailProps {
 export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }) => {
   const { formatPrice } = useCurrency();
   const { addToCart } = useCart();
+  const { isWishlisted, toggleWishlist } = useWishlist();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [recommended, setRecommended] = useState<Product[]>([]);
@@ -418,6 +420,25 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
                   <ShoppingBag size={18} />
                   <span>{isCurrentOutOfStock ? 'CURRENTLY SOLD OUT' : addingToCart ? 'ADDING...' : 'ADD TO BAG'}</span>
                 </button>
+
+                <button
+                  onClick={() => toggleWishlist(product.id, product.title)}
+                  style={{
+                    border: '1px solid #e7e5e3',
+                    backgroundColor: isWishlisted(product.id) ? '#b51224' : '#ffffff',
+                    color: isWishlisted(product.id) ? '#ffffff' : '#0a0a0a',
+                    padding: '0 1.25rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.2s ease',
+                  }}
+                  title={isWishlisted(product.id) ? 'Remove from wishlist' : 'Save to wishlist'}
+                  aria-label="Wishlist toggle"
+                >
+                  <Heart size={20} fill={isWishlisted(product.id) ? '#ffffff' : 'none'} />
+                </button>
               </div>
 
               {/* Express Checkout */}
@@ -622,7 +643,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
           display: 'none',
           alignItems: 'center',
           justifyContent: 'space-between',
-          zIndex: 850,
+          zIndex: 860,
           boxShadow: '0 -4px 20px rgba(0,0,0,0.12)',
         }}
       >
@@ -634,14 +655,34 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
             {formatPrice(currentVariant ? currentVariant.price : product.price)}
           </span>
         </div>
-        <button
-          onClick={handleAddToCart}
-          disabled={isCurrentOutOfStock}
-          className="btn-primary"
-          style={{ padding: '0.75rem 1.25rem', fontSize: '0.75rem', flexShrink: 0 }}
-        >
-          {isCurrentOutOfStock ? 'SOLD OUT' : 'ADD TO BAG'}
-        </button>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button
+            onClick={() => toggleWishlist(product.id, product.title)}
+            style={{
+              width: '38px',
+              height: '38px',
+              border: '1px solid #e7e5e3',
+              backgroundColor: isWishlisted(product.id) ? '#b51224' : '#ffffff',
+              color: isWishlisted(product.id) ? '#ffffff' : '#0a0a0a',
+              borderRadius: '2px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+            }}
+            aria-label="Wishlist toggle"
+          >
+            <Heart size={18} fill={isWishlisted(product.id) ? '#ffffff' : 'none'} />
+          </button>
+          <button
+            onClick={handleAddToCart}
+            disabled={isCurrentOutOfStock}
+            className="btn-primary"
+            style={{ padding: '0.75rem 1.25rem', fontSize: '0.75rem', flexShrink: 0 }}
+          >
+            {isCurrentOutOfStock ? 'SOLD OUT' : 'ADD TO BAG'}
+          </button>
+        </div>
       </div>
 
       {/* Size Guide Modal */}

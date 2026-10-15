@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { CartProvider, useCart } from './context/CartContext';
 import { CurrencyProvider } from './context/CurrencyContext';
+import { WishlistProvider } from './context/WishlistContext';
 import { AnnouncementTicker } from './components/layout/AnnouncementTicker';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
+import { MobileBottomNav } from './components/layout/MobileBottomNav';
 import { CartDrawer } from './components/cart/CartDrawer';
+import { WishlistDrawer } from './components/wishlist/WishlistDrawer';
 import { SearchOverlay } from './components/search/SearchOverlay';
 
 // Pages
@@ -140,7 +143,7 @@ const StorefrontApp: React.FC = () => {
   const isCheckoutView = currentPath === '/checkout';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', paddingBottom: !isCheckoutView ? '60px' : '0' }}>
       {/* Announcement Ticker */}
       {!isCheckoutView && <AnnouncementTicker />}
 
@@ -162,6 +165,9 @@ const StorefrontApp: React.FC = () => {
       {/* Slideout Cart Drawer */}
       <CartDrawer onNavigate={navigate} />
 
+      {/* Slideout Wishlist Drawer */}
+      <WishlistDrawer onNavigate={navigate} />
+
       {/* Live Search Overlay */}
       <SearchOverlay
         isOpen={searchOverlayOpen}
@@ -169,12 +175,19 @@ const StorefrontApp: React.FC = () => {
         onNavigate={navigate}
       />
 
+      {/* Mobile Floating App Bottom Navigation */}
+      <MobileBottomNav
+        currentPath={currentPath}
+        onNavigate={navigate}
+        onOpenSearch={() => setSearchOverlayOpen(true)}
+      />
+
       {/* Toast Feedback */}
       {toastMessage && (
         <div
           style={{
             position: 'fixed',
-            bottom: '24px',
+            bottom: '80px',
             right: '24px',
             backgroundColor: '#0a0a0a',
             color: '#ffffff',
@@ -200,7 +213,9 @@ export default function App() {
   return (
     <CurrencyProvider>
       <CartProvider>
-        <StorefrontApp />
+        <WishlistProvider>
+          <StorefrontApp />
+        </WishlistProvider>
       </CartProvider>
     </CurrencyProvider>
   );

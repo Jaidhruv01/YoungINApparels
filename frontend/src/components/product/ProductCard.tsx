@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Check } from 'lucide-react';
+import { ShoppingBag, Heart, Check } from 'lucide-react';
 import { Product } from '../../types';
 import { useCurrency } from '../../context/CurrencyContext';
 import { useCart } from '../../context/CartContext';
+import { useWishlist } from '../../context/WishlistContext';
 
 interface ProductCardProps {
   product: Product;
@@ -12,11 +13,13 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate }) => {
   const { formatPrice } = useCurrency();
   const { addToCart } = useCart();
-  const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const { isWishlisted, toggleWishlist } = useWishlist();
+
   const [selectedColor, setSelectedColor] = useState(
     product.variants.length > 0 ? product.variants[0].color : ''
   );
   const [addingVariantId, setAddingVariantId] = useState<number | null>(null);
+  const [mobileQuickAddOpen, setMobileQuickAddOpen] = useState(false);
 
   // Group variants by color
   const distinctColors = Array.from(
@@ -31,15 +34,23 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
     try {
       setAddingVariantId(variantId);
       await addToCart(variantId, 1);
+      setMobileQuickAddOpen(false);
     } finally {
       setAddingVariantId(null);
     }
+  };
+
+  const handleHeartClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleWishlist(product.id, product.title);
   };
 
   const discountPercent =
     product.compare_at_price && product.compare_at_price > product.price
       ? Math.round(((product.compare_at_price - product.price) / product.compare_at_price) * 100)
       : null;
+
+  const wishlisted = isWishlisted(product.id);
 
   return (
     <div
@@ -70,7 +81,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
           />
         )}
 
-        {/* Badges */}
+        {/* Left Badges */}
         <div
           style={{
             position: 'absolute',
@@ -94,8 +105,39 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
           )}
         </div>
 
-        {/* Quick-buy Action Trigger */}
-        <div className="quick-add-bar">
+        {/* Wishlist Heart Button Top Right */}
+        <button
+          onClick={handleHeartClick}
+          aria-label={wishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
+          style={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            zIndex: 15,
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            backgroundColor: wishlisted ? '#b51224' : 'rgba(255, 255, 255, 0.9)',
+            backdropFilter: 'blur(4px)',
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+          }}
+          className="wishlist-btn-card"
+        >
+          <Heart
+            size={16}
+            color={wishlisted ? '#ffffff' : '#0a0a0a'}
+            fill={wishlisted ? '#ffffff' : 'none'}
+          />
+        </button>
+
+        {/* Desktop Quick-buy Action Trigger on Hover */}
+        <div className="quick-add-bar desktop-quick-bar">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
             <span style={{ fontSize: '0.6875rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
               SELECT SIZE FOR QUICK-BUY
@@ -147,10 +189,65 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
             })}
           </div>
         </div>
+
+        {/* Mobile Quick-Buy Trigger Button (Bottom Right of Image) */}
+        <button
+          className="mobile-quick-buy-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            setMobileQuickAddOpen(!mobileQuickAddOpen);
+          }}
+          aria-label="Quick buy options"
+        >
+          <ShoppingBag size={15} />
+        </button>
+
+        {/* Mobile Quick-Add Drawer Overlay */}
+        {mobileQuickAddOpen && (
+          <div
+            className="mobile-quick-selector"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+              <span style={{ fontSize: '0.625rem', fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#fff' }}>
+                SELECT SIZE
+              </span>
+              <button
+                onClick={() => setMobileQuickAddOpen(false)}
+                style={{ background: 'none', border: 'none', color: '#999', fontSize: '0.625rem', cursor: 'pointer' }}
+              >
+                ✕
+              </button>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+              {colorVariants.map((v) => {
+                const outOfStock = v.available_quantity <= 0;
+                return (
+                  <button
+                    key={v.id}
+                    disabled={outOfStock || addingVariantId === v.id}
+                    onClick={(e) => handleQuickAdd(e, v.id)}
+                    style={{
+                      padding: '3px 8px',
+                      fontSize: '0.625rem',
+                      fontWeight: 800,
+                      backgroundColor: outOfStock ? '#333' : '#fff',
+                      color: outOfStock ? '#666' : '#0a0a0a',
+                      border: 'none',
+                      borderRadius: '2px',
+                    }}
+                  >
+                    {addingVariantId === v.id ? '..' : v.size}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Meta Content */}
-      <div style={{ paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+      <div style={{ paddingTop: '0.875rem', display: 'flex', flexDirection: 'column', gap: '4px' }}>
         {/* Color Swatches */}
         {distinctColors.length > 1 && (
           <div
@@ -221,6 +318,48 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
           )}
         </div>
       </div>
+
+      <style>{`
+        .mobile-quick-buy-btn {
+          display: none;
+        }
+        .mobile-quick-selector {
+          display: none;
+        }
+
+        @media (max-width: 768px) {
+          .desktop-quick-bar {
+            display: none !important;
+          }
+          .mobile-quick-buy-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(10, 10, 10, 0.9);
+            color: #ffffff;
+            border: none;
+            z-index: 12;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+          }
+          .mobile-quick-selector {
+            display: block;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.96);
+            backdrop-filter: blur(8px);
+            padding: 8px;
+            z-index: 20;
+          }
+        }
+      `}</style>
     </div>
   );
 };

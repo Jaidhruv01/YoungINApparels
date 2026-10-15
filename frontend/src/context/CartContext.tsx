@@ -14,6 +14,7 @@ interface CartContextType {
   clearCart: () => Promise<void>;
   refreshCart: () => Promise<void>;
   toastMessage: string | null;
+  showToast: (msg: string) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -124,6 +125,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         clearCart,
         refreshCart,
         toastMessage,
+        showToast,
       }}
     >
       {children}
