@@ -164,6 +164,31 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
           </button>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 640px) {
+          .hero-badge-floating {
+            top: 1rem !important;
+            left: 1rem !important;
+            right: auto !important;
+            max-width: calc(100% - 2rem) !important;
+            padding: 0.4rem 0.8rem !important;
+          }
+          .hero-badge-floating span:last-child {
+            font-size: 0.58rem !important;
+            letter-spacing: 0.1em !important;
+          }
+          .hero-actions-container {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            width: 100% !important;
+          }
+          .hero-actions-container button {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+        }
+      `}</style>
     </section>
   );
 };

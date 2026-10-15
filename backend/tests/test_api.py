@@ -63,7 +63,7 @@ def test_cart_and_quote_flow():
     session_id = "test-session-suite-1"
     # Get products to find a variant
     p_resp = client.get("/api/v1/products/500gsm-raw-hem-heavyweight-hoodie")
-    variant_id = p_resp.json()["variants"][0]["id"]
+    variant_id = next(v["id"] for v in p_resp.json()["variants"] if v["available_quantity"] > 0)
 
     # 1. Add to cart
     add_resp = client.post("/api/v1/cart/items", json={
