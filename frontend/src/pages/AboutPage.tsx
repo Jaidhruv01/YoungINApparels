@@ -20,13 +20,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       >
         <div className="container-narrow">
           <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '1rem' }}>
-            YOUNGIN APPARELS // ATELIER MANIFESTO
+            YOUNGIN // ATHLETE MANIFESTO
           </span>
           <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', lineHeight: 1.05, marginBottom: '1.5rem', color: '#ffffff' }}>
-            ARCHITECTURAL DRAPERY & RIGOROUS CRAFT
+            PEAK STRENGTH & ANATOMICAL PRECISION
           </h1>
           <p style={{ color: '#a0a0a0', fontSize: '1.05rem', lineHeight: 1.7, maxWidth: '680px', margin: '0 auto' }}>
-            Founded in the intersection of contemporary runway high-fashion and industrial brutalism. Designed with timeless restraint.
+            Engineered in India for athletes, bodybuilders, and uncompromising physical discipline. Designed with purpose.
           </p>
         </div>
       </div>
@@ -46,13 +46,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               CHAPTER I — ORIGINS
             </span>
             <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.75rem)', marginBottom: '1.5rem' }}>
-              THE RADIAN DESIGN PHILOSOPHY
+              STRENGTH MEETS MODERN CRAFT
             </h2>
             <p style={{ fontSize: '0.9375rem', color: '#555555', lineHeight: 1.8, marginBottom: '1.25rem' }}>
-              YoungINApparels was founded on the conviction that everyday clothing should possess the structural intentionality of modernist architecture. We eliminate superfluous ornament in favor of weight, proportion, and texture.
+              YoungIN was founded on the conviction that training apparel should combine high-tensile performance engineering with modern aesthetic dominance. We eliminate fragile synthetic fabrics in favor of true fabric weight, muscle-hugging compression, and enduring resilience.
             </p>
             <p style={{ fontSize: '0.9375rem', color: '#555555', lineHeight: 1.8 }}>
-              Every collection is born as an archival study. Rather than following fast-fashion trend cycles, our garments are engineered in strictly limited production runs using vintage European virgin wools, 500GSM Portuguese cotton fleece, and Japanese shuttle-loom denim.
+              From our 350GSM ultra-heavyweight fleece lowers and breathable 270GSM daily trainers to our multi-tier compression systems and sculpted ribbed vests, every piece is designed, stress-tested, and assembled in India for the relentless pursuer of physical strength.
             </p>
           </div>
 

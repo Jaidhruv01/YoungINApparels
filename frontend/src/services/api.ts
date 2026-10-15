@@ -103,13 +103,37 @@ export const api = {
     try {
       return await request<CollectionDetail>(`/collections/${slug}`);
     } catch {
-      const coll = fallbackCollections.find((c) => c.slug === slug) || fallbackCollections[0];
+      const coll = fallbackCollections.find((c) => c.slug === slug) || {
+        id: 99,
+        title: slug.replace(/-/g, ' ').toUpperCase(),
+        slug,
+        description: 'High-performance athletic gymwear engineered in India.',
+        sort_order: 1,
+        active: true,
+      };
+
       let prods = fallbackProducts;
-      if (slug === 'outerwear') prods = fallbackProducts.filter((p) => p.category === 'Outerwear');
-      else if (slug === 'fleece-hoodies') prods = fallbackProducts.filter((p) => p.category === 'Tops' && p.slug.includes('hoodie'));
-      else if (slug === 'denim') prods = fallbackProducts.filter((p) => p.category === 'Bottoms');
-      else if (slug === 'knitwear') prods = fallbackProducts.filter((p) => p.category === 'Tops' || p.category === 'Accessories');
-      else if (slug === 'accessories') prods = fallbackProducts.filter((p) => p.category === 'Accessories' || p.category === 'Footwear');
+      if (slug === 'tank-tops') {
+        prods = fallbackProducts.filter((p) => p.category === 'Tank Tops' || p.slug.includes('tank'));
+      } else if (slug === 'basic-compressions') {
+        prods = fallbackProducts.filter((p) => p.slug.includes('basic') || p.category === 'Compressions');
+      } else if (slug === 'premium-compressions') {
+        prods = fallbackProducts.filter((p) => p.slug.includes('premium') || p.category === 'Compressions');
+      } else if (slug === 'compressions') {
+        prods = fallbackProducts.filter((p) => p.category === 'Compressions' || p.slug.includes('compression'));
+      } else if (slug === 'ribbed-vests') {
+        prods = fallbackProducts.filter((p) => p.category === 'Ribbed Vests' || p.slug.includes('ribbed'));
+      } else if (slug === '270gsm-lowers') {
+        prods = fallbackProducts.filter((p) => p.slug.includes('270gsm') || p.category === 'Bottoms');
+      } else if (slug === '350gsm-lowers') {
+        prods = fallbackProducts.filter((p) => p.slug.includes('350gsm') || p.category === 'Bottoms');
+      } else if (slug === 'bottoms') {
+        prods = fallbackProducts.filter((p) => p.category === 'Bottoms' || p.slug.includes('lower'));
+      }
+
+      if (prods.length === 0) {
+        prods = fallbackProducts;
+      }
 
       return {
         ...coll,
@@ -122,7 +146,7 @@ export const api = {
     try {
       return await request<string[]>('/categories');
     } catch {
-      return ['Outerwear', 'Tops', 'Bottoms', 'Footwear', 'Accessories'];
+      return ['Tank Tops', 'Compressions', 'Ribbed Vests', 'Bottoms'];
     }
   },
 

@@ -83,13 +83,13 @@ export const StoryCircles: React.FC<StoryCirclesProps> = ({ collections, onNavig
                     display: 'block',
                     fontSize: '0.6875rem',
                     fontWeight: 800,
-                    letterSpacing: '0.08em',
+                    letterSpacing: '0.06em',
                     textTransform: 'uppercase',
                     color: '#0a0a0a',
-                    maxWidth: '96px',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
+                    maxWidth: '110px',
+                    lineHeight: 1.25,
+                    whiteSpace: 'normal',
+                    textAlign: 'center',
                   }}
                 >
                   {coll.title}

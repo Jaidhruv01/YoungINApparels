@@ -22,10 +22,25 @@ import { ContactPage } from './pages/ContactPage';
 import { FAQPage } from './pages/FAQPage';
 import { PoliciesPage } from './pages/PoliciesPage';
 
+import { api } from './services/api';
+
 const StorefrontApp: React.FC = () => {
   const [currentPath, setCurrentPath] = useState<string>(() => window.location.pathname || '/');
   const [searchOverlayOpen, setSearchOverlayOpen] = useState(false);
+  const [announcementText, setAnnouncementText] = useState<string>(
+    'FREE PAN-INDIA EXPRESS SHIPPING ON ORDERS OVER ₹1,999 • USE CODE: FIRST10 FOR 10% OFF • 350GSM HEAVYWEIGHT LOWERS & MULTI-TIER COMPRESSIONS LIVE • HIGH-PERFORMANCE GYMWEAR CRAFTED IN INDIA • 7-DAY EASY SIZE SWAP'
+  );
   const { toastMessage } = useCart();
+
+  useEffect(() => {
+    api.getHomepageCMS()
+      .then((cms) => {
+        if (cms?.announcement?.title) {
+          setAnnouncementText(cms.announcement.title);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -145,7 +160,7 @@ const StorefrontApp: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', paddingBottom: !isCheckoutView ? '60px' : '0' }}>
       {/* Announcement Ticker */}
-      {!isCheckoutView && <AnnouncementTicker />}
+      {!isCheckoutView && <AnnouncementTicker text={announcementText} />}
 
       {/* Main Header */}
       {!isCheckoutView && (

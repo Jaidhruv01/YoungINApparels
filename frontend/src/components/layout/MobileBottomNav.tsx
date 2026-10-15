@@ -43,7 +43,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
           aria-label="Collections"
         >
           <Layers size={19} />
-          <span>ARCHIVE</span>
+          <span>GEAR</span>
         </button>
 
         {/* Search */}

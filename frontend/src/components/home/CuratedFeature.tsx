@@ -9,9 +9,8 @@ interface CuratedFeatureProps {
 }
 
 export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavigate }) => {
-  // Let's pair overcoat, hoodie, and boots
-  const featuredCoats = products.filter((p) => p.category === 'Outerwear');
-  const complementaryPieces = products.filter((p) => p.category === 'Tops' || p.category === 'Footwear').slice(0, 2);
+  const anchorPiece = products.find((p) => p.slug === '350gsm-ultra-heavyweight-gym-lower') || products[0];
+  const complementaryPieces = products.filter((p) => p.id !== anchorPiece?.id).slice(0, 2);
 
   return (
     <section
@@ -25,7 +24,7 @@ export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavi
       <div className="container-custom">
         <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 4rem auto' }}>
           <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '0.75rem' }}>
-            CURATED CAPSULE 01
+            ATHLETE CAPSULE 01
           </span>
           <h2
             style={{
@@ -34,10 +33,10 @@ export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavi
               marginBottom: '1rem',
             }}
           >
-            THE ARCHIVE UNIFORM
+            THE STRENGTH UNIFORM
           </h2>
           <p style={{ color: '#6b6b6b', fontSize: '0.9375rem' }}>
-            A complete monochrome study: Combining 850GSM virgin wool tailoring with custom 500GSM fleece and Italian commando-sole footwear.
+            High-performance athletic layering: Combining custom 350GSM structured fleece lowers with Pro-Armor multi-tier compressions and heavy cotton ribbed vests.
           </p>
         </div>
 
@@ -51,7 +50,7 @@ export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavi
           }}
         >
           {/* Large Hero Feature Card */}
-          {featuredCoats[0] && (
+          {anchorPiece && (
             <div
               style={{
                 backgroundColor: '#ffffff',
@@ -63,8 +62,8 @@ export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavi
             >
               <div style={{ position: 'relative', aspectRatio: '4/5', overflow: 'hidden' }}>
                 <img
-                  src={featuredCoats[0].cover_image}
-                  alt={featuredCoats[0].title}
+                  src={anchorPiece.cover_image}
+                  alt={anchorPiece.title}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
                 <span
@@ -75,25 +74,25 @@ export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavi
                     left: '16px',
                   }}
                 >
-                  FOUNDATIONAL PIECE
+                  FOUNDATIONAL GEAR
                 </span>
               </div>
               <div style={{ padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
                 <span style={{ fontSize: '0.6875rem', fontWeight: 800, letterSpacing: '0.12em', color: '#b51224' }}>
-                  CORE ANCHOR
+                  CORE ANCHOR PIECE
                 </span>
                 <h3 style={{ fontSize: '1.25rem', marginTop: '6px', marginBottom: '8px' }}>
-                  {featuredCoats[0].title}
+                  {anchorPiece.title}
                 </h3>
                 <p style={{ fontSize: '0.875rem', color: '#6b6b6b', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-                  {featuredCoats[0].short_summary}
+                  {anchorPiece.short_summary}
                 </p>
                 <button
-                  onClick={() => onNavigate(`/products/${featuredCoats[0].slug}`)}
+                  onClick={() => onNavigate(`/products/${anchorPiece.slug}`)}
                   className="btn-primary"
                   style={{ width: '100%' }}
                 >
-                  <span>INSPECT ANCHOR PIECE</span>
+                  <span>INSPECT 350GSM LOWER</span>
                   <ArrowRight size={16} />
                 </button>
               </div>

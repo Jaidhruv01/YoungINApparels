@@ -8,10 +8,10 @@ interface EditorialSplitProps {
 }
 
 export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavigate }) => {
-  const title = cmsData?.title || 'UNCOMPROMISING TAILORING';
-  const subtitle = cmsData?.subtitle || 'Structured drapery engineered for contemporary proportions. Every piece is cut from ethically sourced European virgin wool and custom Japanese shuttle looms.';
-  const ctaText = cmsData?.cta_text || 'DISCOVER THE CRAFT';
-  const ctaLink = cmsData?.cta_link || '/about';
+  const title = cmsData?.title || 'UNCOMPROMISING FABRIC WEIGHT';
+  const subtitle = cmsData?.subtitle || 'Every lower is crafted from custom-knit 350GSM and 270GSM dense cotton terry that holds its shape through hundreds of heavy squat sessions and washes.';
+  const ctaText = cmsData?.cta_text || 'EXPLORE LOWERS';
+  const ctaLink = cmsData?.cta_link || '/collections/350gsm-lowers';
   const image = cmsData?.image_url || '/images/editorial-split.jpg';
 
   return (
@@ -22,6 +22,8 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
         paddingTop: '6rem',
         paddingBottom: '6rem',
         overflow: 'hidden',
+        width: '100%',
+        maxWidth: '100%',
       }}
     >
       <div className="container-custom">
@@ -45,7 +47,7 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
             >
               <img
                 src={image}
-                alt="YoungINApparels Atelier Editorial"
+                alt="YoungIN Performance Editorial"
                 style={{
                   width: '100%',
                   height: '100%',
@@ -54,7 +56,7 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
               />
             </div>
 
-            {/* Accent Border Frame */}
+            {/* Accent Border Frame (hidden on small mobile to avoid text or layout overflow) */}
             <div
               className="editorial-accent-frame"
               style={{
@@ -73,7 +75,7 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
           {/* Text Editorial Column */}
           <div style={{ maxWidth: '540px' }}>
             <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '1rem' }}>
-              THE ATELIER PHILOSOPHY
+              THE PERFORMANCE PHILOSOPHY
             </span>
 
             <h2
@@ -82,6 +84,7 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
                 lineHeight: 1.05,
                 marginBottom: '1.75rem',
                 color: '#ffffff',
+                overflowWrap: 'break-word',
               }}
             >
               {title}
@@ -108,7 +111,7 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
                 fontSize: '0.9375rem',
               }}
             >
-              "We reject the seasonal churn of fast-fashion. YoungINApparels is built upon permanent silhouettes designed to outlast trends."
+              "Discipline in training requires discipline in craft. YoungIN gymwear is engineered in India to withstand high-volume workouts with zero loss of shape."
             </blockquote>
 
             <button
@@ -125,6 +128,14 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
           </div>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 640px) {
+          .editorial-accent-frame {
+            display: none !important;
+          }
+        }
+      `}</style>
     </section>
   );
 };

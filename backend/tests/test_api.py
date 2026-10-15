@@ -32,10 +32,10 @@ def test_list_products():
     assert "price" in products[0]
 
 def test_get_product_by_slug():
-    response = client.get("/api/v1/products/500gsm-raw-hem-heavyweight-hoodie")
+    response = client.get("/api/v1/products/350gsm-ultra-heavyweight-gym-lower")
     assert response.status_code == 200
     data = response.json()
-    assert data["title"] == "500GSM Raw-Hem Heavyweight Hoodie"
+    assert data["title"] == "350GSM Ultra-Heavyweight Structured Gym Lower"
     assert len(data["variants"]) > 0
 
 def test_collections():
@@ -50,19 +50,19 @@ def test_collections():
     assert len(coll_resp.json()["products"]) > 0
 
 def test_search():
-    response = client.get("/api/v1/search?q=hoodie")
+    response = client.get("/api/v1/search?q=lower")
     assert response.status_code == 200
     data = response.json()
     assert data["count"] >= 1
 
-    sugg_resp = client.get("/api/v1/search/suggestions?q=coat")
+    sugg_resp = client.get("/api/v1/search/suggestions?q=compression")
     assert sugg_resp.status_code == 200
     assert len(sugg_resp.json()["suggestions"]) > 0
 
 def test_cart_and_quote_flow():
     session_id = "test-session-suite-1"
     # Get products to find a variant
-    p_resp = client.get("/api/v1/products/500gsm-raw-hem-heavyweight-hoodie")
+    p_resp = client.get("/api/v1/products/350gsm-ultra-heavyweight-gym-lower")
     variant_id = next(v["id"] for v in p_resp.json()["variants"] if v["available_quantity"] > 0)
 
     # 1. Add to cart

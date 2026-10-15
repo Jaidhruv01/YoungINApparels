@@ -17,7 +17,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose, o
   const { formatPrice } = useCurrency();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const trendingQueries = ['CASHMERE OVERCOAT', '500GSM HOODIE', 'RAW DENIM', 'LUG-SOLE CHELSEA', 'TACTICAL BOMBER'];
+  const trendingQueries = ['350GSM LOWERS', 'PREMIUM COMPRESSIONS', '270GSM LOWERS', 'RIBBED VESTS', 'TANK TOPS', 'BASIC COMPRESSIONS'];
 
   useEffect(() => {
     if (isOpen) {
@@ -127,7 +127,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose, o
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="SEARCH THE ATELIER CATALOG (E.G. COAT, FLEECE, DENIM)..."
+              placeholder="SEARCH GYMWEAR (E.G. 350GSM LOWERS, COMPRESSION, TANK TOP)..."
               style={{
                 width: '100%',
                 padding: '1.25rem 3.5rem 1.25rem 4rem',

@@ -25,13 +25,13 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
       <div style={{ backgroundColor: '#0a0a0a', color: '#ffffff', paddingTop: '5rem', paddingBottom: '5rem' }}>
         <div className="container-narrow" style={{ textAlign: 'center' }}>
           <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '0.75rem' }}>
-            CLIENT CONCIERGE & CARE
+            ATHLETE CARE & CONCIERGE
           </span>
           <h1 style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)', textTransform: 'uppercase', marginBottom: '1rem', color: '#ffffff' }}>
-            CONTACT THE ATELIER
+            CONTACT YOUNGIN INDIA
           </h1>
           <p style={{ color: '#a0a0a0', fontSize: '0.95rem', maxWidth: '580px', margin: '0 auto' }}>
-            Our client services team in New York and Paris is available to assist with sizing advice, custom order inquiries, and dispatch status.
+            Our athlete care team in Mumbai is available to assist with sizing advice, training gear inquiries, and express dispatch status across India.
           </p>
         </div>
       </div>
@@ -163,8 +163,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                   <Phone size={18} color="#b51224" />
                   <div>
-                    <strong style={{ display: 'block' }}>Direct Telephone</strong>
-                    <span style={{ color: '#6b6b6b' }}>+1 (800) 849-6842</span>
+                    <strong style={{ display: 'block' }}>Direct WhatsApp & Telephone</strong>
+                    <span style={{ color: '#6b6b6b' }}>+91 98201 54821</span>
                   </div>
                 </div>
 
@@ -172,15 +172,15 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                   <Clock size={18} color="#b51224" />
                   <div>
                     <strong style={{ display: 'block' }}>Operational Concierge Hours</strong>
-                    <span style={{ color: '#6b6b6b' }}>Monday – Saturday: 09:00 – 19:00 EST</span>
+                    <span style={{ color: '#6b6b6b' }}>Monday – Saturday: 09:00 – 20:00 IST</span>
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                   <MapPin size={18} color="#b51224" />
                   <div>
-                    <strong style={{ display: 'block' }}>Flagship Atelier</strong>
-                    <span style={{ color: '#6b6b6b' }}>780 Fifth Avenue, 14th Floor, New York, NY 10022</span>
+                    <strong style={{ display: 'block' }}>Performance HQ & Dispatch</strong>
+                    <span style={{ color: '#6b6b6b' }}>YoungIN HQ, BKC, Bandra East, Mumbai, Maharashtra 400051, India</span>
                   </div>
                 </div>
               </div>
@@ -188,13 +188,13 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
 
             <div style={{ backgroundColor: '#0a0a0a', color: '#ffffff', padding: '2rem' }}>
               <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '0.5rem' }}>
-                PRIVATE APPOINTMENTS
+                ATHLETE APPOINTMENTS
               </span>
               <h4 style={{ fontSize: '1.15rem', marginBottom: '0.75rem', textTransform: 'uppercase' }}>
                 SCHEDULE A FITTING
               </h4>
               <p style={{ fontSize: '0.8125rem', color: '#a0a0a0', lineHeight: 1.7, marginBottom: '1.25rem' }}>
-                Private showroom walkthroughs and bespoke tailoring appointments are available by appointment at our Manhattan studio.
+                Private showroom walkthroughs and athlete fitting sessions are available by appointment at our Mumbai Performance Studio.
               </p>
               <button
                 onClick={() => alert('Private fitting concierge request noted. A stylist will reach out.')}

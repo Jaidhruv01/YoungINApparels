@@ -8,10 +8,10 @@ interface CampaignHeroProps {
 }
 
 export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate }) => {
-  const title = cmsData?.title || 'THE WINTER ARCHIVE';
-  const subtitle = cmsData?.subtitle || 'Brutalist architectural silhouettes crafted in 850GSM Italian wool, 14oz Okayama raw selvedge denim, and deep campaign crimson.';
-  const ctaText = cmsData?.cta_text || 'DISCOVER COLLECTION';
-  const ctaLink = cmsData?.cta_link || '/collections/autumn-winter-26';
+  const title = cmsData?.title || 'BUILT FOR STRENGTH';
+  const subtitle = cmsData?.subtitle || 'Heavyweight 350GSM lowers, four-way stretch compressions, and sculpted ribbed vests engineered in India for peak physical output.';
+  const ctaText = cmsData?.cta_text || 'EXPLORE 350GSM LOWERS';
+  const ctaLink = cmsData?.cta_link || '/collections/350gsm-lowers';
   const image = cmsData?.image_url || '/images/campaign-hero.jpg';
 
   return (
@@ -19,6 +19,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
       style={{
         position: 'relative',
         width: '100%',
+        maxWidth: '100%',
         minHeight: 'clamp(580px, 85vh, 880px)',
         backgroundColor: '#0a0a0a',
         display: 'flex',
@@ -36,7 +37,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
       >
         <img
           src={image}
-          alt="YoungINApparels Winter Campaign"
+          alt="YoungIN Performance Campaign"
           style={{
             width: '100%',
             height: '100%',
@@ -83,7 +84,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
           }}
         />
         <span style={{ fontSize: '0.6875rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-          ARCHIVE DROP // 01 — LIMITED PRODUCTION
+          STRENGTH DROP // 01 — CRAFTED IN INDIA
         </span>
       </div>
 
@@ -107,7 +108,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
             marginBottom: '0.75rem',
           }}
         >
-          AUTUMN / WINTER 2026 CAMPAIGN
+          HIGH-PERFORMANCE GYMWEAR // INDIA
         </span>
 
         <h1
@@ -117,6 +118,8 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
             letterSpacing: '-0.02em',
             marginBottom: '1.25rem',
             color: '#ffffff',
+            overflowWrap: 'break-word',
+            wordBreak: 'break-word',
           }}
         >
           {title}
@@ -148,7 +151,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
           </button>
 
           <button
-            onClick={() => onNavigate('/lookbook')}
+            onClick={() => onNavigate('/collections/premium-compressions')}
             className="btn-white"
             style={{
               padding: '1rem 1.75rem',
@@ -160,7 +163,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
             }}
           >
             <Eye size={16} />
-            <span>INTERACTIVE LOOKBOOK</span>
+            <span>PRO COMPRESSIONS</span>
           </button>
         </div>
       </div>

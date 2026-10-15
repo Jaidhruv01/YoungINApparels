@@ -9,71 +9,95 @@ def seed_database(db: Session):
     if db.query(Product).count() > 0:
         return
 
-    # 1. Collections
-    c_aw26 = Collection(
-        title="Autumn / Winter '26",
-        slug="autumn-winter-26",
-        description="Brutalist architectural silhouettes, deep crimson accents, and heavyweight outerwear for the seasonal shift.",
-        image="/images/campaign-hero.jpg",
-        badge="NEW DROP",
+    # 1. Gymwear Collections
+    c_tank_tops = Collection(
+        title="Tank Tops",
+        slug="tank-tops",
+        description="Raw-cut drop-armhole muscle tanks and athletic scoop tanks designed for maximum upper-body mobility and physique accentuation.",
+        image="/images/product-hoodie.jpg",
+        badge="MOBILITY",
         sort_order=1
     )
-    c_outerwear = Collection(
-        title="Outerwear & Tailoring",
-        slug="outerwear",
-        description="Structured wool overcoats, MA-1 modular bombers, and tailored blazers crafted with exacting precision.",
-        image="/images/product-overcoat.jpg",
-        badge="ARCHIVE",
+    c_basic_compressions = Collection(
+        title="Basic Compressions",
+        slug="basic-compressions",
+        description="Four-way stretch base layer compression tees and shorts engineered for everyday high-rep workouts and conditioning.",
+        image="/images/product-sweater.jpg",
+        badge="CORE",
         sort_order=2
     )
-    c_fleece = Collection(
-        title="Heavyweight Fleece",
-        slug="fleece-hoodies",
-        description="500GSM French terry and custom heavyweight fleece with relaxed, drop-shoulder silhouettes.",
-        image="/images/product-hoodie.jpg",
-        badge="CORE",
+    c_premium_compressions = Collection(
+        title="Premium Compressions",
+        slug="premium-compressions",
+        description="High-tensile graduated compression garments engineered with flatlock anti-chafing seams and muscle stabilization zones.",
+        image="/images/product-bomber.jpg",
+        badge="PRO ARMOR",
         sort_order=3
     )
-    c_denim = Collection(
-        title="Japanese Selvedge Denim",
-        slug="denim",
-        description="14oz raw selvedge denim woven on vintage shuttle looms in Okayama, Japan. Unwashed and enduring.",
-        image="/images/product-denim.jpg",
-        badge="LIMITED",
+    c_ribbed_vests = Collection(
+        title="Ribbed Vests",
+        slug="ribbed-vests",
+        description="2x2 heavy stretch rib combed cotton training vests sculpted to accentuate chest, back, and lat lines.",
+        image="/images/editorial-split.jpg",
+        badge="PHYSIQUE",
         sort_order=4
     )
-    c_knitwear = Collection(
-        title="Knitwear & Accents",
-        slug="knitwear",
-        description="100% merino wool ribbing and rich crimson silks tailored for dramatic warmth.",
-        image="/images/product-sweater.jpg",
-        badge="PREMIUM",
+    c_270gsm = Collection(
+        title="270 GSM Lowers",
+        slug="270gsm-lowers",
+        description="Breathable lightweight loopback French terry lowers designed for agility, cardio days, and Indian training climates.",
+        image="/images/product-denim.jpg",
+        badge="270 GSM",
         sort_order=5
     )
-    c_accessories = Collection(
-        title="Modular Leather Goods",
-        slug="accessories",
-        description="Full grain calfskin, cobra buckle hardware, and handcrafted footwear.",
-        image="/images/product-bag.jpg",
-        badge="ESSENTIALS",
+    c_350gsm = Collection(
+        title="350 GSM Lowers",
+        slug="350gsm-lowers",
+        description="Ultra-heavyweight structured fleece gym lowers built for brutal leg days and powerlifting workouts.",
+        image="/images/product-overcoat.jpg",
+        badge="350 GSM HEAVY",
         sort_order=6
     )
+    c_compressions = Collection(
+        title="Compressions",
+        slug="compressions",
+        description="Complete compression tier system: Basic 4-way stretch foundation and Pro-Armor graduated compression tops.",
+        image="/images/product-bomber.jpg",
+        badge="2 TIERS",
+        sort_order=7
+    )
+    c_bottoms = Collection(
+        title="Bottoms",
+        slug="bottoms",
+        description="Heavyweight GSM series: 270GSM lightweight daily lowers and 350GSM structured fleece powerlifting lowers.",
+        image="/images/product-overcoat.jpg",
+        badge="GSM SERIES",
+        sort_order=8
+    )
+    c_aw26 = Collection(
+        title="Strength Series '26",
+        slug="autumn-winter-26",
+        description="High-performance Indian gymwear & strength apparel engineered for peak athletic output.",
+        image="/images/campaign-hero.jpg",
+        badge="NEW DROP",
+        sort_order=9
+    )
 
-    db.add_all([c_aw26, c_outerwear, c_fleece, c_denim, c_knitwear, c_accessories])
+    db.add_all([c_tank_tops, c_basic_compressions, c_premium_compressions, c_ribbed_vests, c_270gsm, c_350gsm, c_compressions, c_bottoms, c_aw26])
     db.commit()
 
-    # 2. Products (INR Pricing)
+    # 2. Gymwear Products (INR Pricing)
     p1 = Product(
-        title="The Oversized Double-Breasted Wool Overcoat",
-        slug="oversized-double-breasted-wool-overcoat",
-        description="Engineered from 850GSM Italian Melton wool with a touch of cashmere. Features razor-sharp peak lapels, deep vented back, unstructured dropped shoulders, and natural horn buttons. Designed to be layered over our heavyweight knitwear.",
-        short_summary="850GSM Italian Melton wool overcoat with horn buttons and dropped shoulder tailoring.",
-        category="Outerwear",
-        price=24999.0,
-        compare_at_price=32000.0,
-        details="• 850GSM 90% Virgin Wool, 10% Cashmere\n• Full cupro lining with internal welt pockets\n• Hand-finished buttonholes and peak lapels\n• Dry clean only\n• Atelier crafted in Milan",
-        fabric_care="Dry clean only with hydrocarbon solvents. Cool iron with pressing cloth.",
-        fit_info="Intentionally oversized boxy fit. Take your normal size for the editorial silhouette, or size down for a conventional fit. Model is 6'2\" (188cm) wearing size L.",
+        title="350GSM Ultra-Heavyweight Structured Gym Lower",
+        slug="350gsm-ultra-heavyweight-gym-lower",
+        description="Custom-milled 350GSM ultra-dense organic French terry cotton engineered for heavy leg days and powerlifting. Features reinforced knee gussets, deep zip utility phone pockets, and thick heavy-duty drawstrings.",
+        short_summary="350GSM heavyweight structured fleece gym lower with zip pockets and tapered ankle cuffs.",
+        category="Bottoms",
+        price=3499.0,
+        compare_at_price=4499.0,
+        details="• 350GSM Dense Organic Combed Cotton Terry\n• Deep concealed anti-slip phone zip pockets\n• Reinforced inner-thigh stretch paneling\n• Heavy 1.5-inch ribbed waistband with brass-tipped cords\n• Engineered and knitted in India",
+        fabric_care="Machine wash cold inside out. Hang dry to maintain 350GSM fleece density. Do not bleach.",
+        fit_info="Athletic taper. Generous quad and glute room tapering into snug ribbed ankle cuffs.",
         is_new=True,
         is_bestseller=True,
         is_sale=True,
@@ -83,16 +107,16 @@ def seed_database(db: Session):
     )
 
     p2 = Product(
-        title="500GSM Raw-Hem Heavyweight Hoodie",
-        slug="500gsm-raw-hem-heavyweight-hoodie",
-        description="A masterclass in weight and silhouette. Custom-knit 500GSM ultra-dense organic cotton French terry. Garment-dyed and stone-washed for subtle vintage distressing. Features double-layered hood without drawstrings, kangaroo pocket with raw edges, and ribbed gusseting.",
-        short_summary="500GSM vintage washed French terry fleece hoodie with double-layered hood.",
-        category="Tops",
-        price=7999.0,
-        compare_at_price=9999.0,
-        details="• 500GSM 100% Organic Cotton French Terry\n• Custom cold-dye pigment wash\n• Pre-shrunk and stone washed\n• Blind-stitched raw hem details\n• Crafted in Portugal",
-        fabric_care="Machine wash cold inside out with like colors. Hang dry in shade. Do not tumble dry.",
-        fit_info="Boxy, dropped shoulders with cropped body length. Boxy fit through chest. Model is 6'1\" (185cm) wearing size M.",
+        title="Pro-Armor Seamless Premium Compression Shirt",
+        slug="pro-armor-premium-compression-shirt",
+        description="High-tensile graduated compression top designed to accelerate blood flow and stabilize deltoid and pectoral muscles during maximal output. Built with ergonomic body-mapped mesh ventilation and anti-chafing flatlock seams.",
+        short_summary="High-tensile graduated compression top with body-mapped ventilation zones.",
+        category="Compressions",
+        price=2499.0,
+        compare_at_price=2999.0,
+        details="• 82% Technical Nylon, 18% Elastane High-Tension Weave\n• Graduated muscle stabilization zones\n• Flatlock 4-needle 6-thread zero-chafe stitching\n• Antimicrobial and sweat-wicking dry-touch finish\n• Made in India",
+        fabric_care="Gentle cycle cold. Line dry in shade. Avoid iron directly on compression fibers.",
+        fit_info="True second-skin compression. Locks down firmly to the torso and arms.",
         is_new=True,
         is_bestseller=True,
         is_sale=False,
@@ -102,93 +126,93 @@ def seed_database(db: Session):
     )
 
     p3 = Product(
-        title="MA-1 Tactical Modular Flight Bomber",
-        slug="ma1-tactical-modular-flight-bomber",
-        description="A brutalist reinterpretation of military flight jackets. Heavy-duty Japanese memory nylon shell with custom crimson satin diamond-quilted lining. Heavy gauge gunmetal double-ended Riri zippers, modular snap utility pockets, and reinforced rib collar.",
-        short_summary="Memory nylon flight bomber with crimson quilted lining and gunmetal Riri hardware.",
-        category="Outerwear",
-        price=18499.0,
-        compare_at_price=None,
-        details="• 100% High-Density Japanese Memory Nylon\n• Crimson 100% Cupro Quilted Lining with 120g Primaloft fill\n• Two-way custom matte gunmetal zipper\n• Exterior storm flap and utility sleeve pocket\n• Water and wind resistant finish",
-        fabric_care="Wipe clean with damp cloth or professional dry clean only.",
-        fit_info="Relaxed silhouette with rounded barrel sleeves. True to size.",
-        is_new=True,
-        is_bestseller=False,
-        is_sale=False,
-        is_featured=True,
-        cover_image="/images/product-bomber.jpg",
-        hover_image="/images/editorial-split.jpg"
-    )
-
-    p4 = Product(
-        title="14oz Japanese Raw Selvedge Denim Trouser",
-        slug="14oz-japanese-raw-selvedge-denim-trouser",
-        description="Woven on original Toyoda Type G shuttle looms in Okayama, Japan. 14oz unwashed right-hand twill selvedge denim with pink and white ticker. Features a wide straight-leg cut, custom debossed YoungIN hardware, hidden coin pocket selvedge, and vegetable-tanned leather patch.",
-        short_summary="14oz unwashed Okayama selvedge denim with wide straight leg and custom hardware.",
-        category="Bottoms",
-        price=11999.0,
-        compare_at_price=None,
-        details="• 14oz 100% Zimbabwe Long-Staple Cotton\n• Red & white selvedge ID line\n• Button fly with custom blackened brass donut buttons\n• Reinforced back pockets with hidden rivets\n• Crafted in Kojima, Okayama",
-        fabric_care="Wear for 6 months before first wash. When washing, soak inside out in cold water with minimal detergent. Hang dry.",
-        fit_info="High-rise with relaxed straight leg. Will stretch roughly 0.5 inches in waistband after initial break-in.",
+        title="Core Four-Way Stretch Basic Compression Tee",
+        slug="core-stretch-basic-compression-tee",
+        description="The everyday workout foundation. Lightweight, ultra-flexible four-way stretch compression that offers supportive contouring without restrictive tightness. Engineered for high-rep pump sessions and daily cardio.",
+        short_summary="Essential four-way stretch moisture-wicking basic compression training tee.",
+        category="Compressions",
+        price=1599.0,
+        compare_at_price=1999.0,
+        details="• 88% Poly-Elastane Hydrophilic Microfiber\n• Four-way multi-directional stretch recovery\n• Ultra-breathable underarm laser cut vents\n• Reflective YoungIN logo on rear neck\n• Made in India",
+        fabric_care="Quick cold wash. Dries in under 30 minutes.",
+        fit_info="Fitted athletic compression cut.",
         is_new=False,
-        is_bestseller=True,
-        is_sale=False,
-        is_featured=True,
-        cover_image="/images/product-denim.jpg",
-        hover_image="/images/lookbook-campaign.jpg"
-    )
-
-    p5 = Product(
-        title="Chunky Lug-Sole Italian Chelsea Boots",
-        slug="chunky-lug-sole-italian-chelsea-boots",
-        description="Sculpted from full-grain French calfskin with a waxed finish. Mounted onto an exaggerated Vibram commando lug sole via 360-degree Goodyear welt construction. Elastic side gussets and heavy webbing pull tabs provide effortless entry.",
-        short_summary="Waxed French calfskin chelsea boots on exaggerated Vibram commando sole.",
-        category="Footwear",
-        price=19999.0,
-        compare_at_price=24999.0,
-        details="• 100% Full-grain French calf leather\n• Custom Vibram rubber lugged outsole (50mm height)\n• Hand-lasted Goodyear welt construction\n• Calfskin lining with shock-absorbing memory foam footbed\n• Handcrafted in Tuscany",
-        fabric_care="Apply neutral leather balm monthly. Brush with horsehair brush after wear.",
-        fit_info="True to European sizing. If between sizes, we recommend sizing down.",
-        is_new=True,
         is_bestseller=True,
         is_sale=True,
         is_featured=True,
-        cover_image="/images/product-boots.jpg",
-        hover_image="/images/campaign-hero.jpg"
-    )
-
-    p6 = Product(
-        title="Heavy Ribbed Merino Turtleneck",
-        slug="heavy-ribbed-merino-turtleneck",
-        description="Crafted from 100% extrafine Australian merino wool in an ultra-thick 5-gauge fisherman rib. Features a generous fold-over rollneck, saddle shoulders, and elongated cuffs. The deep crimson dye evokes the signature YoungINApparels campaign palette.",
-        short_summary="5-gauge extrafine Australian merino wool fisherman rib turtleneck in rich crimson.",
-        category="Tops",
-        price=12499.0,
-        compare_at_price=None,
-        details="• 100% Extra-Fine 19.5-Micron Merino Wool\n• 5-Gauge English Rib Knit\n• Saddle shoulder construction for anatomical drape\n• Seamless circular knit body\n• Spun and knitted in Biella, Italy",
-        fabric_care="Hand wash cold with wool detergent. Dry flat on towel. Never hang knitwear.",
-        fit_info="Subtly relaxed fit. Fits true to size.",
-        is_new=True,
-        is_bestseller=False,
-        is_sale=False,
-        is_featured=False,
         cover_image="/images/product-sweater.jpg",
         hover_image="/images/editorial-split.jpg"
     )
 
-    p7 = Product(
-        title="Grained Calfskin Cobra Crossbody Bag",
-        slug="grained-calfskin-cobra-crossbody-bag",
-        description="A functional luxury accessory engineered from structured pebbled calfskin. Features an authentic AustriaAlpin Cobra quick-release buckle, waterproof matte YKK Excella zippers, internal microfiber tablet sleeve, and adjustable mil-spec nylon webbing strap.",
-        short_summary="Pebbled calfskin utility messenger bag with matte gunmetal Cobra buckle.",
-        category="Accessories",
-        price=14299.0,
-        compare_at_price=16999.0,
-        details="• Full-grain pebbled calf leather\n• Genuine AustriaAlpin Cobra quick-release aluminum buckle\n• YKK Excella matte black zips\n• Magnetic rear quick-access pocket\n• Dimensions: 24cm x 18cm x 7cm",
-        fabric_care="Store in supplied dustbag. Condition with leather balm.",
-        fit_info="One size. Strap extends from 85cm to 145cm.",
+    p4 = Product(
+        title="Artisanal Heavy-Ribbed Athletic Training Vest",
+        slug="heavy-ribbed-athletic-training-vest",
+        description="Constructed from premium 2x2 cotton rib with 5% Lycra recovery. Features deep cut armholes, reinforced bound neckline, and a contoured physique cut that accentuates back width and chest fullness.",
+        short_summary="2x2 heavy cotton-stretch ribbed training vest tailored to accentuate physique lines.",
+        category="Ribbed Vests",
+        price=1399.0,
+        compare_at_price=1799.0,
+        details="• 95% Organic Cotton, 5% Lycra 2x2 Heavy Rib\n• Bound scoop neck and deep armholes\n• Physique-accentuating silhouette that holds shape wash after wash\n• Pre-shrunk with enzyme wash\n• Crafted in India",
+        fabric_care="Cold wash. Dry flat or tumble low.",
+        fit_info="Snug athletic fit through the chest with a natural drape at the waist.",
+        is_new=True,
+        is_bestseller=True,
+        is_sale=False,
+        is_featured=True,
+        cover_image="/images/product-bomber.jpg",
+        hover_image="/images/lookbook-campaign.jpg"
+    )
+
+    p5 = Product(
+        title="Raw-Edge Drop-Armhole Muscle Tank Top",
+        slug="raw-edge-muscle-tank-top",
+        description="Ultra-lightweight 220GSM combed jersey cotton muscle tank with dropped raw-cut armholes for full lat spread visibility and zero shoulder resistance during heavy pressing and pull days.",
+        short_summary="Raw-cut drop-armhole 220GSM combed jersey tank built for lifters.",
+        category="Tank Tops",
+        price=1499.0,
+        compare_at_price=1899.0,
+        details="• 220GSM 100% Combed Compact Jersey Cotton\n• Dropped deep armhole cut\n• Screenprinted tonal YoungIN emblem on chest\n• Pre-washed for zero post-wash shrinkage\n• Made in India",
+        fabric_care="Machine wash cold. Tumble dry delicate.",
+        fit_info="Relaxed athletic fit with maximum chest and lat exposure.",
+        is_new=True,
+        is_bestseller=False,
+        is_sale=False,
+        is_featured=False,
+        cover_image="/images/product-denim.jpg",
+        hover_image="/images/campaign-hero.jpg"
+    )
+
+    p6 = Product(
+        title="270GSM Breathable Daily Training Lower",
+        slug="270gsm-breathable-daily-training-lower",
+        description="Medium-weight 270GSM loopback cotton French terry lowers built for agility drills, running, and warm Indian gym climates. Features zippered side pockets and flexible stretch ankle cuffs.",
+        short_summary="270GSM lightweight breathable French terry daily gym lower.",
+        category="Bottoms",
+        price=2799.0,
+        compare_at_price=3299.0,
+        details="• 270GSM Breathable Loopback Terry Cotton\n• Quick-access phone pocket with YKK zip\n• Elastic waistband with external drawcord\n• Ribbed calf taper that stays in place\n• Crafted in India",
+        fabric_care="Machine wash cold with similar darks.",
+        fit_info="Streamlined athletic taper.",
         is_new=False,
+        is_bestseller=True,
+        is_sale=False,
+        is_featured=True,
+        cover_image="/images/product-boots.jpg",
+        hover_image="/images/editorial-split.jpg"
+    )
+
+    p7 = Product(
+        title="350GSM Stealth Powerlifting Heavy Lower",
+        slug="350gsm-stealth-powerlifting-lower",
+        description="Heavyweight 350GSM cotton lower finished in deep campaign crimson with double-stitched barbell abrasion guards on the shins. Engineered to survive chalk, knurling friction, and heavy lifting sessions.",
+        short_summary="350GSM heavy powerlifting lower with shin knurling guards in campaign crimson.",
+        category="Bottoms",
+        price=3699.0,
+        compare_at_price=4699.0,
+        details="• 350GSM Ultra-Dense Combed Cotton Fleece\n• Shin knurling abrasion-resistant paneling\n• Heavy 2-inch waistband with flat braided cords\n• Deep zip storage pockets\n• Engineered in India",
+        fabric_care="Machine wash cold inside out. Hang dry only.",
+        fit_info="Generous squat fit through thighs with clean taper at ankle.",
+        is_new=True,
         is_bestseller=True,
         is_sale=True,
         is_featured=False,
@@ -197,22 +221,22 @@ def seed_database(db: Session):
     )
 
     p8 = Product(
-        title="Crimson Raw Silk Editorial Scarf",
-        slug="crimson-raw-silk-editorial-scarf",
-        description="100% heavy mulberry silk twill printed in deep campaign crimson with hand-rolled hems. Sized generously at 110cm x 110cm to be draped under tailored lapels or worn draped over outerwear.",
-        short_summary="110cm hand-rolled Mulberry silk twill scarf in signature campaign crimson.",
-        category="Accessories",
-        price=5999.0,
+        title="Pro-Armor Thermal Long-Sleeve Compression Rashguard",
+        slug="pro-armor-thermal-long-sleeve-compression",
+        description="Long-sleeve performance armor offering full forearm and upper torso compression support. Breathable underarm mesh inserts keep skin dry through the hardest sets.",
+        short_summary="Long-sleeve high-tension compression rashguard with thermal regulation.",
+        category="Compressions",
+        price=2899.0,
         compare_at_price=None,
-        details="• 100% 18mm Mulberry Silk Twill\n• Hand-rolled and hand-stitched edges\n• Tone-on-tone jacquard YoungIN monogram\n• Made in Como, Italy",
-        fabric_care="Dry clean only. Store folded.",
-        fit_info="110cm x 110cm square format.",
-        is_new=True,
+        details="• High-tension four-way technical compression weave\n• Ergonomic thumbhole cuffs for zero ride-up\n• UV protective and anti-odor treated\n• Built in India",
+        fabric_care="Cold gentle wash. Dries quickly.",
+        fit_info="Second skin compression.",
+        is_new=False,
         is_bestseller=False,
         is_sale=False,
         is_featured=False,
-        cover_image="/images/editorial-split.jpg",
-        hover_image="/images/campaign-hero.jpg"
+        cover_image="/images/product-hoodie.jpg",
+        hover_image="/images/product-sweater.jpg"
     )
 
     products = [p1, p2, p3, p4, p5, p6, p7, p8]
@@ -220,107 +244,112 @@ def seed_database(db: Session):
     db.commit()
 
     # 3. Product Variants
-    # Overcoat variants
-    for color, code in [("Midnight Black", "#0A0A0A"), ("Deep Charcoal", "#2B2B2B")]:
+    # p1 (350GSM Lower)
+    for color, code in [("Midnight Black", "#0A0A0A"), ("Heather Charcoal", "#2B2B2B")]:
         for size in ["S", "M", "L", "XL"]:
             db.add(ProductVariant(
                 product_id=p1.id,
-                sku=f"YIN-OVC-{color[:3].upper()}-{size}",
+                sku=f"YIN-350-{color[:3].upper()}-{size}",
                 color=color,
                 color_code=code,
                 size=size,
-                price=24999.0,
-                compare_at_price=32000.0,
-                available_quantity=15 if size != "XL" else 3
+                price=3499.0,
+                compare_at_price=4499.0,
+                available_quantity=20 if size != "XL" else 8
             ))
 
-    # Hoodie variants
-    for color, code in [("Washed Charcoal", "#373737"), ("Deep Onyx", "#111111"), ("Campaign Crimson", "#B51224")]:
-        for size in ["XS", "S", "M", "L", "XL"]:
+    # p2 (Pro-Armor Compression)
+    for color, code in [("Carbon Black", "#1A1A1A"), ("Stealth Grey", "#333333")]:
+        for size in ["S", "M", "L", "XL"]:
             db.add(ProductVariant(
                 product_id=p2.id,
-                sku=f"YIN-HOD-{color[:3].upper()}-{size}",
+                sku=f"YIN-CMP-PRM-{color[:3].upper()}-{size}",
                 color=color,
                 color_code=code,
                 size=size,
-                price=7999.0,
-                compare_at_price=9999.0,
-                available_quantity=20 if size != "XS" else 4
+                price=2499.0,
+                compare_at_price=2999.0,
+                available_quantity=18
             ))
 
-    # Bomber variants
-    for color, code in [("Matte Black", "#0A0A0A"), ("Olive Drab", "#3A4035")]:
+    # p3 (Basic Compression)
+    for color, code in [("Washed Charcoal", "#2B2B2B"), ("True Black", "#0A0A0A")]:
         for size in ["S", "M", "L", "XL"]:
             db.add(ProductVariant(
                 product_id=p3.id,
-                sku=f"YIN-BMB-{color[:3].upper()}-{size}",
+                sku=f"YIN-CMP-BSC-{color[:3].upper()}-{size}",
                 color=color,
                 color_code=code,
                 size=size,
-                price=18499.0,
-                available_quantity=8
+                price=1599.0,
+                compare_at_price=1999.0,
+                available_quantity=25
             ))
 
-    # Denim variants
-    for color, code in [("Raw Dark Indigo", "#1B2A3D")]:
-        for size in ["28", "30", "32", "34", "36"]:
+    # p4 (Ribbed Vest)
+    for color, code in [("Raw Chalk White", "#F5F5F0"), ("Pitch Black", "#0A0A0A")]:
+        for size in ["S", "M", "L", "XL"]:
             db.add(ProductVariant(
                 product_id=p4.id,
-                sku=f"YIN-DNM-{size}",
+                sku=f"YIN-RIB-{color[:3].upper()}-{size}",
                 color=color,
                 color_code=code,
                 size=size,
-                price=11999.0,
-                available_quantity=12
+                price=1399.0,
+                compare_at_price=1799.0,
+                available_quantity=22
             ))
 
-    # Boots variants
-    for color, code in [("Polished Nero", "#0A0A0A")]:
-        for size in ["EU 40", "EU 41", "EU 42", "EU 43", "EU 44", "EU 45"]:
+    # p5 (Muscle Tank)
+    for color, code in [("Deep Crimson", "#B51224"), ("Midnight Black", "#0A0A0A")]:
+        for size in ["S", "M", "L", "XL"]:
             db.add(ProductVariant(
                 product_id=p5.id,
-                sku=f"YIN-BOT-{size.replace(' ', '')}",
+                sku=f"YIN-TNK-{color[:3].upper()}-{size}",
                 color=color,
                 color_code=code,
                 size=size,
-                price=19999.0,
-                compare_at_price=24999.0,
-                available_quantity=7
+                price=1499.0,
+                compare_at_price=1899.0,
+                available_quantity=15
             ))
 
-    # Turtleneck variants
-    for color, code in [("Campaign Crimson", "#B51224"), ("Onyx Black", "#0A0A0A")]:
+    # p6 (270GSM Lower)
+    for color, code in [("Graphite Grey", "#222222"), ("Navy Shadow", "#151B26")]:
         for size in ["S", "M", "L", "XL"]:
             db.add(ProductVariant(
                 product_id=p6.id,
-                sku=f"YIN-SWT-{color[:3].upper()}-{size}",
+                sku=f"YIN-270-{color[:3].upper()}-{size}",
                 color=color,
                 color_code=code,
                 size=size,
-                price=12499.0,
-                available_quantity=10
+                price=2799.0,
+                compare_at_price=3299.0,
+                available_quantity=18
             ))
 
-    # Bag variants
-    db.add(ProductVariant(
-        product_id=p7.id,
-        sku="YIN-BAG-BLK-OS",
-        color="Matte Black",
-        color_code="#0A0A0A",
-        size="ONE-SIZE",
-        price=14299.0,
-        compare_at_price=16999.0,
-        available_quantity=18
-    ))
+    # p7 (350GSM Powerlifting)
+    for color, code in [("Campaign Crimson", "#B51224"), ("Matte Black", "#0A0A0A")]:
+        for size in ["S", "M", "L", "XL"]:
+            db.add(ProductVariant(
+                product_id=p7.id,
+                sku=f"YIN-PWR-350-{color[:3].upper()}-{size}",
+                color=color,
+                color_code=code,
+                size=size,
+                price=3699.0,
+                compare_at_price=4699.0,
+                available_quantity=12
+            ))
 
-    # Scarf variants
+    # p8 (Long-Sleeve Rashguard)
     db.add(ProductVariant(
         product_id=p8.id,
-        sku="YIN-SCF-CRM-OS",
-        color="Campaign Crimson",
-        color_code="#B51224",
-        size="ONE-SIZE",
-        price=5999.0,
+        sku="YIN-CMP-LS-M",
+        color="Midnight Black",
+        color_code="#0A0A0A",
+        size="M",
+        price=2899.0,
         available_quantity=25
     ))
 
@@ -328,42 +357,45 @@ def seed_database(db: Session):
 
     # 4. Attach Products to Collections
     collection_mappings = [
-        (c_aw26, [p1, p2, p3, p4, p5, p6, p7, p8]),
-        (c_outerwear, [p1, p3]),
-        (c_fleece, [p2]),
-        (c_denim, [p4]),
-        (c_knitwear, [p6, p8]),
-        (c_accessories, [p7, p8, p5])
+        (c_tank_tops, [p5]),
+        (c_basic_compressions, [p3]),
+        (c_premium_compressions, [p2, p8]),
+        (c_ribbed_vests, [p4]),
+        (c_270gsm, [p6]),
+        (c_350gsm, [p1, p7]),
+        (c_compressions, [p2, p3, p8]),
+        (c_bottoms, [p1, p6, p7]),
+        (c_aw26, [p1, p2, p3, p4, p5, p6, p7, p8])
     ]
     for coll, prods in collection_mappings:
         for idx, p in enumerate(prods):
             db.add(CollectionProduct(collection_id=coll.id, product_id=p.id, position=idx))
     db.commit()
 
-    # 5. Lookbook Hotspots (coordinates on lookbook-campaign.jpg with INR pricing)
+    # 5. Lookbook Hotspots
     h1 = LookbookHotspot(
         x_percent=49.0,
         y_percent=32.0,
         product_id=p2.id,
-        title="500GSM Raw-Hem Heavyweight Hoodie",
-        price=7999.0,
-        tag="Upper Layer"
+        title="Pro-Armor Seamless Premium Compression Shirt",
+        price=2499.0,
+        tag="Upper Compression"
     )
     h2 = LookbookHotspot(
         x_percent=51.5,
         y_percent=62.0,
-        product_id=p4.id,
-        title="14oz Japanese Raw Selvedge Denim Trouser",
-        price=11999.0,
-        tag="Trousers"
+        product_id=p1.id,
+        title="350GSM Ultra-Heavyweight Structured Gym Lower",
+        price=3499.0,
+        tag="Heavy Lower"
     )
     h3 = LookbookHotspot(
         x_percent=45.5,
         y_percent=91.0,
-        product_id=p5.id,
-        title="Chunky Lug-Sole Italian Chelsea Boots",
-        price=19999.0,
-        tag="Footwear"
+        product_id=p6.id,
+        title="270GSM Breathable Daily Training Lower",
+        price=2799.0,
+        tag="Daily Training"
     )
     db.add_all([h1, h2, h3])
     db.commit()
@@ -373,14 +405,14 @@ def seed_database(db: Session):
         code="RADIAN15",
         discount_type="percentage",
         value=15.0,
-        minimum_order_value=3000.0,
+        minimum_order_value=2000.0,
         active=True
     )
     d2 = Discount(
-        code="YOUNGIN1000",
+        code="YOUNGIN500",
         discount_type="fixed",
-        value=1000.0,
-        minimum_order_value=5000.0,
+        value=500.0,
+        minimum_order_value=2500.0,
         active=True
     )
     d3 = Discount(
@@ -393,43 +425,43 @@ def seed_database(db: Session):
     db.add_all([d1, d2, d3])
     db.commit()
 
-    # 7. Initial CMS Blocks
+    # 7. Initial CMS Blocks (Gymwear & India focused)
     cms_announcement = CMSContent(
         section_key="announcement",
-        title="COMPLIMENTARY EXPRESS SHIPPING ON ALL ORDERS OVER ₹5,000 • AUTUMN/WINTER ARCHIVE 2026 NOW LIVE",
+        title="FREE PAN-INDIA EXPRESS SHIPPING ON ORDERS OVER ₹1,999 • USE CODE: FIRST10 FOR 10% OFF • 350GSM HEAVYWEIGHT LOWERS & MULTI-TIER COMPRESSIONS LIVE • HIGH-PERFORMANCE GYMWEAR CRAFTED IN INDIA • 7-DAY EASY SIZE SWAP",
         meta_json={"ticker_speed": 28, "allow_pause": True}
     )
     cms_hero = CMSContent(
         section_key="hero",
-        title="THE WINTER ARCHIVE",
-        subtitle="Brutalist architectural silhouettes crafted in 850GSM Italian wool, 14oz Okayama raw selvedge denim, and deep campaign crimson.",
-        cta_text="DISCOVER COLLECTION",
-        cta_link="/collections/autumn-winter-26",
+        title="BUILT FOR STRENGTH",
+        subtitle="Heavyweight 350GSM lowers, four-way stretch compressions, and sculpted ribbed vests engineered in India for peak physical discipline.",
+        cta_text="EXPLORE 350GSM LOWERS",
+        cta_link="/collections/350gsm-lowers",
         image_url="/images/campaign-hero.jpg",
-        meta_json={"season": "AW '26", "campaign_code": "RADIAN-REF-01"}
+        meta_json={"season": "STRENGTH '26", "campaign_code": "YOUNGIN-PRO-01"}
     )
     cms_editorial_split = CMSContent(
         section_key="editorial_split",
-        title="UNCOMPROMISING TAILORING",
-        subtitle="Structured drapery engineered for contemporary volume. Every piece is cut from ethically sourced European virgin wool and custom Japanese shuttle looms.",
-        cta_text="EXPLORE THE ATELIER",
-        cta_link="/about",
+        title="UNCOMPROMISING FABRIC WEIGHT",
+        subtitle="Every lower is crafted from custom-knit 350GSM and 270GSM dense cotton terry that holds its shape through hundreds of heavy squat sessions and washes.",
+        cta_text="EXPLORE LOWERS",
+        cta_link="/collections/350gsm-lowers",
         image_url="/images/editorial-split.jpg",
-        meta_json={"quote": "A balance between brutalist structure and sensual movement."}
+        meta_json={"quote": "Discipline in training requires discipline in craft."}
     )
     cms_curated = CMSContent(
         section_key="curated_feature",
-        title="CURATED CAPSULE 01",
-        subtitle="The essential uniform: Oversized double-breasted overcoat, 500GSM fleece, and lugged Italian footwear.",
-        cta_text="SHOP THE CAPSULE",
-        cta_link="/collections/outerwear",
+        title="THE STRENGTH UNIFORM",
+        subtitle="Pro-Armor compression base layer paired with 350GSM heavy lowers and raw-cut muscle tank.",
+        cta_text="SHOP COMPRESSIONS",
+        cta_link="/collections/premium-compressions",
         image_url="/images/product-overcoat.jpg"
     )
     cms_brand_manifesto = CMSContent(
         section_key="brand_manifesto",
-        title="YOUNGIN APPARELS",
-        subtitle="Founded in the intersection of contemporary high fashion and industrial brutalism. Designed with timeless restraint.",
-        cta_text="READ MANIFESTO",
+        title="YOUNG IN",
+        subtitle="High-performance gymwear and strength apparel engineered in India with zero compromise.",
+        cta_text="OUR MANIFESTO",
         cta_link="/about"
     )
     db.add_all([cms_announcement, cms_hero, cms_editorial_split, cms_curated, cms_brand_manifesto])

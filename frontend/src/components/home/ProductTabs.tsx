@@ -19,10 +19,10 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ products, onNavigate }
   });
 
   const tabs = [
-    { id: 'all', label: 'THE COLLECTION' },
-    { id: 'new', label: 'NEW ARRIVALS' },
+    { id: 'all', label: 'ALL GYMWEAR' },
+    { id: 'new', label: 'NEW DROPS' },
     { id: 'bestsellers', label: 'BEST SELLERS' },
-    { id: 'sale', label: 'ARCHIVE SALE' },
+    { id: 'sale', label: 'SPECIAL EDITIONS' },
   ];
 
   return (
@@ -45,7 +45,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ products, onNavigate }
           }}
         >
           <span className="eyebrow" style={{ color: '#b51224', marginBottom: '0.75rem' }}>
-            ATELIER ESSENTIALS
+            GYMWEAR ESSENTIALS
           </span>
           <h2
             style={{
@@ -54,7 +54,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ products, onNavigate }
               color: '#0a0a0a',
             }}
           >
-            CURATED DISCOVERY
+            PERFORMANCE GEAR
           </h2>
 
           {/* Tab Buttons */}

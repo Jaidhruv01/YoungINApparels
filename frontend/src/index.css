@@ -34,20 +34,36 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
+  position: relative;
   line-height: 1.5;
 }
 
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
 /* Typography Presets */
-h1, h2, h3, .font-display {
+h1, h2, h3, h4, h5, h6, .font-display {
   font-family: var(--font-display);
   letter-spacing: -0.02em;
   text-transform: uppercase;
   font-weight: 800;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .eyebrow {
@@ -256,9 +272,10 @@ h1, h2, h3, .font-display {
 
 /* Marquee Ticker */
 .marquee-track {
-  display: flex;
+  display: inline-flex;
   width: max-content;
-  animation: marquee-scroll 32s linear infinite;
+  animation: marquee-scroll 28s linear infinite;
+  will-change: transform;
 }
 
 .marquee-track:hover {
@@ -266,11 +283,11 @@ h1, h2, h3, .font-display {
 }
 
 @keyframes marquee-scroll {
-  from {
-    transform: translateX(0);
+  0% {
+    transform: translate3d(0, 0, 0);
   }
-  to {
-    transform: translateX(-50%);
+  100% {
+    transform: translate3d(-50%, 0, 0);
   }
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Search, Menu, X, Shield, Globe, Heart } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Shield, Globe, Heart, ChevronDown } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import { useWishlist } from '../../context/WishlistContext';
@@ -10,12 +10,25 @@ interface HeaderProps {
   onNavigate: (path: string) => void;
 }
 
+interface NavSubItem {
+  label: string;
+  path: string;
+  subtext?: string;
+}
+
+interface NavItem {
+  label: string;
+  path: string;
+  tag?: string;
+  subItems?: NavSubItem[];
+}
+
 export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNavigate }) => {
   const { cart, openCart } = useCart();
   const { wishlistCount, openWishlist } = useWishlist();
-  const { currency, currencySymbol } = useCurrency();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,17 +50,40 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
     };
   }, [mobileMenuOpen]);
 
-  const navLinks = [
-    { label: 'COLLECTIONS', path: '/collections', tag: 'ALL' },
-    { label: 'OUTERWEAR', path: '/collections/outerwear', tag: '850GSM' },
-    { label: 'FLEECE', path: '/collections/fleece-hoodies', tag: '500GSM' },
-    { label: 'DENIM', path: '/collections/denim', tag: '14OZ' },
-    { label: 'LOOKBOOK', path: '/lookbook', tag: 'CAMPAIGN' },
-    { label: 'ATELIER', path: '/about', tag: 'STORY' },
+  const navLinks: NavItem[] = [
+    {
+      label: 'TANK TOPS',
+      path: '/collections/tank-tops',
+      tag: 'ATHLETIC',
+    },
+    {
+      label: 'COMPRESSIONS',
+      path: '/collections/compressions',
+      tag: '2 TIERS',
+      subItems: [
+        { label: 'Basic Compressions', path: '/collections/basic-compressions', subtext: 'Four-Way Stretch Training Base' },
+        { label: 'Premium Compressions', path: '/collections/premium-compressions', subtext: 'High-Tensile Muscle Support' },
+      ],
+    },
+    {
+      label: 'RIBBED VESTS',
+      path: '/collections/ribbed-vests',
+      tag: 'COTTON RIB',
+    },
+    {
+      label: 'BOTTOMS',
+      path: '/collections/bottoms',
+      tag: 'GSM SERIES',
+      subItems: [
+        { label: '270 GSM Lowers', path: '/collections/270gsm-lowers', subtext: 'Breathable Lightweight French Terry' },
+        { label: '350 GSM Lowers', path: '/collections/350gsm-lowers', subtext: 'Ultra-Heavyweight Fleece Taper' },
+      ],
+    },
   ];
 
   const handleNav = (path: string) => {
     setMobileMenuOpen(false);
+    setActiveDropdown(null);
     onNavigate(path);
   };
 
@@ -67,63 +103,136 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
 
             <nav className="desktop-nav">
               {navLinks.map((link) => {
-                const isActive = currentPath === link.path;
+                const isActive = currentPath === link.path || (link.subItems && link.subItems.some(s => s.path === currentPath));
+                const isDropdownOpen = activeDropdown === link.label;
+
                 return (
-                  <button
-                    key={link.path}
-                    onClick={() => handleNav(link.path)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: '0.75rem',
-                      fontWeight: 700,
-                      letterSpacing: '0.12em',
-                      textTransform: 'uppercase',
-                      color: isActive ? '#b51224' : '#0a0a0a',
-                      position: 'relative',
-                      padding: '4px 0',
-                      transition: 'color 0.2s ease',
-                    }}
+                  <div
+                    key={link.label}
+                    className="nav-item-dropdown-container"
+                    onMouseEnter={() => link.subItems && setActiveDropdown(link.label)}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                    style={{ position: 'relative' }}
                   >
-                    {link.label}
-                    {isActive && (
-                      <span
+                    <button
+                      onClick={() => handleNav(link.path)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        fontSize: '0.75rem',
+                        fontWeight: 800,
+                        letterSpacing: '0.12em',
+                        textTransform: 'uppercase',
+                        color: isActive ? '#b51224' : '#0a0a0a',
+                        position: 'relative',
+                        padding: '8px 0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        transition: 'color 0.2s ease',
+                      }}
+                    >
+                      <span>{link.label}</span>
+                      {link.subItems && <ChevronDown size={12} color={isActive ? '#b51224' : '#888888'} />}
+                      {isActive && (
+                        <span
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            height: '2px',
+                            backgroundColor: '#b51224',
+                          }}
+                        />
+                      )}
+                    </button>
+
+                    {/* Desktop Dropdown Menu */}
+                    {link.subItems && isDropdownOpen && (
+                      <div
+                        className="desktop-dropdown-card"
                         style={{
                           position: 'absolute',
-                          bottom: 0,
+                          top: '100%',
                           left: 0,
-                          right: 0,
-                          height: '2px',
-                          backgroundColor: '#b51224',
+                          minWidth: '260px',
+                          backgroundColor: '#0a0a0a',
+                          color: '#ffffff',
+                          border: '1px solid #222222',
+                          boxShadow: '0 12px 35px rgba(0,0,0,0.3)',
+                          padding: '0.75rem 0',
+                          zIndex: 950,
+                          borderRadius: '2px',
+                          display: 'flex',
+                          flexDirection: 'column',
                         }}
-                      />
+                      >
+                        {link.subItems.map((sub) => (
+                          <button
+                            key={sub.path}
+                            onClick={() => handleNav(sub.path)}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              textAlign: 'left',
+                              padding: '10px 18px',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '2px',
+                              transition: 'background-color 0.15s ease',
+                            }}
+                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#161616')}
+                            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                          >
+                            <span
+                              style={{
+                                color: currentPath === sub.path ? '#b51224' : '#ffffff',
+                                fontSize: '0.8125rem',
+                                fontWeight: 800,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.06em',
+                              }}
+                            >
+                              {sub.label}
+                            </span>
+                            {sub.subtext && (
+                              <span style={{ fontSize: '0.6875rem', color: '#888888' }}>
+                                {sub.subtext}
+                              </span>
+                            )}
+                          </button>
+                        ))}
+                      </div>
                     )}
-                  </button>
+                  </div>
                 );
               })}
             </nav>
           </div>
 
-          {/* Center: Brand Wordmark */}
+          {/* Center: Brand Wordmark (Strictly Centered, YOUNG in black, IN in red) */}
           <div className="header-center">
             <button
               onClick={() => handleNav('/')}
               className="brand-button"
-              aria-label="YoungINApparels Home"
+              aria-label="YoungIN Home"
             >
               <span className="brand-wordmark">
-                YOUNGIN<span style={{ color: '#b51224' }}>APPARELS</span>
+                <span style={{ color: '#0a0a0a' }}>YOUNG</span>
+                <span style={{ color: '#b51224' }}>IN</span>
               </span>
             </button>
           </div>
 
           {/* Right: Actions */}
           <div className="header-right">
-            {/* Currency Selector (Desktop only) */}
+            {/* India Flag & Currency Selector (Desktop only) */}
             <div className="currency-selector">
-              <Globe size={14} color="#6b6b6b" />
-              <span className="currency-label">INR (₹)</span>
+              <Globe size={14} color="#b51224" />
+              <span className="currency-label">INDIA (₹)</span>
             </div>
 
             {/* Wishlist Button (Desktop & Tablet) */}
@@ -218,7 +327,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           boxShadow: mobileMenuOpen ? '10px 0 40px rgba(0,0,0,0.6)' : 'none',
         }}
       >
-        {/* Drawer Brand Bar */}
+        {/* Drawer Brand Bar (YOUNG in white/black, IN in red) */}
         <div
           style={{
             display: 'flex',
@@ -232,13 +341,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           <span
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '0.95rem',
+              fontSize: '1.25rem',
               fontWeight: 900,
-              letterSpacing: '0.12em',
+              letterSpacing: '0.14em',
               whiteSpace: 'nowrap',
             }}
           >
-            YOUNGIN<span style={{ color: '#b51224' }}>APPARELS</span>
+            YOUNG<span style={{ color: '#b51224' }}>IN</span>
           </span>
           <button
             onClick={() => setMobileMenuOpen(false)}
@@ -283,14 +392,91 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
             }}
           >
             <Search size={15} color="#b51224" />
-            <span>SEARCH ARCHIVE PIECES (⌘K)...</span>
+            <span>SEARCH GYMWEAR & LOWERS (⌘K)...</span>
           </button>
         </div>
 
-        {/* Nav Links */}
+        {/* Gymwear Category Nav Links */}
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
           {navLinks.map((link) => {
-            const isActive = currentPath === link.path;
+            const isActive = currentPath === link.path || (link.subItems && link.subItems.some(s => s.path === currentPath));
+
+            if (link.subItems) {
+              return (
+                <div key={link.label} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <button
+                    onClick={() => handleNav(link.path)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      textAlign: 'left',
+                      color: isActive ? '#b51224' : '#ffffff',
+                      fontFamily: 'var(--font-display)',
+                      fontSize: '1.05rem',
+                      fontWeight: 800,
+                      letterSpacing: '0.06em',
+                      cursor: 'pointer',
+                      padding: '4px 0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <span>{link.label}</span>
+                    <span
+                      style={{
+                        fontSize: '0.5625rem',
+                        padding: '2px 6px',
+                        backgroundColor: '#1f1f1f',
+                        color: '#b51224',
+                        borderRadius: '2px',
+                        fontFamily: 'var(--font-body)',
+                        fontWeight: 800,
+                      }}
+                    >
+                      {link.tag}
+                    </span>
+                  </button>
+
+                  {/* Sub-options for Compressions & Bottoms */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.5rem',
+                      paddingLeft: '0.85rem',
+                      borderLeft: '2px solid #222222',
+                      marginLeft: '4px',
+                    }}
+                  >
+                    {link.subItems.map((sub) => (
+                      <button
+                        key={sub.path}
+                        onClick={() => handleNav(sub.path)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          textAlign: 'left',
+                          color: currentPath === sub.path ? '#b51224' : '#b0b0b0',
+                          fontSize: '0.8125rem',
+                          fontWeight: 700,
+                          letterSpacing: '0.04em',
+                          cursor: 'pointer',
+                          padding: '3px 0',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                        }}
+                      >
+                        <span style={{ color: '#b51224', fontSize: '0.625rem' }}>▸</span>
+                        <span>{sub.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
             return (
               <button
                 key={link.path}
@@ -301,7 +487,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                   textAlign: 'left',
                   color: isActive ? '#b51224' : '#ffffff',
                   fontFamily: 'var(--font-display)',
-                  fontSize: '1.1rem',
+                  fontSize: '1.05rem',
                   fontWeight: 800,
                   letterSpacing: '0.06em',
                   cursor: 'pointer',
@@ -345,7 +531,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               textAlign: 'left',
               color: '#ffffff',
               fontFamily: 'var(--font-display)',
-              fontSize: '1.1rem',
+              fontSize: '1.05rem',
               fontWeight: 800,
               letterSpacing: '0.06em',
               cursor: 'pointer',
@@ -353,6 +539,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              marginTop: '0.5rem',
             }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -375,7 +562,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
             )}
           </button>
 
-          {/* Admin Dashboard */}
+          {/* Admin Dashboard Link */}
           <button
             onClick={() => handleNav('/admin')}
             style={{
@@ -384,7 +571,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               textAlign: 'left',
               color: '#b51224',
               fontFamily: 'var(--font-display)',
-              fontSize: '0.875rem',
+              fontSize: '0.85rem',
               fontWeight: 800,
               letterSpacing: '0.08em',
               cursor: 'pointer',
@@ -400,14 +587,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           </button>
         </nav>
 
-        {/* Concierge & Location Card in Drawer */}
+        {/* Indian Gymwear Brand Info Card in Drawer */}
         <div style={{ marginTop: 'auto', borderTop: '1px solid #222222', paddingTop: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.6875rem', color: '#999999' }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 800, color: '#ffffff' }}>
               <Globe size={13} color="#b51224" />
               <span>INDIA (₹ INR)</span>
             </span>
-            <span style={{ color: '#10b981', fontWeight: 700 }}>FREE SHIPPING OVER ₹5,000</span>
+            <span style={{ color: '#10b981', fontWeight: 700 }}>FREE DELIVERY OVER ₹1,999</span>
           </div>
 
           <div
@@ -424,17 +611,17 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           >
             <div>
               <p style={{ fontSize: '0.6875rem', fontWeight: 800, color: '#ffffff', textTransform: 'uppercase' }}>
-                ATELIER CONCIERGE
+                ATHLETE CONCIERGE (INDIA)
               </p>
               <p style={{ fontSize: '0.625rem', color: '#888888', marginTop: '2px' }}>
-                Direct Stylist Support & Sizing Assistance
+                Direct WhatsApp Sizing & Training Gear Advice
               </p>
             </div>
             <span style={{ color: '#b51224', fontSize: '0.875rem', fontWeight: 800 }}>→</span>
           </div>
 
           <p style={{ fontSize: '0.625rem', color: '#666666', marginTop: '0.25rem' }}>
-            Autumn / Winter Archive 2026 • International D2C Flagship
+            Engineered in India • High-Performance Athletic Gymwear
           </p>
         </div>
       </div>
@@ -454,9 +641,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
         }
         .header-inner {
-          display: grid;
-          grid-template-columns: 1fr auto 1fr;
+          position: relative;
+          display: flex;
           align-items: center;
+          justify-content: space-between;
           height: 60px;
           width: 100%;
         }
@@ -464,21 +652,26 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           display: flex;
           align-items: center;
           justify-content: flex-start;
-          min-width: 0;
+          z-index: 2;
         }
         .header-center {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
           display: flex;
           align-items: center;
           justify-content: center;
           text-align: center;
-          min-width: 0;
+          pointer-events: auto;
+          z-index: 3;
         }
         .header-right {
           display: flex;
           align-items: center;
           justify-content: flex-end;
           gap: 0.5rem;
-          min-width: 0;
+          z-index: 2;
         }
         .mobile-toggle {
           display: flex;
@@ -505,9 +698,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
         }
         .brand-wordmark {
           font-family: var(--font-display);
-          font-size: 0.98rem;
+          font-size: 1.25rem;
           font-weight: 900;
-          letter-spacing: 0.10em;
+          letter-spacing: 0.16em;
           text-transform: uppercase;
           color: #0a0a0a;
           white-space: nowrap;
@@ -561,15 +754,15 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
 
         @media (max-width: 375px) {
           .brand-wordmark {
-            font-size: 0.90rem;
-            letter-spacing: 0.08em;
+            font-size: 1.1rem;
+            letter-spacing: 0.12em;
           }
         }
 
         @media (min-width: 480px) {
           .brand-wordmark {
-            font-size: 1.12rem;
-            letter-spacing: 0.14em;
+            font-size: 1.35rem;
+            letter-spacing: 0.16em;
           }
         }
 
@@ -579,10 +772,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           }
         }
 
-        @media (min-width: 861px) {
+        @media (min-width: 1024px) {
           .header-inner {
-            display: flex;
-            justify-content: space-between;
             height: 72px;
           }
           .mobile-toggle {
@@ -591,16 +782,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           .desktop-nav {
             display: flex !important;
             align-items: center;
-            gap: 1.75rem;
-          }
-          .header-left {
-            gap: 2rem;
-          }
-          .header-right {
             gap: 1.25rem;
           }
+          .header-right {
+            gap: 1rem;
+          }
           .brand-wordmark {
-            font-size: 1.35rem;
+            font-size: 1.55rem;
             letter-spacing: 0.18em;
           }
           .currency-selector {
@@ -638,6 +826,15 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           }
           .desktop-admin-label {
             display: inline !important;
+          }
+        }
+
+        @media (min-width: 1240px) {
+          .desktop-nav {
+            gap: 1.65rem;
+          }
+          .header-right {
+            gap: 1.25rem;
           }
         }
       `}</style>
