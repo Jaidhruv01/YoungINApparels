@@ -8,6 +8,8 @@ class Settings(BaseModel):
     API_V1_STR: str = "/api/v1"
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./youngin_apparels.db")
     CORS_ORIGINS: List[str] = [
+        "http://localhost:5190",
+        "http://127.0.0.1:5190",
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
