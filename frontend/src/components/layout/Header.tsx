@@ -69,17 +69,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
         { label: 'Training Joggers (250GSM)', path: '/collections/250gsm-lowers', subtext: 'Lightweight Breathable French Terry' },
       ],
     },
-  ];
-
-  const rightNavLinks: NavItem[] = [
     {
       label: 'TANKS & VESTS',
       path: '/collections/tanks-and-vests',
+      tag: 'ATHLETIC',
       subItems: [
         { label: 'Premium Tank Tops', path: '/collections/tank-tops', subtext: 'Raw-Cut Deep Armhole Mobility Tanks' },
         { label: 'Training Vests', path: '/collections/ribbed-vests', subtext: '2x2 Heavy Cotton Ribbed Physique Vests' },
       ],
     },
+  ];
+
+  const rightNavLinks: NavItem[] = [
     {
       label: 'PREMIUM SERIES',
       path: '/collections/premium-series',
@@ -122,7 +123,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                 cursor: 'pointer',
                 fontSize: '0.72rem',
                 fontWeight: 800,
-                letterSpacing: '0.1em',
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 color: isActive ? '#b51224' : '#0a0a0a',
                 position: 'relative',
@@ -135,22 +136,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               }}
             >
               <span>{link.label}</span>
-              {link.tag && (
-                <span
-                  style={{
-                    fontSize: '0.53rem',
-                    fontWeight: 900,
-                    letterSpacing: '0.04em',
-                    padding: '1px 5px',
-                    borderRadius: '2px',
-                    backgroundColor: link.tag === 'ELITE' ? '#b51224' : '#f0f0f0',
-                    color: link.tag === 'ELITE' ? '#ffffff' : '#666666',
-                    marginLeft: '2px',
-                  }}
-                >
-                  {link.tag}
-                </span>
-              )}
               {link.subItems && <ChevronDown size={11} color={isActive ? '#b51224' : '#888888'} />}
               {isActive && (
                 <span
@@ -810,18 +795,44 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
 
         @media (min-width: 1024px) {
           .header-inner {
-            height: 72px;
+            display: grid !important;
+            grid-template-columns: 1fr auto 1fr !important;
+            align-items: center !important;
+            height: 70px;
+            column-gap: 0.75rem;
           }
           .mobile-toggle {
             display: none !important;
           }
-          .desktop-nav {
+          .header-left {
             display: flex !important;
-            align-items: center;
-            gap: 1.1rem;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            min-width: 0 !important;
+          }
+          .header-center {
+            position: static !important;
+            top: auto !important;
+            left: auto !important;
+            transform: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            padding: 0 1rem !important;
+            white-space: nowrap !important;
           }
           .header-right {
-            gap: 0.85rem;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            min-width: 0 !important;
+            gap: 0.65rem !important;
+          }
+          .desktop-nav {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.85rem !important;
           }
           .brand-wordmark {
             font-size: 1.45rem;
@@ -833,25 +844,20 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
             gap: 4px;
           }
           .currency-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 800;
             color: #0a0a0a;
             letter-spacing: 0.04em;
           }
           .desktop-search-label {
-            display: inline !important;
-            font-size: 0.6875rem;
-            font-weight: 600;
-            color: #888888;
-            letter-spacing: 0.05em;
-            margin-left: 6px;
+            display: none !important;
           }
           .admin-btn {
             display: flex !important;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
             border: 1px solid #e7e5e3 !important;
-            padding: 4px 8px !important;
+            padding: 5px 8px !important;
             font-size: 0.6875rem !important;
             font-weight: 700 !important;
             letter-spacing: 0.08em !important;
@@ -861,16 +867,27 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
             color: #ffffff !important;
           }
           .desktop-admin-label {
-            display: inline !important;
+            display: none !important;
           }
         }
 
-        @media (min-width: 1240px) {
+        @media (min-width: 1280px) {
+          .header-inner {
+            column-gap: 1.25rem;
+          }
           .desktop-nav {
-            gap: 1.65rem;
+            gap: 1.25rem !important;
           }
           .header-right {
-            gap: 1.25rem;
+            gap: 0.85rem !important;
+          }
+          .desktop-search-label {
+            display: inline !important;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: #888888;
+            letter-spacing: 0.05em;
+            margin-left: 6px;
           }
         }
       `}</style>
