@@ -19,8 +19,8 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ products, onNavigate }
   });
 
   const tabs = [
-    { id: 'all', label: 'ALL GYMWEAR' },
-    { id: 'new', label: 'NEW DROPS' },
+    { id: 'all', label: 'ALL GEAR' },
+    { id: 'new', label: 'NEW ARRIVALS' },
     { id: 'bestsellers', label: 'BEST SELLERS' },
     { id: 'sale', label: 'SPECIAL EDITIONS' },
   ];
@@ -45,16 +45,17 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ products, onNavigate }
           }}
         >
           <span className="eyebrow" style={{ color: '#b51224', marginBottom: '0.75rem' }}>
-            GYMWEAR ESSENTIALS
+            CORE ESSENTIALS
           </span>
           <h2
             style={{
-              fontSize: 'clamp(2rem, 3.8vw, 2.75rem)',
+              fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
               marginBottom: '2rem',
               color: '#0a0a0a',
+              letterSpacing: '-0.01em',
             }}
           >
-            PERFORMANCE GEAR
+            THE LAUNCH CAPSULE / CORE ESSENTIALS
           </h2>
 
           {/* Tab Buttons */}
@@ -128,7 +129,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ products, onNavigate }
             className="btn-secondary"
             style={{ padding: '1rem 2.5rem' }}
           >
-            <span>VIEW COMPLETE CATALOG ({products.length} PIECES)</span>
+            <span>VIEW ALL GEAR</span>
             <ArrowRight size={16} />
           </button>
         </div>

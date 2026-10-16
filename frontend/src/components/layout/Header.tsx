@@ -50,36 +50,49 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
     };
   }, [mobileMenuOpen]);
 
-  const navLinks: NavItem[] = [
+  const leftNavLinks: NavItem[] = [
     {
-      label: 'TANK TOPS',
-      path: '/collections/tank-tops',
-      tag: 'ATHLETIC',
-    },
-    {
-      label: 'COMPRESSIONS',
-      path: '/collections/compressions',
+      label: 'COMPRESSION',
+      path: '/collections/compression',
       tag: '2 TIERS',
       subItems: [
-        { label: 'Basic Compressions', path: '/collections/basic-compressions', subtext: 'Four-Way Stretch Training Base' },
-        { label: 'Premium Compressions', path: '/collections/premium-compressions', subtext: 'High-Tensile Muscle Support' },
+        { label: 'Basic Compression Tees', path: '/collections/basic-compressions', subtext: '4-Way Stretch Poly-Nylon Base' },
+        { label: 'Premium Compression Tees', path: '/collections/premium-compressions', subtext: 'High-Tensile Muscle Support & Flatlock' },
       ],
     },
     {
-      label: 'RIBBED VESTS',
-      path: '/collections/ribbed-vests',
-      tag: 'COTTON RIB',
-    },
-    {
-      label: 'BOTTOMS',
-      path: '/collections/bottoms',
-      tag: 'GSM SERIES',
+      label: 'JOGGERS',
+      path: '/collections/joggers',
+      tag: '350/250 GSM',
       subItems: [
-        { label: '270 GSM Lowers', path: '/collections/270gsm-lowers', subtext: 'Breathable Lightweight French Terry' },
-        { label: '350 GSM Lowers', path: '/collections/350gsm-lowers', subtext: 'Ultra-Heavyweight Fleece Taper' },
+        { label: 'Heavyweight Joggers (350GSM)', path: '/collections/350gsm-lowers', subtext: 'Ultra-Heavyweight Architectural Fleece' },
+        { label: 'Training Joggers (250GSM)', path: '/collections/250gsm-lowers', subtext: 'Lightweight Breathable French Terry' },
       ],
     },
   ];
+
+  const rightNavLinks: NavItem[] = [
+    {
+      label: 'TANKS & VESTS',
+      path: '/collections/tanks-and-vests',
+      subItems: [
+        { label: 'Premium Tank Tops', path: '/collections/tank-tops', subtext: 'Raw-Cut Deep Armhole Mobility Tanks' },
+        { label: 'Training Vests', path: '/collections/ribbed-vests', subtext: '2x2 Heavy Cotton Ribbed Physique Vests' },
+      ],
+    },
+    {
+      label: 'PREMIUM SERIES',
+      path: '/collections/premium-series',
+      tag: 'ELITE',
+    },
+    {
+      label: 'TRACK MY ORDER',
+      path: '/track-order',
+      tag: 'PAN-INDIA',
+    },
+  ];
+
+  const allNavLinks: NavItem[] = [...leftNavLinks, ...rightNavLinks];
 
   const handleNav = (path: string) => {
     setMobileMenuOpen(false);
@@ -87,11 +100,141 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
     onNavigate(path);
   };
 
+  const renderNavItems = (items: NavItem[], alignDropdownRight = false) => (
+    <nav className="desktop-nav">
+      {items.map((link) => {
+        const isActive = currentPath === link.path || (link.subItems && link.subItems.some(s => s.path === currentPath));
+        const isDropdownOpen = activeDropdown === link.label;
+
+        return (
+          <div
+            key={link.label}
+            className="nav-item-dropdown-container"
+            onMouseEnter={() => link.subItems && setActiveDropdown(link.label)}
+            onMouseLeave={() => setActiveDropdown(null)}
+            style={{ position: 'relative' }}
+          >
+            <button
+              onClick={() => handleNav(link.path)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: isActive ? '#b51224' : '#0a0a0a',
+                position: 'relative',
+                padding: '8px 0',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                transition: 'color 0.2s ease',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <span>{link.label}</span>
+              {link.tag && (
+                <span
+                  style={{
+                    fontSize: '0.53rem',
+                    fontWeight: 900,
+                    letterSpacing: '0.04em',
+                    padding: '1px 5px',
+                    borderRadius: '2px',
+                    backgroundColor: link.tag === 'ELITE' ? '#b51224' : '#f0f0f0',
+                    color: link.tag === 'ELITE' ? '#ffffff' : '#666666',
+                    marginLeft: '2px',
+                  }}
+                >
+                  {link.tag}
+                </span>
+              )}
+              {link.subItems && <ChevronDown size={11} color={isActive ? '#b51224' : '#888888'} />}
+              {isActive && (
+                <span
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: '2px',
+                    backgroundColor: '#b51224',
+                  }}
+                />
+              )}
+            </button>
+
+            {/* Desktop Dropdown Menu */}
+            {link.subItems && isDropdownOpen && (
+              <div
+                className="desktop-dropdown-card"
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  ...(alignDropdownRight ? { right: 0 } : { left: 0 }),
+                  minWidth: '270px',
+                  backgroundColor: '#0a0a0a',
+                  color: '#ffffff',
+                  border: '1px solid #222222',
+                  boxShadow: '0 12px 35px rgba(0,0,0,0.3)',
+                  padding: '0.75rem 0',
+                  zIndex: 950,
+                  borderRadius: '2px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                {link.subItems.map((sub) => (
+                  <button
+                    key={sub.path}
+                    onClick={() => handleNav(sub.path)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      textAlign: 'left',
+                      padding: '10px 18px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '2px',
+                      transition: 'background-color 0.15s ease',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#161616')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                  >
+                    <span
+                      style={{
+                        color: currentPath === sub.path ? '#b51224' : '#ffffff',
+                        fontSize: '0.8125rem',
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.06em',
+                      }}
+                    >
+                      {sub.label}
+                    </span>
+                    {sub.subtext && (
+                      <span style={{ fontSize: '0.6875rem', color: '#888888' }}>
+                        {sub.subtext}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </nav>
+  );
+
   return (
     <>
       <header className={`site-header ${isScrolled ? 'scrolled' : ''}`}>
         <div className="container-custom header-inner">
-          {/* Left: Mobile Toggle & Desktop Nav */}
+          {/* Left: Mobile Toggle & Left Desktop Nav */}
           <div className="header-left">
             <button
               onClick={() => setMobileMenuOpen(true)}
@@ -101,116 +244,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               <Menu size={22} />
             </button>
 
-            <nav className="desktop-nav">
-              {navLinks.map((link) => {
-                const isActive = currentPath === link.path || (link.subItems && link.subItems.some(s => s.path === currentPath));
-                const isDropdownOpen = activeDropdown === link.label;
-
-                return (
-                  <div
-                    key={link.label}
-                    className="nav-item-dropdown-container"
-                    onMouseEnter={() => link.subItems && setActiveDropdown(link.label)}
-                    onMouseLeave={() => setActiveDropdown(null)}
-                    style={{ position: 'relative' }}
-                  >
-                    <button
-                      onClick={() => handleNav(link.path)}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        fontSize: '0.75rem',
-                        fontWeight: 800,
-                        letterSpacing: '0.12em',
-                        textTransform: 'uppercase',
-                        color: isActive ? '#b51224' : '#0a0a0a',
-                        position: 'relative',
-                        padding: '8px 0',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        transition: 'color 0.2s ease',
-                      }}
-                    >
-                      <span>{link.label}</span>
-                      {link.subItems && <ChevronDown size={12} color={isActive ? '#b51224' : '#888888'} />}
-                      {isActive && (
-                        <span
-                          style={{
-                            position: 'absolute',
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            height: '2px',
-                            backgroundColor: '#b51224',
-                          }}
-                        />
-                      )}
-                    </button>
-
-                    {/* Desktop Dropdown Menu */}
-                    {link.subItems && isDropdownOpen && (
-                      <div
-                        className="desktop-dropdown-card"
-                        style={{
-                          position: 'absolute',
-                          top: '100%',
-                          left: 0,
-                          minWidth: '260px',
-                          backgroundColor: '#0a0a0a',
-                          color: '#ffffff',
-                          border: '1px solid #222222',
-                          boxShadow: '0 12px 35px rgba(0,0,0,0.3)',
-                          padding: '0.75rem 0',
-                          zIndex: 950,
-                          borderRadius: '2px',
-                          display: 'flex',
-                          flexDirection: 'column',
-                        }}
-                      >
-                        {link.subItems.map((sub) => (
-                          <button
-                            key={sub.path}
-                            onClick={() => handleNav(sub.path)}
-                            style={{
-                              background: 'none',
-                              border: 'none',
-                              textAlign: 'left',
-                              padding: '10px 18px',
-                              cursor: 'pointer',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              gap: '2px',
-                              transition: 'background-color 0.15s ease',
-                            }}
-                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#161616')}
-                            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                          >
-                            <span
-                              style={{
-                                color: currentPath === sub.path ? '#b51224' : '#ffffff',
-                                fontSize: '0.8125rem',
-                                fontWeight: 800,
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.06em',
-                              }}
-                            >
-                              {sub.label}
-                            </span>
-                            {sub.subtext && (
-                              <span style={{ fontSize: '0.6875rem', color: '#888888' }}>
-                                {sub.subtext}
-                              </span>
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </nav>
+            {renderNavItems(leftNavLinks)}
           </div>
 
           {/* Center: Brand Wordmark (Strictly Centered, YOUNG in black, IN in red) */}
@@ -227,11 +261,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
             </button>
           </div>
 
-          {/* Right: Actions */}
+          {/* Right: Right Desktop Nav & Actions */}
           <div className="header-right">
+            {renderNavItems(rightNavLinks, true)}
+
             {/* India Flag & Currency Selector (Desktop only) */}
             <div className="currency-selector">
-              <Globe size={14} color="#b51224" />
+              <Globe size={13} color="#b51224" />
               <span className="currency-label">INDIA (₹)</span>
             </div>
 
@@ -242,7 +278,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               title="View saved items"
               aria-label="View saved items"
             >
-              <Heart size={19} />
+              <Heart size={18} />
               {wishlistCount > 0 && (
                 <span className="cart-badge">{wishlistCount}</span>
               )}
@@ -255,7 +291,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               title="Search collection (⌘K)"
               aria-label="Search collection"
             >
-              <Search size={20} />
+              <Search size={19} />
               <span className="desktop-search-label">SEARCH</span>
             </button>
 
@@ -275,7 +311,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               className="header-action-btn bag-btn"
               aria-label="Open shopping bag"
             >
-              <ShoppingBag size={21} />
+              <ShoppingBag size={20} />
               {cart && cart.item_count > 0 && (
                 <span className="cart-badge">{cart.item_count}</span>
               )}
@@ -398,7 +434,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
 
         {/* Gymwear Category Nav Links */}
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-          {navLinks.map((link) => {
+          {allNavLinks.map((link) => {
             const isActive = currentPath === link.path || (link.subItems && link.subItems.some(s => s.path === currentPath));
 
             if (link.subItems) {
@@ -782,14 +818,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           .desktop-nav {
             display: flex !important;
             align-items: center;
-            gap: 1.25rem;
+            gap: 1.1rem;
           }
           .header-right {
-            gap: 1rem;
+            gap: 0.85rem;
           }
           .brand-wordmark {
-            font-size: 1.55rem;
-            letter-spacing: 0.18em;
+            font-size: 1.45rem;
+            letter-spacing: 0.16em;
           }
           .currency-selector {
             display: flex !important;

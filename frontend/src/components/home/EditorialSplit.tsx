@@ -8,10 +8,10 @@ interface EditorialSplitProps {
 }
 
 export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavigate }) => {
-  const title = cmsData?.title || 'UNCOMPROMISING FABRIC WEIGHT';
-  const subtitle = cmsData?.subtitle || 'Every lower is crafted from custom-knit 350GSM and 270GSM dense cotton terry that holds its shape through hundreds of heavy squat sessions and washes.';
-  const ctaText = cmsData?.cta_text || 'EXPLORE LOWERS';
-  const ctaLink = cmsData?.cta_link || '/collections/350gsm-lowers';
+  const title = cmsData?.title || 'UNCOMPROMISING PERFORMANCE';
+  const subtitle = cmsData?.subtitle || 'Built for the aesthetic. Engineered for the lift. YoungIN delivers brutalist, high-contrast gymwear that never restricts your range of motion.';
+  const ctaText = cmsData?.cta_text || 'VIEW ALL GEAR';
+  const ctaLink = cmsData?.cta_link || '/collections';
   const image = cmsData?.image_url || '/images/editorial-split.jpg';
 
   return (
@@ -111,7 +111,7 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
                 fontSize: '0.9375rem',
               }}
             >
-              "Discipline in training requires discipline in craft. YoungIN gymwear is engineered in India to withstand high-volume workouts with zero loss of shape."
+              "We reject average. YoungIN is built upon resilient fabrics designed to outlast your toughest training blocks."
             </blockquote>
 
             <button

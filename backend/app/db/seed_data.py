@@ -428,39 +428,39 @@ def seed_database(db: Session):
     # 7. Initial CMS Blocks (Gymwear & India focused)
     cms_announcement = CMSContent(
         section_key="announcement",
-        title="FREE PAN-INDIA EXPRESS SHIPPING ON ORDERS OVER ₹1,999 • USE CODE: FIRST10 FOR 10% OFF • 350GSM HEAVYWEIGHT LOWERS & MULTI-TIER COMPRESSIONS LIVE • HIGH-PERFORMANCE GYMWEAR CRAFTED IN INDIA • 7-DAY EASY SIZE SWAP",
+        title="ENGINEERED FOR THE GRIND • FREE PAN-INDIA EXPRESS SHIPPING ON ORDERS OVER ₹1,999 • USE CODE: FIRST10 FOR 10% OFF • 4-WAY STRETCH POLY-NYLON & 350GSM HEAVYWEIGHT JOGGERS • CRAFTED IN INDIA • 7-DAY EASY SIZE SWAP",
         meta_json={"ticker_speed": 28, "allow_pause": True}
     )
     cms_hero = CMSContent(
         section_key="hero",
-        title="BUILT FOR STRENGTH",
-        subtitle="Heavyweight 350GSM lowers, four-way stretch compressions, and sculpted ribbed vests engineered in India for peak physical discipline.",
-        cta_text="EXPLORE 350GSM LOWERS",
-        cta_link="/collections/350gsm-lowers",
+        title="ENGINEERED FOR THE GRIND",
+        subtitle="High-performance activewear built for high-intensity training. Featuring our signature 4-way stretch poly-nylon compression wear and heavy-duty 350GSM training joggers.",
+        cta_text="SHOP THE DROP",
+        cta_link="/collections/compression",
         image_url="/images/campaign-hero.jpg",
         meta_json={"season": "STRENGTH '26", "campaign_code": "YOUNGIN-PRO-01"}
     )
     cms_editorial_split = CMSContent(
         section_key="editorial_split",
-        title="UNCOMPROMISING FABRIC WEIGHT",
-        subtitle="Every lower is crafted from custom-knit 350GSM and 270GSM dense cotton terry that holds its shape through hundreds of heavy squat sessions and washes.",
-        cta_text="EXPLORE LOWERS",
-        cta_link="/collections/350gsm-lowers",
+        title="UNCOMPROMISING PERFORMANCE",
+        subtitle="Built for the aesthetic. Engineered for the lift. YoungIN delivers brutalist, high-contrast gymwear that never restricts your range of motion.",
+        cta_text="VIEW ALL GEAR",
+        cta_link="/collections",
         image_url="/images/editorial-split.jpg",
-        meta_json={"quote": "Discipline in training requires discipline in craft."}
+        meta_json={"quote": "We reject average. YoungIN is built upon resilient fabrics designed to outlast your toughest training blocks."}
     )
     cms_curated = CMSContent(
         section_key="curated_feature",
-        title="THE STRENGTH UNIFORM",
-        subtitle="Pro-Armor compression base layer paired with 350GSM heavy lowers and raw-cut muscle tank.",
-        cta_text="SHOP COMPRESSIONS",
-        cta_link="/collections/premium-compressions",
-        image_url="/images/product-overcoat.jpg"
+        title="ULTIMATE COMPRESSION",
+        subtitle="Second-skin fit with flatlock stitching and strategic nylon mesh panelling. Available in Basic and Premium tiers to support your most intense Push/Pull/Legs days.",
+        cta_text="EXPLORE COMPRESSIONS",
+        cta_link="/collections/compression",
+        image_url="/images/product-hoodie.jpg"
     )
     cms_brand_manifesto = CMSContent(
         section_key="brand_manifesto",
-        title="YOUNG IN",
-        subtitle="High-performance gymwear and strength apparel engineered in India with zero compromise.",
+        title="DIRECT-TO-CONSUMER ACTIVEWEAR",
+        subtitle="Direct-to-consumer activewear defined by industrial aesthetics and elite performance. Engineered in India with zero compromise on craftsmanship.",
         cta_text="OUR MANIFESTO",
         cta_link="/about"
     )

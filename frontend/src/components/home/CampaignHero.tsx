@@ -8,10 +8,10 @@ interface CampaignHeroProps {
 }
 
 export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate }) => {
-  const title = cmsData?.title || 'BUILT FOR STRENGTH';
-  const subtitle = cmsData?.subtitle || 'Heavyweight 350GSM lowers, four-way stretch compressions, and sculpted ribbed vests engineered in India for peak physical output.';
-  const ctaText = cmsData?.cta_text || 'EXPLORE 350GSM LOWERS';
-  const ctaLink = cmsData?.cta_link || '/collections/350gsm-lowers';
+  const title = cmsData?.title || 'ENGINEERED FOR THE GRIND';
+  const subtitle = cmsData?.subtitle || 'High-performance activewear built for high-intensity training. Featuring our signature 4-way stretch poly-nylon compression wear and heavy-duty 350GSM training joggers.';
+  const ctaText = cmsData?.cta_text || 'SHOP THE DROP';
+  const ctaLink = cmsData?.cta_link || '/collections/compression';
   const image = cmsData?.image_url || '/images/campaign-hero.jpg';
 
   return (
@@ -151,7 +151,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
           </button>
 
           <button
-            onClick={() => onNavigate('/collections/premium-compressions')}
+            onClick={() => onNavigate('/collections/joggers')}
             className="btn-white"
             style={{
               padding: '1rem 1.75rem',
@@ -163,7 +163,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
             }}
           >
             <Eye size={16} />
-            <span>PRO COMPRESSIONS</span>
+            <span>EXPLORE JOGGERS</span>
           </button>
         </div>
       </div>

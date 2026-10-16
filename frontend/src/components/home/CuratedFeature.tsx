@@ -9,7 +9,7 @@ interface CuratedFeatureProps {
 }
 
 export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavigate }) => {
-  const anchorPiece = products.find((p) => p.slug === '350gsm-ultra-heavyweight-gym-lower') || products[0];
+  const anchorPiece = products.find((p) => p.slug.includes('compression')) || products[0];
   const complementaryPieces = products.filter((p) => p.id !== anchorPiece?.id).slice(0, 2);
 
   return (
@@ -22,21 +22,22 @@ export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavi
       }}
     >
       <div className="container-custom">
-        <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 4rem auto' }}>
+        <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 4rem auto' }}>
           <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '0.75rem' }}>
-            ATHLETE CAPSULE 01
+            TECHNICAL ACTIVEWEAR
           </span>
           <h2
             style={{
               fontSize: 'clamp(2rem, 3.8vw, 2.75rem)',
               color: '#0a0a0a',
               marginBottom: '1rem',
+              letterSpacing: '-0.01em',
             }}
           >
-            THE STRENGTH UNIFORM
+            ULTIMATE COMPRESSION
           </h2>
-          <p style={{ color: '#6b6b6b', fontSize: '0.9375rem' }}>
-            High-performance athletic layering: Combining custom 350GSM structured fleece lowers with Pro-Armor multi-tier compressions and heavy cotton ribbed vests.
+          <p style={{ color: '#555555', fontSize: '0.95rem', lineHeight: 1.7 }}>
+            Second-skin fit with flatlock stitching and strategic nylon mesh panelling. Available in Basic and Premium tiers to support your most intense Push/Pull/Legs days.
           </p>
         </div>
 
@@ -92,7 +93,7 @@ export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavi
                   className="btn-primary"
                   style={{ width: '100%' }}
                 >
-                  <span>INSPECT 350GSM LOWER</span>
+                  <span>INSPECT COMPRESSION GEAR</span>
                   <ArrowRight size={16} />
                 </button>
               </div>

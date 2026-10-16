@@ -43,11 +43,11 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
           setProducts(prodList);
           setCollectionInfo({
             id: 0,
-            title: searchQuery ? `SEARCH: "${searchQuery.toUpperCase()}"` : 'COMPLETE ATELIER ARCHIVE',
+            title: searchQuery ? `SEARCH: "${searchQuery.toUpperCase()}"` : 'COMPLETE GEAR COLLECTION',
             slug: 'all',
             description: searchQuery
               ? `Archival garments corresponding to '${searchQuery}'.`
-              : 'The comprehensive collection of YoungINApparels luxury tailoring, heavyweight fleece, Japanese selvedge denim, and leather footwear.',
+              : 'Engineered for the grind. High-performance activewear featuring 4-way stretch poly-nylon compression wear, 350GSM & 250GSM joggers, and training tanks.',
             sort_order: 0,
             active: true,
           });
@@ -63,9 +63,9 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
   }, [collectionSlug, searchQuery]);
 
   // Distinct options
-  const categories = ['All', 'Outerwear', 'Tops', 'Bottoms', 'Footwear', 'Accessories'];
-  const sizes = ['All', 'XS', 'S', 'M', 'L', 'XL', '28', '30', '32', '34', 'EU 42', 'EU 43', 'ONE-SIZE'];
-  const colors = ['All', 'Midnight Black', 'Washed Charcoal', 'Campaign Crimson', 'Raw Dark Indigo'];
+  const categories = ['All', 'Compressions', 'Bottoms', 'Tank Tops', 'Ribbed Vests'];
+  const sizes = ['All', 'S', 'M', 'L', 'XL', 'XXL'];
+  const colors = ['All', 'Midnight Black', 'Washed Charcoal', 'Campaign Crimson', 'Carbon Black', 'Obsidian Black'];
 
   // Apply client filtering
   const filteredProducts = products.filter((p) => {

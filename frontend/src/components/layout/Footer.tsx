@@ -71,11 +71,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 marginBottom: '1.5rem',
               }}
             >
-              High-performance Indian gymwear & strength apparel engineered for peak athletic output. Built with four-way stretch compressions, 350GSM heavyweight structured lowers, and contoured ribbed training vests. Engineered and dispatched across India with zero compromise.
+              Direct-to-consumer activewear defined by industrial aesthetics and elite performance. Engineered in India with zero compromise on craftsmanship.
             </p>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <span className="eyebrow" style={{ color: '#b51224', fontSize: '0.6875rem' }}>
-                MUMBAI • NEW DELHI • BENGALURU • HYDERABAD • PAN-INDIA
+              <span className="eyebrow" style={{ color: '#b51224', fontSize: '0.6875rem', letterSpacing: '0.12em' }}>
+                PROUDLY ENGINEERED & MANUFACTURED IN INDIA • PAN-INDIA EXPRESS SHIPPING
               </span>
             </div>
           </div>
@@ -94,7 +94,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               THE ATHLETE DISPATCH
             </h4>
             <p style={{ fontSize: '0.8125rem', color: '#9e9e9e', marginBottom: '1.25rem' }}>
-              Subscribe for private drop previews, restocking alerts on 350GSM lowers, and athlete training discounts. Receive 10% off your initial acquisition.
+              Subscribe for private drop previews, restocking alerts on 350GSM joggers, and athlete training discounts. Receive 10% off your initial acquisition.
             </p>
 
             {subscribedMessage ? (
@@ -167,18 +167,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 marginBottom: '1.25rem',
               }}
             >
-              GYMWEAR GEAR
+              COLLECTIONS
             </h5>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {[
-                { label: 'Tank Tops', path: '/collections/tank-tops' },
-                { label: 'Basic Compressions', path: '/collections/basic-compressions' },
-                { label: 'Premium Compressions', path: '/collections/premium-compressions' },
-                { label: 'Ribbed Vests', path: '/collections/ribbed-vests' },
-                { label: '270 GSM Lowers', path: '/collections/270gsm-lowers' },
-                { label: '350 GSM Heavy Lowers', path: '/collections/350gsm-lowers' },
+                { label: 'Premium Compression Tees', path: '/collections/premium-compressions' },
+                { label: 'Basic Compression Tees', path: '/collections/basic-compressions' },
+                { label: 'Heavyweight Joggers (350GSM)', path: '/collections/350gsm-lowers' },
+                { label: 'Training Joggers (250GSM)', path: '/collections/250gsm-lowers' },
+                { label: 'Premium Tank Tops', path: '/collections/tank-tops' },
+                { label: 'Training Vests', path: '/collections/ribbed-vests' },
               ].map((item) => (
-                <li key={item.path}>
+                <li key={item.label}>
                   <button
                     onClick={() => onNavigate(item.path)}
                     style={{
@@ -201,7 +201,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </ul>
           </div>
 
-          {/* Col 2: Athlete Services */}
+          {/* Col 2: Client Services */}
           <div>
             <h5
               style={{
@@ -213,17 +213,17 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 marginBottom: '1.25rem',
               }}
             >
-              ATHLETE SERVICES
+              CLIENT SERVICES
             </h5>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {[
-                { label: 'Pan-India Express Shipping', path: '/shipping-returns' },
-                { label: '7-Day Easy Returns & Size Swap', path: '/shipping-returns' },
-                { label: 'Gymwear Sizing Guide', path: '/size-guide' },
-                { label: 'Frequently Asked Questions', path: '/faq' },
-                { label: 'WhatsApp Concierge Support', path: '/contact' },
+                { label: 'Shipping & Delivery (3-5 Day Express)', path: '/shipping-returns' },
+                { label: 'Returns & Exchanges', path: '/shipping-returns' },
+                { label: 'Size Guide', path: '/size-guide' },
+                { label: 'Track Your Order', path: '/track-order' },
+                { label: 'Contact Support', path: '/contact' },
               ].map((item) => (
-                <li key={item.path}>
+                <li key={item.label}>
                   <button
                     onClick={() => onNavigate(item.path)}
                     style={{
@@ -263,11 +263,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {[
                 { label: 'Brand Story & Philosophy', path: '/about' },
+                { label: 'Track My Order', path: '/track-order' },
                 { label: 'Privacy Policy', path: '/privacy' },
                 { label: 'Terms of Service', path: '/terms' },
-                { label: 'Admin Management', path: '/admin' },
+                { label: 'Admin Console', path: '/admin' },
               ].map((item) => (
-                <li key={item.path}>
+                <li key={item.label}>
                   <button
                     onClick={() => onNavigate(item.path)}
                     style={{
@@ -302,13 +303,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 marginBottom: '1.25rem',
               }}
             >
-              DISPATCH HEADQUARTERS
+              DISPATCH OFFICE
             </h5>
             <p style={{ fontSize: '0.8125rem', color: '#9e9e9e', lineHeight: 1.6, marginBottom: '1rem' }}>
-              YoungIN Performance HQ<br />
-              BKC, Bandra East<br />
-              Mumbai, Maharashtra 400051, India<br />
-              care@younginapparels.com
+              YoungIN Performance Logistics Hub<br />
+              Plot 42, Industrial Area Phase II<br />
+              Chandigarh 160002, India<br />
+              <span style={{ color: '#ffffff', fontWeight: 600 }}>care@younginapparels.com</span>
             </p>
             <div style={{ display: 'flex', gap: '1rem' }}>
               {['INSTAGRAM', 'YOUTUBE', 'WHATSAPP'].map((social) => (
@@ -331,7 +332,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Bottom Bar: Copyright & Payment Badges */}
+        {/* Bottom Bar: Copyright & Domestic Payment Gateways */}
         <div
           style={{
             display: 'flex',
@@ -349,16 +350,36 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             © {new Date().getFullYear()} YOUNGIN APPARELS INDIA. ALL RIGHTS RESERVED.
           </div>
 
-          {/* Indian Payment Gateways */}
+          {/* Indian Payment Gateways - Prominently Advertising UPI */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
-            {['UPI', 'GPAY', 'PHONEPE', 'PAYTM', 'RUPAY', 'VISA', 'MASTERCARD', 'NET BANKING'].map((badge) => (
+            {/* Featured UPI Pill */}
+            <span
+              style={{
+                fontSize: '0.625rem',
+                fontWeight: 900,
+                letterSpacing: '0.06em',
+                backgroundColor: '#b51224',
+                color: '#ffffff',
+                border: '1px solid #d4172c',
+                padding: '3px 8px',
+                borderRadius: '2px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+            >
+              ⚡ UPI INSTANT
+            </span>
+
+            {['GPAY', 'PHONEPE', 'PAYTM', 'RAZORPAY', 'RUPAY', 'VISA', 'MASTERCARD', 'NET BANKING'].map((badge) => (
               <span
                 key={badge}
                 style={{
                   fontSize: '0.5625rem',
                   fontWeight: 800,
                   letterSpacing: '0.06em',
-                  color: '#9e9e9e',
+                  color: '#a3a3a3',
+                  backgroundColor: '#121212',
                   border: '1px solid #282828',
                   padding: '3px 6px',
                   borderRadius: '2px',

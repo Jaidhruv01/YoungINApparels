@@ -119,16 +119,22 @@ export const api = {
         prods = fallbackProducts.filter((p) => p.slug.includes('basic') || p.category === 'Compressions');
       } else if (slug === 'premium-compressions') {
         prods = fallbackProducts.filter((p) => p.slug.includes('premium') || p.category === 'Compressions');
-      } else if (slug === 'compressions') {
+      } else if (slug === 'compression' || slug === 'compressions') {
         prods = fallbackProducts.filter((p) => p.category === 'Compressions' || p.slug.includes('compression'));
       } else if (slug === 'ribbed-vests') {
-        prods = fallbackProducts.filter((p) => p.category === 'Ribbed Vests' || p.slug.includes('ribbed'));
-      } else if (slug === '270gsm-lowers') {
-        prods = fallbackProducts.filter((p) => p.slug.includes('270gsm') || p.category === 'Bottoms');
-      } else if (slug === '350gsm-lowers') {
+        prods = fallbackProducts.filter((p) => p.category === 'Ribbed Vests' || p.slug.includes('ribbed') || p.slug.includes('vest'));
+      } else if (slug === 'tanks-and-vests') {
+        prods = fallbackProducts.filter((p) => p.category === 'Tank Tops' || p.category === 'Ribbed Vests' || p.slug.includes('tank') || p.slug.includes('vest'));
+      } else if (slug === '270gsm-lowers' || slug === '250gsm-lowers' || slug === 'training-joggers') {
+        prods = fallbackProducts.filter((p) => p.slug.includes('270gsm') || p.slug.includes('250gsm') || p.category === 'Bottoms');
+      } else if (slug === '350gsm-lowers' || slug === 'heavyweight-joggers') {
         prods = fallbackProducts.filter((p) => p.slug.includes('350gsm') || p.category === 'Bottoms');
-      } else if (slug === 'bottoms') {
-        prods = fallbackProducts.filter((p) => p.category === 'Bottoms' || p.slug.includes('lower'));
+      } else if (slug === 'joggers' || slug === 'bottoms') {
+        prods = fallbackProducts.filter((p) => p.category === 'Bottoms' || p.slug.includes('lower') || p.slug.includes('jogger'));
+      } else if (slug === 'premium-series') {
+        prods = fallbackProducts.filter((p) => p.slug.includes('premium') || p.slug.includes('350gsm'));
+      } else if (slug === 'launch-capsule') {
+        prods = fallbackProducts;
       }
 
       if (prods.length === 0) {

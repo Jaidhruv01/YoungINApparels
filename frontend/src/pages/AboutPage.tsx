@@ -88,30 +88,30 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             <div style={{ backgroundColor: '#ffffff', padding: '2rem', border: '1px solid #e7e5e3' }}>
               <Compass size={28} color="#b51224" style={{ marginBottom: '1rem' }} />
               <h3 style={{ fontSize: '1rem', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-                EXACTING PROPORTION
+                ANATOMICAL PRECISION
               </h3>
               <p style={{ fontSize: '0.8125rem', color: '#666666', lineHeight: 1.7 }}>
-                Drop shoulders, cropped body blocks, and balanced silhouettes calculated to provide an effortless, dramatic drape.
+                Ergonomic seam mapping, flatlock anti-chafing stitching, and physique-accentuating cuts engineered for complete range of motion on heavy lifts.
               </p>
             </div>
 
             <div style={{ backgroundColor: '#ffffff', padding: '2rem', border: '1px solid #e7e5e3' }}>
               <Shield size={28} color="#b51224" style={{ marginBottom: '1rem' }} />
               <h3 style={{ fontSize: '1rem', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-                SUBSTANTIAL FABRICATION
+                TECHNICAL FABRICATION
               </h3>
               <p style={{ fontSize: '0.8125rem', color: '#666666', lineHeight: 1.7 }}>
-                We work only with heavyweight materials: 850GSM Italian wool, 500GSM terry cotton, and 14oz Okayama raw selvedge denim.
+                Engineered with high-tensile 4-way stretch poly-nylon, strategic nylon mesh panels, and heavy-duty 250GSM & 350GSM organic combed fabrics.
               </p>
             </div>
 
             <div style={{ backgroundColor: '#ffffff', padding: '2rem', border: '1px solid #e7e5e3' }}>
               <Award size={28} color="#b51224" style={{ marginBottom: '1rem' }} />
               <h3 style={{ fontSize: '1rem', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-                ARTISANAL FINISHING
+                UNCOMPROMISING RESILIENCE
               </h3>
               <p style={{ fontSize: '0.8125rem', color: '#666666', lineHeight: 1.7 }}>
-                Gunmetal Riri hardware, genuine horn buttons, blind hems, and hand-rolled mulberry silk finishes.
+                Reinforced barbell guard zones, heavy-duty waistbands, and resilient fibers designed to withstand hundreds of high-volume workouts.
               </p>
             </div>
           </div>
@@ -121,13 +121,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       {/* CTA Section */}
       <div className="container-custom" style={{ textAlign: 'center', paddingTop: '6rem' }}>
         <h2 style={{ fontSize: '2.5rem', marginBottom: '1.25rem', textTransform: 'uppercase' }}>
-          EXPLORE THE ARCHIVE
+          ENGINEERED FOR THE GRIND
         </h2>
         <p style={{ color: '#6b6b6b', maxWidth: '520px', margin: '0 auto 2.5rem auto', fontSize: '0.9375rem' }}>
-          Discover the seasonal garments currently available in our limited production run.
+          Discover the high-performance activewear and technical compression gear currently live in our launch capsule.
         </p>
-        <button onClick={() => onNavigate('/collections')} className="btn-primary" style={{ padding: '1.1rem 2.5rem' }}>
-          <span>VIEW COLLECTION CATALOG</span>
+        <button onClick={() => onNavigate('/collections')} className="btn-crimson" style={{ padding: '1.1rem 2.5rem' }}>
+          <span>VIEW ALL GEAR</span>
           <ArrowRight size={16} />
         </button>
       </div>

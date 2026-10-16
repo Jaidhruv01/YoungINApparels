@@ -21,6 +21,7 @@ import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { FAQPage } from './pages/FAQPage';
 import { PoliciesPage } from './pages/PoliciesPage';
+import { TrackOrderPage } from './pages/TrackOrderPage';
 
 import { api } from './services/api';
 
@@ -139,17 +140,21 @@ const StorefrontApp: React.FC = () => {
       return <PoliciesPage type="terms" onNavigate={navigate} />;
     }
 
+    if (currentPath === '/track-order') {
+      return <TrackOrderPage onNavigate={navigate} />;
+    }
+
     // Default Fallback
     return (
       <div className="container-custom" style={{ padding: '8rem 0', textAlign: 'center' }}>
         <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', textTransform: 'uppercase' }}>
-          404 — ARCHIVE NOT LOCATED
+          404 — GEAR NOT FOUND
         </h2>
         <p style={{ color: '#6b6b6b', marginBottom: '2rem' }}>
-          The requested atelier page does not exist or has been retired from the collection.
+          The requested page or training drop is unavailable or has been relocated.
         </p>
         <button onClick={() => navigate('/')} className="btn-primary">
-          RETURN TO ATELIER HOME
+          RETURN TO STOREFRONT
         </button>
       </div>
     );

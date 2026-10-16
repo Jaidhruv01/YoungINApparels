@@ -321,7 +321,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose, o
                   NO PIECES FOUND MATCHING "{query}"
                 </p>
                 <p style={{ fontSize: '0.875rem', color: '#888888', marginBottom: '1.5rem' }}>
-                  Please verify spelling or search by general categories such as outerwear, fleece, denim, or footwear.
+                  Please verify spelling or search by activewear categories such as compression, joggers, tank tops, or training vests.
                 </p>
                 <button
                   onClick={() => setQuery('')}
