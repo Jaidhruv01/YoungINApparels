@@ -97,3 +97,4 @@ docker-compose up --build
 PYTHONPATH=backend python3 -m pytest backend/tests/test_api.py -v
 ```
 All 7 unit and integration tests verify catalog listings, slug lookups, search suggestions, atomic cart transactions, promo calculations, and orders.
+# YoungINApparels
