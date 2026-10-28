@@ -14,7 +14,7 @@ export const PoliciesPage: React.FC<PoliciesPageProps> = ({ type, onNavigate }) 
         <>
           <h3>1. PAN-INDIA DISPATCH PROTOCOLS</h3>
           <p>
-            All YoungIN Apparels orders are packaged and fulfilled by our dedicated athletic dispatch facility at Bandra Kurla Complex (BKC), Mumbai, India. Orders placed Monday through Saturday before 15:00 IST are dispatched on the same day. Orders placed on Sunday are fulfilled the following business morning.
+            All YoungIN Apparels orders are packaged and fulfilled by our dedicated athletic dispatch facilities at Industrial Area Phase II, Chandigarh and BKC, Mumbai, India. Orders placed Monday through Saturday before 15:00 IST are dispatched on the same day. Orders placed on Sunday are fulfilled the following business morning.
           </p>
           <h3>2. COURIER TIERS & COMPLIMENTARY SHIPPING</h3>
           <p>

@@ -179,8 +179,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                   <MapPin size={18} color="#b51224" />
                   <div>
-                    <strong style={{ display: 'block' }}>Performance HQ & Dispatch</strong>
-                    <span style={{ color: '#6b6b6b' }}>YoungIN HQ, BKC, Bandra East, Mumbai, Maharashtra 400051, India</span>
+                    <strong style={{ display: 'block' }}>Performance Logistics Hub & Dispatch</strong>
+                    <span style={{ color: '#6b6b6b' }}>YoungIN Hub, Plot 42, Industrial Area Phase II, Chandigarh 160002, India</span>
                   </div>
                 </div>
               </div>
