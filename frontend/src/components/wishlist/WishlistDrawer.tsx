@@ -35,8 +35,6 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({ onNavigate }) =>
     }
   }, [isWishlistOpen, wishlist]);
 
-  if (!isWishlistOpen) return null;
-
   const handleMoveToBag = async (product: Product) => {
     const firstAvailable = product.variants.find((v) => v.available_quantity > 0) || product.variants[0];
     if (!firstAvailable) return;
@@ -58,19 +56,26 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({ onNavigate }) =>
     <>
       {/* Backdrop */}
       <div
-        className="drawer-backdrop active"
+        className={`drawer-backdrop ${isWishlistOpen ? 'active' : ''}`}
         onClick={closeWishlist}
-        style={{ zIndex: 1100 }}
+        style={{
+          zIndex: 1100,
+          visibility: isWishlistOpen ? 'visible' : 'hidden',
+          transition: 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s',
+        }}
       />
 
       {/* Slideout Panel */}
       <div
-        className="cart-drawer-panel open"
+        className={`cart-drawer-panel ${isWishlistOpen ? 'open' : ''}`}
         style={{
           zIndex: 1105,
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: '#ffffff',
+          visibility: isWishlistOpen ? 'visible' : 'hidden',
+          pointerEvents: isWishlistOpen ? 'auto' : 'none',
+          transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s',
         }}
       >
         {/* Header */}

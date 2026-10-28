@@ -17,8 +17,6 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigate }) => {
   const [promoError, setPromoError] = useState<string | null>(null);
   const [validatingPromo, setValidatingPromo] = useState(false);
 
-  if (!isCartOpen) return null;
-
   const subtotal = cart?.subtotal || 0;
   const freeThreshold = cart?.free_shipping_threshold || 5000;
   const progressPercent = Math.min(100, (subtotal / freeThreshold) * 100);
@@ -56,10 +54,26 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigate }) => {
   return (
     <>
       {/* Backdrop */}
-      <div className="drawer-backdrop active" onClick={closeCart} />
+      <div
+        className={`drawer-backdrop ${isCartOpen ? 'active' : ''}`}
+        onClick={closeCart}
+        style={{
+          visibility: isCartOpen ? 'visible' : 'hidden',
+          transition: 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s',
+        }}
+      />
 
       {/* Slide-out Drawer */}
-      <div className="cart-drawer-panel open" style={{ display: 'flex', flexDirection: 'column' }}>
+      <div
+        className={`cart-drawer-panel ${isCartOpen ? 'open' : ''}`}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          visibility: isCartOpen ? 'visible' : 'hidden',
+          pointerEvents: isCartOpen ? 'auto' : 'none',
+          transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s',
+        }}
+      >
         {/* Header */}
         <div
           style={{

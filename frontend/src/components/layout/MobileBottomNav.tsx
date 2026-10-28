@@ -18,7 +18,9 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   const { wishlistCount, openWishlist } = useWishlist();
 
   const isCheckout = currentPath === '/checkout';
-  if (isCheckout) return null;
+  const isAdmin = currentPath.startsWith('/admin');
+  const isProduct = currentPath.startsWith('/products/');
+  if (isCheckout || isAdmin || isProduct) return null;
 
   const isHome = currentPath === '/' || currentPath === '';
   const isCollections = currentPath.startsWith('/collections');
@@ -32,7 +34,10 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
           className={`nav-tab ${isHome ? 'active' : ''}`}
           aria-label="Home"
         >
-          <Home size={19} />
+          <div className="nav-icon-wrapper">
+            <Home size={19} />
+            {isHome && <span className="nav-active-dot" />}
+          </div>
           <span>HOME</span>
         </button>
 
@@ -42,7 +47,10 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
           className={`nav-tab ${isCollections ? 'active' : ''}`}
           aria-label="Collections"
         >
-          <Layers size={19} />
+          <div className="nav-icon-wrapper">
+            <Layers size={19} />
+            {isCollections && <span className="nav-active-dot" />}
+          </div>
           <span>GEAR</span>
         </button>
 
@@ -52,20 +60,22 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
           className="nav-tab"
           aria-label="Search"
         >
-          <Search size={19} />
+          <div className="nav-icon-wrapper">
+            <Search size={19} />
+          </div>
           <span>SEARCH</span>
         </button>
 
         {/* Wishlist */}
         <button
           onClick={openWishlist}
-          className="nav-tab relative"
+          className="nav-tab"
           aria-label="Wishlist"
         >
-          <div style={{ position: 'relative', display: 'inline-flex' }}>
+          <div className="nav-icon-wrapper" style={{ position: 'relative' }}>
             <Heart size={19} />
             {wishlistCount > 0 && (
-              <span className="badge-pill-counter">{wishlistCount}</span>
+              <span className="badge-pill-counter animate-pop">{wishlistCount}</span>
             )}
           </div>
           <span>SAVED</span>
@@ -74,13 +84,13 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
         {/* Shopping Bag */}
         <button
           onClick={openCart}
-          className="nav-tab relative"
+          className="nav-tab"
           aria-label="Cart Bag"
         >
-          <div style={{ position: 'relative', display: 'inline-flex' }}>
+          <div className="nav-icon-wrapper" style={{ position: 'relative' }}>
             <ShoppingBag size={19} />
             {cart && cart.item_count > 0 && (
-              <span className="badge-pill-counter">{cart.item_count}</span>
+              <span className="badge-pill-counter animate-pop">{cart.item_count}</span>
             )}
           </div>
           <span>BAG</span>
@@ -101,13 +111,14 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             left: 0;
             right: 0;
             z-index: 850;
-            background: rgba(10, 10, 10, 0.94);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-top: 1px solid #1f1f1f;
-            padding-top: 8px;
-            padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
-            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 6px;
+            padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+            box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.6);
+            will-change: transform;
           }
 
           .nav-tab {
@@ -119,9 +130,34 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-            padding: 4px 0;
-            transition: color 0.15s ease, transform 0.15s ease;
+            gap: 3px;
+            padding: 5px 0;
+            transition: color 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s ease;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+          }
+
+          .nav-icon-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 24px;
+          }
+
+          .nav-active-dot {
+            position: absolute;
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #b51224;
+            box-shadow: 0 0 8px #b51224;
           }
 
           .nav-tab span {
@@ -137,6 +173,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
 
           .nav-tab:active {
             transform: scale(0.92);
+            color: #ffffff;
           }
 
           .badge-pill-counter {
@@ -147,14 +184,25 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             color: #ffffff;
             font-size: 0.5rem;
             font-weight: 800;
-            min-width: 15px;
-            height: 15px;
-            padding: 0 3px;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid #0a0a0a;
+            border: 1.5px solid #0a0a0a;
+            box-shadow: 0 2px 6px rgba(181, 18, 36, 0.4);
+          }
+
+          .badge-pill-counter.animate-pop {
+            animation: badgePop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          }
+
+          @keyframes badgePop {
+            0% { transform: scale(0.6); }
+            60% { transform: scale(1.25); }
+            100% { transform: scale(1); }
           }
         }
       `}</style>

@@ -5,23 +5,53 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    image: youngin-backend:latest
     container_name: youngin_backend
+    restart: unless-stopped
     ports:
       - "8000:8000"
     environment:
       - DATABASE_URL=sqlite:///./youngin_apparels.db
       - ADMIN_API_KEY=youngin-secret-admin-key-2026
     volumes:
-      - ./backend/youngin_apparels.db:/app/youngin_apparels.db
-    restart: unless-stopped
+      - sqlite_data:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - youngin_network
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=""
+    image: youngin-frontend:latest
     container_name: youngin_frontend
+    restart: unless-stopped
     ports:
+      - "80:80"
       - "5173:80"
     depends_on:
-      - backend
-    restart: unless-stopped
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - youngin_network
+
+volumes:
+  sqlite_data:
+    driver: local
+
+networks:
+  youngin_network:
+    driver: bridge

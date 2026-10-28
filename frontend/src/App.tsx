@@ -161,11 +161,21 @@ const StorefrontApp: React.FC = () => {
   };
 
   const isCheckoutView = currentPath === '/checkout';
+  const isAdminView = currentPath.startsWith('/admin');
+  const isProductDetailView = currentPath.startsWith('/products/');
+  const showMobileBottomNav = !isCheckoutView && !isAdminView && !isProductDetailView;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', paddingBottom: !isCheckoutView ? '60px' : '0' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        paddingBottom: showMobileBottomNav ? '60px' : '0',
+      }}
+    >
       {/* Announcement Ticker */}
-      {!isCheckoutView && <AnnouncementTicker text={announcementText} />}
+      {!isCheckoutView && !isAdminView && <AnnouncementTicker text={announcementText} />}
 
       {/* Main Header */}
       {!isCheckoutView && (
@@ -176,11 +186,13 @@ const StorefrontApp: React.FC = () => {
         />
       )}
 
-      {/* Main Page Content */}
-      <div style={{ flex: 1 }}>{renderRoute()}</div>
+      {/* Main Page Content with smooth view transition */}
+      <div key={currentPath} className="page-fade-in" style={{ flex: 1 }}>
+        {renderRoute()}
+      </div>
 
       {/* Footer */}
-      {!isCheckoutView && <Footer onNavigate={navigate} />}
+      {!isCheckoutView && !isAdminView && <Footer onNavigate={navigate} />}
 
       {/* Slideout Cart Drawer */}
       <CartDrawer onNavigate={navigate} />
@@ -195,19 +207,22 @@ const StorefrontApp: React.FC = () => {
         onNavigate={navigate}
       />
 
-      {/* Mobile Floating App Bottom Navigation */}
-      <MobileBottomNav
-        currentPath={currentPath}
-        onNavigate={navigate}
-        onOpenSearch={() => setSearchOverlayOpen(true)}
-      />
+      {/* Mobile Floating App Bottom Navigation (cleanly hidden on PDP & Admin to prevent control overlap) */}
+      {showMobileBottomNav && (
+        <MobileBottomNav
+          currentPath={currentPath}
+          onNavigate={navigate}
+          onOpenSearch={() => setSearchOverlayOpen(true)}
+        />
+      )}
 
-      {/* Toast Feedback */}
+      {/* Toast Feedback with smooth spring animation */}
       {toastMessage && (
         <div
+          className="toast-feedback"
           style={{
             position: 'fixed',
-            bottom: '80px',
+            bottom: isProductDetailView ? '90px' : '80px',
             right: '24px',
             backgroundColor: '#0a0a0a',
             color: '#ffffff',
@@ -218,7 +233,7 @@ const StorefrontApp: React.FC = () => {
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
             zIndex: 99999,
-            boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
             borderLeft: '4px solid #b51224',
           }}
         >

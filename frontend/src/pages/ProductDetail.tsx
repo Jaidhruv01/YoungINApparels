@@ -636,7 +636,9 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: '#ffffff',
+          backgroundColor: 'rgba(255, 255, 255, 0.96)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
           borderTop: '1px solid #e7e5e3',
           padding: '0.75rem 1rem',
           paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))',
@@ -644,16 +646,40 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
           alignItems: 'center',
           justifyContent: 'space-between',
           zIndex: 860,
-          boxShadow: '0 -4px 20px rgba(0,0,0,0.12)',
+          boxShadow: '0 -6px 25px rgba(0,0,0,0.12)',
         }}
       >
-        <div style={{ maxWidth: '60%', minWidth: 0 }}>
+        <div style={{ maxWidth: '52%', minWidth: 0 }}>
           <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {product.title}
           </span>
-          <span style={{ fontSize: '0.875rem', fontWeight: 900, color: '#b51224' }}>
-            {formatPrice(currentVariant ? currentVariant.price : product.price)}
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+            <span style={{ fontSize: '0.875rem', fontWeight: 900, color: '#b51224' }}>
+              {formatPrice(currentVariant ? currentVariant.price : product.price)}
+            </span>
+            {sizesForColor.length > 0 && (
+              <select
+                value={selectedSize}
+                onChange={(e) => setSelectedSize(e.target.value)}
+                style={{
+                  fontSize: '0.6875rem',
+                  fontWeight: 800,
+                  padding: '2px 4px',
+                  border: '1px solid #d4d2d0',
+                  backgroundColor: '#f7f6f4',
+                  borderRadius: '2px',
+                  cursor: 'pointer',
+                }}
+                aria-label="Choose garment size"
+              >
+                {sizesForColor.map((s) => (
+                  <option key={s.id} value={s.size} disabled={s.available_quantity <= 0}>
+                    {s.size} {s.available_quantity <= 0 ? '(Out)' : ''}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
         </div>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <button
@@ -669,6 +695,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
+              transition: 'transform 0.15s ease',
             }}
             aria-label="Wishlist toggle"
           >
@@ -676,11 +703,11 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
           </button>
           <button
             onClick={handleAddToCart}
-            disabled={isCurrentOutOfStock}
+            disabled={isCurrentOutOfStock || addingToCart}
             className="btn-primary"
             style={{ padding: '0.75rem 1.25rem', fontSize: '0.75rem', flexShrink: 0 }}
           >
-            {isCurrentOutOfStock ? 'SOLD OUT' : 'ADD TO BAG'}
+            {isCurrentOutOfStock ? 'SOLD OUT' : addingToCart ? 'ADDING...' : 'ADD TO BAG'}
           </button>
         </div>
       </div>

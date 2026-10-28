@@ -315,6 +315,10 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
       <div
         className={`drawer-backdrop ${mobileFilterOpen ? 'active' : ''}`}
         onClick={() => setMobileFilterOpen(false)}
+        style={{
+          visibility: mobileFilterOpen ? 'visible' : 'hidden',
+          transition: 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s',
+        }}
       />
       <div
         style={{
@@ -327,10 +331,12 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
           backgroundColor: '#ffffff',
           zIndex: 999,
           transform: mobileFilterOpen ? 'translateX(0)' : 'translateX(-100%)',
-          transition: 'transform var(--transition-smooth)',
+          visibility: mobileFilterOpen ? 'visible' : 'hidden',
+          pointerEvents: mobileFilterOpen ? 'auto' : 'none',
+          transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '10px 0 40px rgba(0,0,0,0.2)',
+          boxShadow: '10px 0 40px rgba(0,0,0,0.25)',
         }}
       >
         <div

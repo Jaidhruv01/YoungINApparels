@@ -662,37 +662,33 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
         }
         .header-inner {
-          position: relative;
-          display: flex;
+          display: grid;
+          grid-template-columns: minmax(44px, 1fr) auto minmax(80px, 1fr);
           align-items: center;
-          justify-content: space-between;
           height: 60px;
           width: 100%;
+          column-gap: 0.5rem;
         }
         .header-left {
           display: flex;
           align-items: center;
           justify-content: flex-start;
-          z-index: 2;
+          min-width: 0;
         }
         .header-center {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
           display: flex;
           align-items: center;
           justify-content: center;
           text-align: center;
-          pointer-events: auto;
-          z-index: 3;
+          min-width: 0;
+          padding: 0 0.25rem;
         }
         .header-right {
           display: flex;
           align-items: center;
           justify-content: flex-end;
-          gap: 0.5rem;
-          z-index: 2;
+          gap: 0.35rem;
+          min-width: 0;
         }
         .mobile-toggle {
           display: flex;
@@ -701,9 +697,19 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           background: none;
           border: none;
           cursor: pointer;
+          min-width: 44px;
+          min-height: 44px;
           padding: 8px;
           margin-left: -8px;
           color: #0a0a0a;
+          border-radius: 4px;
+          transition: transform 0.15s ease, background-color 0.15s ease;
+          touch-action: manipulation;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .mobile-toggle:active {
+          transform: scale(0.92);
+          background-color: rgba(0, 0, 0, 0.05);
         }
         .desktop-nav {
           display: none;
@@ -712,21 +718,30 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           background: none;
           border: none;
           cursor: pointer;
-          padding: 0;
+          padding: 4px 6px;
           text-decoration: none;
           display: inline-flex;
           align-items: center;
+          justify-content: center;
+          transition: transform 0.15s ease, opacity 0.15s ease;
+          touch-action: manipulation;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .brand-button:active {
+          transform: scale(0.96);
+          opacity: 0.85;
         }
         .brand-wordmark {
           font-family: var(--font-display);
-          font-size: 1.25rem;
+          font-size: 1.18rem;
           font-weight: 900;
-          letter-spacing: 0.16em;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
           color: #0a0a0a;
           white-space: nowrap;
           display: inline-flex;
           align-items: center;
+          user-select: none;
         }
         .currency-selector {
           display: none;
@@ -747,14 +762,23 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           display: flex;
           align-items: center;
           justify-content: center;
+          min-width: 40px;
+          min-height: 40px;
           padding: 8px;
           color: #0a0a0a;
           position: relative;
-          border-radius: 2px;
-          transition: opacity 0.2s ease, background-color 0.2s ease;
+          border-radius: 4px;
+          transition: opacity 0.18s ease, transform 0.15s ease, background-color 0.18s ease;
+          touch-action: manipulation;
+          -webkit-tap-highlight-color: transparent;
         }
         .header-action-btn:hover {
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+        .header-action-btn:active {
+          transform: scale(0.92);
           opacity: 0.75;
+          background-color: rgba(0, 0, 0, 0.08);
         }
         .cart-badge {
           position: absolute;
@@ -773,17 +797,33 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           box-shadow: 0 2px 5px rgba(181, 18, 36, 0.4);
         }
 
-        @media (max-width: 375px) {
+        @media (max-width: 360px) {
+          .header-inner {
+            column-gap: 0.25rem;
+            grid-template-columns: 40px auto 72px;
+          }
           .brand-wordmark {
-            font-size: 1.1rem;
+            font-size: 1.02rem;
+            letter-spacing: 0.08em;
+          }
+          .header-action-btn {
+            padding: 6px;
+            min-width: 36px;
+            min-height: 36px;
+          }
+        }
+
+        @media (min-width: 361px) and (max-width: 480px) {
+          .brand-wordmark {
+            font-size: 1.15rem;
             letter-spacing: 0.12em;
           }
         }
 
-        @media (min-width: 480px) {
+        @media (min-width: 481px) and (max-width: 1023px) {
           .brand-wordmark {
-            font-size: 1.35rem;
-            letter-spacing: 0.16em;
+            font-size: 1.32rem;
+            letter-spacing: 0.14em;
           }
         }
 
@@ -791,13 +831,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           .wishlist-header-btn {
             display: flex;
           }
+          .header-inner {
+            grid-template-columns: minmax(44px, 1fr) auto minmax(120px, 1fr);
+          }
         }
 
         @media (min-width: 1024px) {
           .header-inner {
-            display: grid !important;
             grid-template-columns: 1fr auto 1fr !important;
-            align-items: center !important;
             height: 70px;
             column-gap: 0.75rem;
           }
@@ -805,33 +846,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
             display: none !important;
           }
           .header-left {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: flex-start !important;
-            min-width: 0 !important;
-          }
-          .header-center {
-            position: static !important;
-            top: auto !important;
-            left: auto !important;
-            transform: none !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            text-align: center !important;
-            padding: 0 1rem !important;
-            white-space: nowrap !important;
+            gap: 0.85rem !important;
           }
           .header-right {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: flex-end !important;
-            min-width: 0 !important;
             gap: 0.65rem !important;
           }
           .desktop-nav {
             display: flex !important;
-            align-items: center !important;
+            align-items: center;
             gap: 0.85rem !important;
           }
           .brand-wordmark {
