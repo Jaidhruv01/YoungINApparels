@@ -113,13 +113,14 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
 
         <h1
           style={{
-            fontSize: 'clamp(2.15rem, 6.5vw, 5.25rem)',
-            lineHeight: 0.96,
-            letterSpacing: '-0.02em',
+            fontSize: 'clamp(1.85rem, 6vw, 5.25rem)',
+            lineHeight: 1.02,
+            letterSpacing: '-0.01em',
             marginBottom: '1.25rem',
             color: '#ffffff',
             overflowWrap: 'break-word',
-            wordBreak: 'break-word',
+            wordBreak: 'normal',
+            hyphens: 'none',
           }}
         >
           {title}

@@ -662,17 +662,17 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
         }
         .header-inner {
-          display: grid;
-          grid-template-columns: minmax(44px, 1fr) auto minmax(80px, 1fr);
+          display: flex;
           align-items: center;
+          justify-content: space-between;
           height: 60px;
           width: 100%;
-          column-gap: 0.5rem;
         }
         .header-left {
           display: flex;
           align-items: center;
           justify-content: flex-start;
+          flex: 1 1 0%;
           min-width: 0;
         }
         .header-center {
@@ -680,15 +680,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           align-items: center;
           justify-content: center;
           text-align: center;
-          min-width: 0;
-          padding: 0 0.25rem;
+          flex-shrink: 0;
+          padding: 0 0.5rem;
         }
         .header-right {
           display: flex;
           align-items: center;
           justify-content: flex-end;
-          gap: 0.35rem;
+          flex: 1 1 0%;
           min-width: 0;
+          gap: 0.25rem;
         }
         .mobile-toggle {
           display: flex;
@@ -733,9 +734,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
         }
         .brand-wordmark {
           font-family: var(--font-display);
-          font-size: 1.18rem;
+          font-size: 1.15rem;
           font-weight: 900;
-          letter-spacing: 0.12em;
+          letter-spacing: 0.10em;
           text-transform: uppercase;
           color: #0a0a0a;
           white-space: nowrap;
@@ -744,16 +745,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           user-select: none;
         }
         .currency-selector {
-          display: none;
+          display: none !important;
         }
         .desktop-search-label, .desktop-admin-label {
-          display: none;
+          display: none !important;
         }
         .admin-btn {
-          display: none;
+          display: none !important;
         }
         .wishlist-header-btn {
-          display: none;
+          display: none !important;
         }
         .header-action-btn {
           background: none;
@@ -798,13 +799,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
         }
 
         @media (max-width: 360px) {
-          .header-inner {
-            column-gap: 0.25rem;
-            grid-template-columns: 40px auto 72px;
-          }
           .brand-wordmark {
-            font-size: 1.02rem;
-            letter-spacing: 0.08em;
+            font-size: 0.98rem;
+            letter-spacing: 0.06em;
           }
           .header-action-btn {
             padding: 6px;
@@ -815,32 +812,27 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
 
         @media (min-width: 361px) and (max-width: 480px) {
           .brand-wordmark {
-            font-size: 1.15rem;
-            letter-spacing: 0.12em;
+            font-size: 1.12rem;
+            letter-spacing: 0.09em;
           }
         }
 
         @media (min-width: 481px) and (max-width: 1023px) {
           .brand-wordmark {
-            font-size: 1.32rem;
-            letter-spacing: 0.14em;
+            font-size: 1.28rem;
+            letter-spacing: 0.12em;
           }
         }
 
         @media (min-width: 769px) {
           .wishlist-header-btn {
-            display: flex;
-          }
-          .header-inner {
-            grid-template-columns: minmax(44px, 1fr) auto minmax(120px, 1fr);
+            display: flex !important;
           }
         }
 
         @media (min-width: 1024px) {
           .header-inner {
-            grid-template-columns: 1fr auto 1fr !important;
             height: 70px;
-            column-gap: 0.75rem;
           }
           .mobile-toggle {
             display: none !important;
