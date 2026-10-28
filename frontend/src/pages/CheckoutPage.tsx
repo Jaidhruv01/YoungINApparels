@@ -49,6 +49,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
       const payloadItems = cart.items.map((i) => ({
         variant_id: i.variant_id,
         quantity: i.quantity,
+        price: i.price,
+        product_title: i.product_title,
+        sku: i.sku,
+        color: i.color,
+        size: i.size,
       }));
       const quoteData = await api.getCheckoutQuote({
         items: payloadItems,
@@ -95,6 +100,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
       const payloadItems = cart.items.map((i) => ({
         variant_id: i.variant_id,
         quantity: i.quantity,
+        price: i.price,
+        product_title: i.product_title,
+        sku: i.sku,
+        color: i.color,
+        size: i.size,
+        image_url: i.image_url,
+        total_price: i.total_price,
       }));
 
       const newOrder = await api.createOrder({
@@ -571,13 +583,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                   </div>
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6b6b6b' }}>
-                  <span>Courier Delivery</span>
+                  <span>Pan-India Courier Delivery</span>
                   <span style={{ fontWeight: 700, color: '#0a0a0a' }}>
-                    {quote?.shipping === 0 ? 'COMPLIMENTARY' : formatPrice(quote?.shipping || 0)}
+                    {quote?.shipping === 0 ? 'FREE (OVER ₹1,999)' : formatPrice(quote?.shipping || 149)}
                   </span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6b6b6b' }}>
-                  <span>Estimated Tax (8%)</span>
+                  <span>Standard Domestic GST (12%)</span>
                   <span style={{ fontWeight: 700, color: '#0a0a0a' }}>
                     {formatPrice(quote?.tax || 0)}
                   </span>
@@ -612,7 +624,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', justifyContent: 'center', marginTop: '1.25rem', fontSize: '0.6875rem', color: '#888' }}>
                 <ShieldCheck size={14} color="#10b981" />
-                <span>Zero Risk • Insured Worldwide Courier Delivery</span>
+                <span>Pan-India Express Logistics (Delhivery / Bluedart / DTDC)</span>
               </div>
             </div>
           </div>

@@ -311,23 +311,33 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               Chandigarh 160002, India<br />
               <span style={{ color: '#ffffff', fontWeight: 600 }}>care@younginapparels.com</span>
             </p>
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              {['INSTAGRAM', 'YOUTUBE', 'WHATSAPP'].map((social) => (
-                <span
-                  key={social}
-                  style={{
-                    fontSize: '0.6875rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.08em',
-                    color: '#6b6b6b',
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = '#6b6b6b')}
-                >
-                  {social}
-                </span>
-              ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.85rem' }}>
+              <span style={{ fontSize: '0.625rem', color: '#6b6b6b', letterSpacing: '0.08em', fontWeight: 800 }}>
+                ATHLETE NETWORK & CONCIERGE:
+              </span>
+              <div style={{ display: 'flex', gap: '0.85rem', flexWrap: 'wrap' }}>
+                {[
+                  { name: 'INSTAGRAM', handle: '@youngin.apparel' },
+                  { name: 'YOUTUBE', handle: '@youngin.apparel' },
+                  { name: 'WHATSAPP', handle: '+91 98201 54821' },
+                ].map((social) => (
+                  <span
+                    key={social.name}
+                    style={{
+                      fontSize: '0.6875rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.06em',
+                      color: '#a3a3a3',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#a3a3a3')}
+                    title={`${social.name}: ${social.handle}`}
+                  >
+                    {social.name} <span style={{ color: '#b51224', fontSize: '0.625rem' }}>({social.handle})</span>
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>

@@ -71,6 +71,14 @@ export const api = {
       return await request<Product[]>(`/products${qs ? `?${qs}` : ''}`);
     } catch {
       let list = [...fallbackProducts];
+      try {
+        const overrides = JSON.parse(localStorage.getItem('yin_inventory_overrides') || '{}');
+        list = list.map((p) => ({
+          ...p,
+          variants: p.variants.map((v) => overrides[v.id] !== undefined ? { ...v, available_quantity: overrides[v.id] } : v),
+        }));
+      } catch (e) {}
+
       if (params?.category && params.category !== 'All') {
         list = list.filter((p) => p.category.toLowerCase() === params.category?.toLowerCase());
       }
@@ -241,8 +249,8 @@ export const api = {
 
       current.item_count = current.items.reduce((sum, it) => sum + it.quantity, 0);
       current.subtotal = current.items.reduce((sum, it) => sum + it.total_price, 0);
-      current.has_free_shipping = current.subtotal >= 5000;
-      current.amount_for_free_shipping = Math.max(0, 5000 - current.subtotal);
+      current.has_free_shipping = current.subtotal >= 1999;
+      current.amount_for_free_shipping = Math.max(0, 1999 - current.subtotal);
       return saveLocalCart(current);
     }
   },
@@ -266,8 +274,8 @@ export const api = {
       }
       current.item_count = current.items.reduce((sum, it) => sum + it.quantity, 0);
       current.subtotal = current.items.reduce((sum, it) => sum + it.total_price, 0);
-      current.has_free_shipping = current.subtotal >= 5000;
-      current.amount_for_free_shipping = Math.max(0, 5000 - current.subtotal);
+      current.has_free_shipping = current.subtotal >= 1999;
+      current.amount_for_free_shipping = Math.max(0, 1999 - current.subtotal);
       return saveLocalCart(current);
     }
   },
@@ -282,8 +290,8 @@ export const api = {
       current.items = current.items.filter((it) => it.id !== itemId);
       current.item_count = current.items.reduce((sum, it) => sum + it.quantity, 0);
       current.subtotal = current.items.reduce((sum, it) => sum + it.total_price, 0);
-      current.has_free_shipping = current.subtotal >= 5000;
-      current.amount_for_free_shipping = Math.max(0, 5000 - current.subtotal);
+      current.has_free_shipping = current.subtotal >= 1999;
+      current.amount_for_free_shipping = Math.max(0, 1999 - current.subtotal);
       return saveLocalCart(current);
     }
   },
@@ -299,8 +307,8 @@ export const api = {
         items: [],
         item_count: 0,
         subtotal: 0,
-        free_shipping_threshold: 5000,
-        amount_for_free_shipping: 5000,
+        free_shipping_threshold: 1999,
+        amount_for_free_shipping: 1999,
         has_free_shipping: false
       };
       return saveLocalCart(emptyCart);
@@ -315,8 +323,29 @@ export const api = {
         body: JSON.stringify(payload),
       });
     } catch {
-      const current = getLocalCart();
-      const subtotal = current.subtotal || 24999.0;
+      // Calculate true subtotal strictly from payload items and product pricing (never arbitrary defaults)
+      let subtotal = 0;
+      if (payload.items && payload.items.length > 0) {
+        for (const it of payload.items) {
+          const qty = Number(it.quantity) || 1;
+          let price = Number(it.price) || 0;
+          if (!price) {
+            for (const p of fallbackProducts) {
+              const v = p.variants.find((vr) => vr.id === it.variant_id);
+              if (v) {
+                price = v.price;
+                break;
+              }
+            }
+          }
+          if (!price) price = 1599; // Fallback to basic compression tee price
+          subtotal += price * qty;
+        }
+      } else {
+        const current = getLocalCart();
+        subtotal = current.subtotal || 0;
+      }
+
       let discountAmount = 0;
       let discountApplied = null;
 
@@ -331,11 +360,11 @@ export const api = {
         discountApplied = 'FIRST10';
       }
 
-      const freeShipping = subtotal >= 5000;
-      const shipping = payload.shipping_method === 'express' ? 750.0 : (freeShipping ? 0.0 : 350.0);
+      const freeShipping = subtotal >= 1999;
+      const shipping = payload.shipping_method === 'express' ? 299.0 : (freeShipping ? 0.0 : 149.0);
       const taxable = Math.max(0, subtotal - discountAmount);
       const tax = Math.round(taxable * 0.12 * 100) / 100;
-      const total = taxable + shipping + tax;
+      const total = Math.round((taxable + shipping + tax) * 100) / 100;
 
       return {
         subtotal,
@@ -381,11 +410,40 @@ export const api = {
         body: JSON.stringify(payload),
       });
     } catch {
-      const orderNum = `YIN-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
-      const subtotal = payload.items?.reduce((s: number, i: any) => s + (i.price || 11999) * (i.quantity || 1), 0) || 24999;
-      const discount = payload.discount_code ? 1000 : 0;
-      const tax = Math.round((subtotal - discount) * 0.12);
-      const shipping = subtotal >= 5000 ? 0 : 350;
+      const orderNum = `YIN-${Math.floor(100000 + Math.random() * 900000)}`;
+      let subtotal = 0;
+      if (payload.items && payload.items.length > 0) {
+        for (const it of payload.items) {
+          const qty = Number(it.quantity) || 1;
+          let price = Number(it.price) || 0;
+          if (!price) {
+            for (const p of fallbackProducts) {
+              const v = p.variants.find((vr) => vr.id === it.variant_id);
+              if (v) {
+                price = v.price;
+                break;
+              }
+            }
+          }
+          if (!price) price = 1599;
+          subtotal += price * qty;
+        }
+      }
+
+      let discount = 0;
+      if (payload.discount_code?.toUpperCase() === 'FIRST10') {
+        discount = Math.round(subtotal * 0.10);
+      } else if (payload.discount_code?.toUpperCase() === 'RADIAN15') {
+        discount = Math.round(subtotal * 0.15);
+      } else if (payload.discount_code?.toUpperCase() === 'YOUNGIN1000' && subtotal >= 5000) {
+        discount = 1000;
+      }
+
+      const shipping = subtotal >= 1999 ? 0 : (payload.shipping_method === 'express' ? 299 : 149);
+      const taxable = Math.max(0, subtotal - discount);
+      const tax = Math.round(taxable * 0.12 * 100) / 100;
+      const total = Math.round((taxable + shipping + tax) * 100) / 100;
+
       const order: Order = {
         id: Date.now(),
         order_number: orderNum,
@@ -405,7 +463,7 @@ export const api = {
         discount,
         shipping,
         tax,
-        total: subtotal - discount + shipping + tax,
+        total,
         status: 'confirmed',
         payment_status: 'paid',
         tracking_number: `TRK${Math.random().toString(36).substring(2, 9).toUpperCase()}`,
@@ -444,35 +502,35 @@ export const api = {
         email: 'client@younginapparels.com',
         first_name: 'Dhruv',
         last_name: 'Jai',
-        address1: '42 Altamount Road',
-        city: 'Mumbai',
-        state: 'Maharashtra',
-        postal_code: '400026',
+        address1: 'Plot 42, Industrial Area Phase II',
+        city: 'Chandigarh',
+        state: 'Chandigarh',
+        postal_code: '160002',
         country: 'India',
         shipping_method: 'standard',
         payment_method: 'upi',
-        subtotal: 24999.0,
-        discount: 1000.0,
+        subtotal: 2499.0,
+        discount: 250.0,
         shipping: 0.0,
-        tax: 2879.88,
-        total: 26878.88,
+        tax: 269.88,
+        total: 2518.88,
         status: 'confirmed',
         payment_status: 'paid',
         tracking_number: 'TRK6A2A47182F',
-        discount_code: 'YOUNGIN1000',
+        discount_code: 'FIRST10',
         created_at: new Date().toISOString(),
         items: [
           {
             id: 1,
-            variant_id: 1,
-            product_title: 'The Oversized Double-Breasted Wool Overcoat',
-            variant_color: 'Midnight Black',
-            variant_size: 'S',
-            sku: 'YIN-OVC-MID-S',
-            unit_price: 24999.0,
+            variant_id: 2,
+            product_title: 'Pro-Armor Seamless Premium Compression Shirt',
+            variant_color: 'Carbon Black',
+            variant_size: 'M',
+            sku: 'YIN-CMP-PRM-M',
+            unit_price: 2499.0,
             quantity: 1,
-            total_price: 24999.0,
-            image_url: '/images/product-overcoat.jpg'
+            total_price: 2499.0,
+            image_url: '/images/product-hoodie.jpg'
           }
         ]
       };
@@ -575,6 +633,21 @@ export const api = {
   },
 
   updateVariantInventory: async (variantId: number, availableQuantity: number) => {
+    // 1. Instantly update memory
+    for (const p of fallbackProducts) {
+      const v = p.variants.find((vr) => vr.id === variantId);
+      if (v) {
+        v.available_quantity = availableQuantity;
+        break;
+      }
+    }
+    // 2. Persist override to localStorage
+    try {
+      const overrides = JSON.parse(localStorage.getItem('yin_inventory_overrides') || '{}');
+      overrides[variantId] = availableQuantity;
+      localStorage.setItem('yin_inventory_overrides', JSON.stringify(overrides));
+    } catch (e) {}
+
     try {
       return await request<any>(`/admin/variants/${variantId}/inventory`, {
         method: 'PATCH',

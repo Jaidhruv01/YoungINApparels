@@ -17,11 +17,10 @@ class Settings(BaseModel):
         "*"
     ]
     CURRENCY: str = "INR"
-    CURRENCY_SYMBOL: str = "₹"
-    FREE_SHIPPING_THRESHOLD: float = 5000.00
-    STANDARD_SHIPPING_FEE: float = 350.00
-    EXPRESS_SHIPPING_FEE: float = 750.00
-    TAX_RATE: float = 0.12  # 12% GST
+    FREE_SHIPPING_THRESHOLD: float = 1999.00
+    STANDARD_SHIPPING_FEE: float = 149.00
+    EXPRESS_SHIPPING_FEE: float = 299.00
+    TAX_RATE: float = 0.12  # 12% Standard Indian GST
     ADMIN_API_KEY: str = os.getenv("ADMIN_API_KEY", "youngin-secret-admin-key-2026")
 
 settings = Settings()
