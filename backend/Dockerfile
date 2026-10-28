@@ -41,7 +41,7 @@ RUN addgroup --system --gid 1001 appgroup && \
 COPY . .
 
 # Ensure app directory permissions for appuser (needed for SQLite file writes and media caching)
-RUN chown -R appuser:appgroup /app
+RUN mkdir -p /app/data && chown -R appuser:appgroup /app
 
 USER appuser
 

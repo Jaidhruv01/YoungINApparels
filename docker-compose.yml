@@ -11,10 +11,11 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=sqlite:///./youngin_apparels.db
+      - DATABASE_URL=sqlite:////app/data/youngin_apparels.db
       - ADMIN_API_KEY=youngin-secret-admin-key-2026
+      - CORS_ORIGINS=*
     volumes:
-      - sqlite_data:/app
+      - sqlite_data:/app/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 20s
