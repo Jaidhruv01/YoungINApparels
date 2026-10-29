@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Trash2, ArrowRight, ShieldCheck, Tag, ShoppingBag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import { api } from '../../services/api';
+import { smoothScrollEngine } from '../../utils/smoothScroll';
 
 interface CartDrawerProps {
   onNavigate: (path: string) => void;
@@ -11,6 +12,18 @@ interface CartDrawerProps {
 export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigate }) => {
   const { cart, isCartOpen, closeCart, updateQuantity, removeItem } = useCart();
   const { formatPrice } = useCurrency();
+
+  useEffect(() => {
+    if (isCartOpen) {
+      smoothScrollEngine.lockScroll();
+    } else {
+      smoothScrollEngine.unlockScroll();
+    }
+    return () => {
+      smoothScrollEngine.unlockScroll();
+    };
+  }, [isCartOpen]);
+
   const [promoCode, setPromoCode] = useState('');
   const [promoDiscount, setPromoDiscount] = useState<number>(0);
   const [promoApplied, setPromoApplied] = useState<string | null>(null);
@@ -18,7 +31,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigate }) => {
   const [validatingPromo, setValidatingPromo] = useState(false);
 
   const subtotal = cart?.subtotal || 0;
-  const freeThreshold = cart?.free_shipping_threshold || 5000;
+  const freeThreshold = cart?.free_shipping_threshold || 1999;
   const progressPercent = Math.min(100, (subtotal / freeThreshold) * 100);
   const amountNeeded = Math.max(0, freeThreshold - subtotal);
 

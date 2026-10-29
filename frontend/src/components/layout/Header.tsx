@@ -23,30 +23,61 @@ interface NavItem {
   subItems?: NavSubItem[];
 }
 
+import { smoothScrollEngine } from '../../utils/smoothScroll';
+import { useRef } from 'react';
+
 export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNavigate }) => {
   const { cart, openCart } = useCart();
   const { wishlistCount, openWishlist } = useWishlist();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolledPastHero, setIsScrolledPastHero] = useState(false);
+  const [isHeaderHidden, setIsHeaderHidden] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  const lastScrollYRef = useRef(0);
+  const scrollUpDeltaRef = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      const currentY = window.scrollY;
+      const deltaY = currentY - lastScrollYRef.current;
+
+      setIsScrolledPastHero(currentY > 100);
+
+      if (currentY <= 60) {
+        // At the very top: always visible in default header state
+        setIsHeaderHidden(false);
+        scrollUpDeltaRef.current = 0;
+      } else if (deltaY > 0) {
+        // Sliding down past 120px triggers translateY(-100%) over 350ms
+        scrollUpDeltaRef.current = 0;
+        if (currentY > 120) {
+          setIsHeaderHidden(true);
+        }
+      } else if (deltaY < 0) {
+        // Scrolling up by more than 15px instantly triggers reveal translateY(0%) with backdrop blur
+        scrollUpDeltaRef.current += Math.abs(deltaY);
+        if (scrollUpDeltaRef.current > 15) {
+          setIsHeaderHidden(false);
+        }
+      }
+
+      lastScrollYRef.current = currentY;
     };
-    window.addEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock background scroll when mobile drawer is open
+  // Lock background scroll with scrollbar compensation when mobile drawer is open
   useEffect(() => {
     if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
+      smoothScrollEngine.lockScroll();
     } else {
-      document.body.style.overflow = '';
+      smoothScrollEngine.unlockScroll();
     }
     return () => {
-      document.body.style.overflow = '';
+      smoothScrollEngine.unlockScroll();
     };
   }, [mobileMenuOpen]);
 
@@ -106,6 +137,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
       {items.map((link) => {
         const isActive = currentPath === link.path || (link.subItems && link.subItems.some(s => s.path === currentPath));
         const isDropdownOpen = activeDropdown === link.label;
+        const linkColor = isActive ? 'var(--color-campaign-red)' : (isScrolledPastHero ? '#ffffff' : '#0a0a0a');
 
         return (
           <div
@@ -125,7 +157,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                 fontWeight: 800,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
-                color: isActive ? '#b51224' : '#0a0a0a',
+                color: linkColor,
                 position: 'relative',
                 padding: '8px 0',
                 display: 'flex',
@@ -136,7 +168,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               }}
             >
               <span>{link.label}</span>
-              {link.subItems && <ChevronDown size={11} color={isActive ? '#b51224' : '#888888'} />}
+              {link.subItems && (
+                <ChevronDown
+                  size={11}
+                  color={isActive ? 'var(--color-campaign-red)' : (isScrolledPastHero ? '#cccccc' : '#888888')}
+                />
+              )}
               {isActive && (
                 <span
                   style={{
@@ -145,7 +182,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                     left: 0,
                     right: 0,
                     height: '2px',
-                    backgroundColor: '#b51224',
+                    backgroundColor: 'var(--color-campaign-red)',
                   }}
                 />
               )}
@@ -191,7 +228,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                   >
                     <span
                       style={{
-                        color: currentPath === sub.path ? '#b51224' : '#ffffff',
+                        color: currentPath === sub.path ? 'var(--color-campaign-red)' : '#ffffff',
                         fontSize: '0.8125rem',
                         fontWeight: 800,
                         textTransform: 'uppercase',
@@ -217,7 +254,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
 
   return (
     <>
-      <header className={`site-header ${isScrolled ? 'scrolled' : ''}`}>
+      <header
+        className={`site-header ${isScrolledPastHero ? 'scrolled-blur' : ''} ${isHeaderHidden ? 'header-hidden' : 'header-visible'}`}
+        style={{
+          transform: isHeaderHidden ? 'translateY(-100%)' : 'translateY(0%)',
+          backgroundColor: isScrolledPastHero ? 'rgba(0, 0, 0, 0.75)' : '#ffffff',
+          backdropFilter: isScrolledPastHero ? 'blur(16px)' : 'none',
+          WebkitBackdropFilter: isScrolledPastHero ? 'blur(16px)' : 'none',
+          borderBottom: isScrolledPastHero ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #f0efed',
+        }}
+      >
         <div className="container-custom header-inner">
           {/* Left: Mobile Toggle & Left Desktop Nav */}
           <div className="header-left">
@@ -225,6 +271,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               onClick={() => setMobileMenuOpen(true)}
               className="mobile-toggle"
               aria-label="Open navigation menu"
+              style={{ color: isScrolledPastHero ? '#ffffff' : '#0a0a0a' }}
             >
               <Menu size={22} />
             </button>
@@ -232,7 +279,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
             {renderNavItems(leftNavLinks)}
           </div>
 
-          {/* Center: Brand Wordmark (Strictly Centered, YOUNG in black, IN in red) */}
+          {/* Center: Brand Wordmark (Strictly Centered, YOUNG in black/white, IN in oxblood) */}
           <div className="header-center">
             <button
               onClick={() => handleNav('/')}
@@ -240,8 +287,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               aria-label="YoungIN Home"
             >
               <span className="brand-wordmark">
-                <span style={{ color: '#0a0a0a' }}>YOUNG</span>
-                <span style={{ color: '#b51224' }}>IN</span>
+                <span className="brand-part-name" style={{ color: isScrolledPastHero ? '#ffffff' : '#0a0a0a', transition: 'color 0.2s ease' }}>YOUNG</span>
+                <span style={{ color: 'var(--color-campaign-red)' }}>IN</span>
               </span>
             </button>
           </div>
@@ -654,12 +701,31 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           z-index: 900;
           background-color: #ffffff;
           border-bottom: 1px solid #f0efed;
-          transition: box-shadow 0.2s ease, border-color 0.2s ease;
+          transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms ease, backdrop-filter 300ms ease, border-bottom 300ms ease, box-shadow 300ms ease;
           width: 100%;
+          will-change: transform;
+          padding-right: var(--scrollbar-compensation, 0px);
         }
-        .site-header.scrolled {
-          border-bottom-color: #e7e5e3;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        .site-header.header-hidden {
+          transform: translateY(-100%) !important;
+        }
+        .site-header.header-visible {
+          transform: translateY(0%) !important;
+        }
+        .site-header.scrolled-blur {
+          background-color: rgba(0, 0, 0, 0.75) !important;
+          backdrop-filter: blur(16px) !important;
+          -webkit-backdrop-filter: blur(16px) !important;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+        }
+        .site-header.scrolled-blur .header-action-btn,
+        .site-header.scrolled-blur .mobile-toggle,
+        .site-header.scrolled-blur .currency-label {
+          color: #ffffff !important;
+        }
+        .site-header.scrolled-blur .header-action-btn:hover {
+          background-color: rgba(255, 255, 255, 0.1) !important;
         }
         .header-inner {
           display: flex;

@@ -41,50 +41,36 @@ export const AnnouncementTicker: React.FC<AnnouncementTickerProps> = ({
         }}
       />
 
-      {/* Marquee Track: Contains two identical halves for a 100% seamless, mathematically infinite loop */}
+      {/* Marquee Track: Seamless mathematically infinite loop with 4 cloned groups to eliminate gap artifacts */}
       <div
         className="marquee-track"
         style={{
-          animationPlayState: isPaused ? 'paused' : 'running',
+          animationPlayState: isPaused ? 'paused' : undefined,
           display: 'inline-flex',
           whiteSpace: 'nowrap',
           willChange: 'transform',
         }}
       >
-        <div
-          className="marquee-group"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '2.5rem',
-            paddingRight: '2.5rem',
-            fontSize: '0.6875rem',
-            fontWeight: 800,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-          }}
-        >
-          <span>{text}</span>
-          <span style={{ color: '#b51224', fontWeight: 900 }}>•</span>
-        </div>
-
-        <div
-          className="marquee-group"
-          aria-hidden="true"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '2.5rem',
-            paddingRight: '2.5rem',
-            fontSize: '0.6875rem',
-            fontWeight: 800,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-          }}
-        >
-          <span>{text}</span>
-          <span style={{ color: '#b51224', fontWeight: 900 }}>•</span>
-        </div>
+        {[0, 1, 2, 3].map((idx) => (
+          <div
+            key={idx}
+            className="marquee-group"
+            aria-hidden={idx > 0}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '2.5rem',
+              paddingRight: '2.5rem',
+              fontSize: '0.6875rem',
+              fontWeight: 800,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+            }}
+          >
+            <span>{text}</span>
+            <span style={{ color: 'var(--color-campaign-red)', fontWeight: 900 }}>•</span>
+          </div>
+        ))}
       </div>
 
       {/* Right Gradient Mask */}

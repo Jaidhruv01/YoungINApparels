@@ -4,6 +4,8 @@ import { useCurrency } from '../../context/CurrencyContext';
 import { useCart } from '../../context/CartContext';
 import { ArrowRight, ShoppingBag, X } from 'lucide-react';
 
+import { MaskedRevealHeader } from '../common/MaskedRevealHeader';
+
 interface LookbookHotspotsProps {
   lookbookData: LookbookData | null;
   onNavigate: (path: string) => void;
@@ -21,8 +23,6 @@ export const LookbookHotspots: React.FC<LookbookHotspotsProps> = ({ lookbookData
     e.stopPropagation();
     try {
       setAddingId(hotspot.id);
-      // Hotspot links to product, we will navigate or if we have variant we add to cart
-      // Let's navigate to product or add first available variant
       if (hotspot.product_slug) {
         onNavigate(`/products/${hotspot.product_slug}`);
       }
@@ -34,31 +34,29 @@ export const LookbookHotspots: React.FC<LookbookHotspotsProps> = ({ lookbookData
   return (
     <section
       style={{
-        backgroundColor: '#0a0a0a',
+        backgroundColor: '#000000',
         color: '#ffffff',
         paddingTop: '6rem',
         paddingBottom: '6rem',
-        borderTop: '1px solid #1c1c1c',
-        borderBottom: '1px solid #1c1c1c',
+        borderTop: '1px solid #141414',
+        borderBottom: '1px solid #141414',
       }}
     >
       <div className="container-custom">
-        {/* Header */}
-        <div style={{ maxWidth: '680px', marginBottom: '3.5rem' }}>
-          <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '0.75rem' }}>
-            INTERACTIVE LOOKBOOK
-          </span>
-          <h2
+        {/* Header with Masked Text Reveal */}
+        <div style={{ maxWidth: '720px', marginBottom: '3.5rem' }}>
+          <MaskedRevealHeader
+            tag="INTERACTIVE LOOKBOOK // FIT ARCHIVE"
+            lines={['DYNAMIC ATHLETE', 'SPECIFICATION PINPOINT']}
+            italicSuffix="Performance Rig"
             style={{
-              fontSize: 'clamp(2rem, 4vw, 3rem)',
+              fontSize: 'clamp(2rem, 4vw, 3.25rem)',
               color: '#ffffff',
               marginBottom: '1rem',
             }}
-          >
-            {lookbookData.title}
-          </h2>
+          />
           <p style={{ color: '#a0a0a0', fontSize: '0.9375rem', lineHeight: 1.6 }}>
-            {lookbookData.subtitle}
+            {lookbookData.subtitle || 'Tactical activewear engineered for extreme mechanical tension. Select or hover any pin to inspect fabric composition and fit.'}
           </p>
         </div>
 
@@ -71,8 +69,8 @@ export const LookbookHotspots: React.FC<LookbookHotspotsProps> = ({ lookbookData
             margin: '0 auto',
             borderRadius: '2px',
             overflow: 'hidden',
-            backgroundColor: '#141414',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
+            backgroundColor: '#111111',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)',
           }}
           onClick={() => setActiveHotspot(null)}
         >
@@ -96,7 +94,7 @@ export const LookbookHotspots: React.FC<LookbookHotspotsProps> = ({ lookbookData
             return (
               <div
                 key={hotspot.id}
-                className="hotspot-pin"
+                className={`hotspot-pin ${isSelected ? 'is-active' : ''}`}
                 style={{
                   left: `${hotspot.x_percent}%`,
                   top: `${hotspot.y_percent}%`,
@@ -111,10 +109,50 @@ export const LookbookHotspots: React.FC<LookbookHotspotsProps> = ({ lookbookData
                 <div
                   className="hotspot-center"
                   style={{
-                    backgroundColor: isSelected ? '#b51224' : '#ffffff',
-                    transform: isSelected ? 'translate(-50%, -50%) scale(1.4)' : undefined,
+                    backgroundColor: isSelected ? 'var(--color-campaign-red)' : '#ffffff',
                   }}
                 />
+
+                {/* Connecting Line Vector */}
+                <svg className="hotspot-connecting-line" width="30" height="2" viewBox="0 0 30 2">
+                  <line x1="0" y1="1" x2="30" y2="1" className="hotspot-connecting-path" />
+                </svg>
+
+                {/* Floating Glass Card Expansion Adjacent to Pin */}
+                <div className="hotspot-glass-card">
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '0.5625rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.12em',
+                      color: 'var(--color-campaign-red)',
+                      textTransform: 'uppercase',
+                      display: 'block',
+                      marginBottom: '4px',
+                    }}
+                  >
+                    {hotspot.tag || 'SPECIFICATION'}
+                  </span>
+                  <h4 style={{ fontSize: '0.8125rem', fontWeight: 900, textTransform: 'uppercase', color: '#ffffff', marginBottom: '4px' }}>
+                    {hotspot.title}
+                  </h4>
+                  <p style={{ fontSize: '0.875rem', fontWeight: 800, color: '#ffffff', marginBottom: '8px' }}>
+                    {formatPrice(hotspot.price)}
+                  </p>
+                  <button
+                    onClick={(e) => handleQuickAdd(e, hotspot)}
+                    className="btn-crimson"
+                    style={{
+                      width: '100%',
+                      padding: '0.5rem 0.75rem',
+                      fontSize: '0.6875rem',
+                    }}
+                  >
+                    <span>INSPECT PIECE</span>
+                    <ArrowRight size={13} />
+                  </button>
+                </div>
               </div>
             );
           })}

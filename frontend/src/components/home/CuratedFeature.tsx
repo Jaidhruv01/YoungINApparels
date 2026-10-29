@@ -2,6 +2,7 @@ import React from 'react';
 import { Product } from '../../types';
 import { ProductCard } from '../product/ProductCard';
 import { ArrowRight } from 'lucide-react';
+import { MaskedRevealHeader } from '../common/MaskedRevealHeader';
 
 interface CuratedFeatureProps {
   products: Product[];
@@ -14,29 +15,28 @@ export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavi
 
   return (
     <section
+      className="section-editorial-break"
       style={{
         paddingTop: '6rem',
         paddingBottom: '6rem',
-        backgroundColor: '#f7f6f4',
-        borderTop: '1px solid #e7e5e3',
+        backgroundColor: '#f5f5f5',
+        borderTop: '1px solid #e2e0dc',
       }}
     >
       <div className="container-custom">
         <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 4rem auto' }}>
-          <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '0.75rem' }}>
-            TECHNICAL ACTIVEWEAR
-          </span>
-          <h2
+          <MaskedRevealHeader
+            tag="TECHNICAL ACTIVEWEAR // 4-WAY STRETCH"
+            lines={['ULTIMATE', 'COMPRESSION']}
+            italicSuffix="Second-Skin Rig"
             style={{
               fontSize: 'clamp(2rem, 3.8vw, 2.75rem)',
-              color: '#0a0a0a',
+              color: '#111111',
               marginBottom: '1rem',
-              letterSpacing: '-0.01em',
+              textAlign: 'center',
             }}
-          >
-            ULTIMATE COMPRESSION
-          </h2>
-          <p style={{ color: '#555555', fontSize: '0.95rem', lineHeight: 1.7 }}>
+          />
+          <p style={{ color: '#444444', fontSize: '0.95rem', lineHeight: 1.7 }}>
             Second-skin fit with flatlock stitching and strategic nylon mesh panelling. Available in Basic and Premium tiers to support your most intense Push/Pull/Legs days.
           </p>
         </div>
@@ -79,7 +79,7 @@ export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavi
                 </span>
               </div>
               <div style={{ padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
-                <span style={{ fontSize: '0.6875rem', fontWeight: 800, letterSpacing: '0.12em', color: '#b51224' }}>
+                <span style={{ fontSize: '0.6875rem', fontWeight: 800, letterSpacing: '0.12em', color: 'var(--color-campaign-red)' }}>
                   CORE ANCHOR PIECE
                 </span>
                 <h3 style={{ fontSize: '1.25rem', marginTop: '6px', marginBottom: '8px' }}>

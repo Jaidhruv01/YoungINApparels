@@ -1,24 +1,34 @@
 :root {
-  --color-ink: #0a0a0a;
-  --color-ink-surface: #141414;
-  --color-ink-elevated: #1e1e1e;
+  --color-ink: #000000;
+  --color-ink-surface: #0a0a0a;
+  --color-ink-elevated: #141414;
   --color-white: #ffffff;
-  --color-campaign-red: #b51224;
-  --color-deep-red: #5d0712;
-  --color-warm-neutral: #f7f6f4;
+  --color-charcoal: #111111;
+  --color-editorial-gray: #f5f5f5;
+  --color-editorial-light: #f9f9f9;
+  --color-campaign-red: #8A0303;
+  --color-oxblood: #800000;
+  --color-deep-red: #5e0202;
+  --color-warm-neutral: #f5f5f5;
   --color-muted: #6b6b6b;
   --color-muted-light: #9e9e9e;
-  --color-border: #e7e5e3;
-  --color-border-dark: #262626;
+  --color-border: #e2e0dc;
+  --color-border-dark: #202020;
 
   --font-display: 'Syne', sans-serif;
+  --font-serif-italic: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'Space Mono', monospace;
   --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 
   --transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-hover: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-scale: 0.7s cubic-bezier(0.25, 1, 0.5, 1);
   --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.06);
   --shadow-floating: 0 12px 40px rgba(0, 0, 0, 0.16);
   --shadow-dark: 0 20px 50px rgba(0, 0, 0, 0.5);
+
+  --scrollbar-compensation: 0px;
 }
 
 *, *::before, *::after {
@@ -30,6 +40,34 @@
 
 button, a, input, select, textarea {
   touch-action: manipulation;
+}
+
+/* Lenis Smooth Scroll Engine Support */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* GPU Accelerated Smooth Scroll Wrapper */
+.smooth-scroll-wrapper {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  width: 100%;
 }
 
 html {
@@ -224,14 +262,14 @@ h1, h2, h3, h4, h5, h6, .font-display {
   padding: 0.25rem 0.5rem;
 }
 
-/* Hotspot Pulsation */
+/* Hotspot Physics & Micro-Interactions */
 .hotspot-pin {
   position: absolute;
   width: 32px;
   height: 32px;
   transform: translate(-50%, -50%);
   cursor: pointer;
-  z-index: 20;
+  z-index: 25;
 }
 
 .hotspot-center {
@@ -244,28 +282,31 @@ h1, h2, h3, h4, h5, h6, .font-display {
   border: 2px solid var(--color-campaign-red);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: transform 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+  z-index: 2;
 }
 
+/* Idle Pulse Ring: scale(1) -> scale(2.2), opacity 0.8 -> 0 over 2s cubic-bezier(0.215, 0.61, 0.355, 1) */
 .hotspot-ring {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 28px;
-  height: 28px;
-  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  animation: hotspot-pulse 2s infinite ease-out;
+  animation: hotspot-pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  pointer-events: none;
 }
 
-@keyframes hotspot-pulse {
+@keyframes hotspot-pulse-ring {
   0% {
-    transform: translate(-50%, -50%) scale(0.6);
-    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
   }
   100% {
-    transform: translate(-50%, -50%) scale(1.6);
+    transform: translate(-50%, -50%) scale(2.2);
     opacity: 0;
   }
 }
@@ -275,19 +316,70 @@ h1, h2, h3, h4, h5, h6, .font-display {
   background-color: var(--color-campaign-red);
 }
 
-/* Marquee Ticker */
+/* Hover Connecting SVG Line Draw */
+.hotspot-connecting-line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 1;
+}
+
+.hotspot-connecting-path {
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1.5;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 300ms ease-out;
+}
+
+.hotspot-pin:hover .hotspot-connecting-path,
+.hotspot-pin.is-active .hotspot-connecting-path {
+  stroke-dashoffset: 0;
+}
+
+/* Floating Glass Card Expansion Adjacent to Pin */
+.hotspot-glass-card {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 14px);
+  width: 250px;
+  background: rgba(18, 18, 18, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 1rem 1.15rem;
+  color: #ffffff;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+  z-index: 30;
+  opacity: 0;
+  transform: translate3d(12px, -50%, 0) scale(0.95);
+  pointer-events: none;
+  transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hotspot-pin:hover .hotspot-glass-card,
+.hotspot-pin.is-active .hotspot-glass-card {
+  opacity: 1;
+  transform: translate3d(0, -50%, 0) scale(1);
+  pointer-events: auto;
+}
+
+/* Scrolling Top Ticker (Marquee Bar) Physics: 30s linear infinite with 200ms ease-out pause */
 .marquee-track {
   display: inline-flex;
   width: max-content;
-  animation: marquee-scroll 28s linear infinite;
+  animation: marquee-scroll-30 30s linear infinite;
   will-change: transform;
 }
 
 .marquee-track:hover {
   animation-play-state: paused;
+  transition: animation-play-state 200ms ease-out;
 }
 
-@keyframes marquee-scroll {
+@keyframes marquee-scroll-30 {
   0% {
     transform: translate3d(0, 0, 0);
   }
@@ -296,7 +388,15 @@ h1, h2, h3, h4, h5, h6, .font-display {
   }
 }
 
-/* Product Card Image Hover Zoom */
+/* Product Card & Hover Motion Physics */
+.product-card {
+  position: relative;
+  overflow: hidden;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
 .product-image-container {
   position: relative;
   overflow: hidden;
@@ -304,49 +404,92 @@ h1, h2, h3, h4, h5, h6, .font-display {
   aspect-ratio: 3 / 4;
 }
 
-.product-image-primary, .product-image-hover {
+/* Dual Image Stack: Primary (z-index: 1), Secondary (z-index: 2) */
+.product-image-primary {
+  position: relative;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+  transition: transform 700ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .product-image-hover {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 2;
   opacity: 0;
+  transition: opacity 400ms ease-in-out, transform 700ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .product-card:hover .product-image-hover {
   opacity: 1;
 }
 
-.product-card:hover .product-image-primary {
-  transform: scale(1.04);
-}
-
+.product-card:hover .product-image-primary,
 .product-card:hover .product-image-hover {
   transform: scale(1.04);
 }
 
-/* Quick Add Overlay */
+/* Quick-Buy Slide-Up Overlay (Radian Style) */
 .quick-add-bar {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   transform: translateY(100%);
-  transition: transform var(--transition-fast);
-  background: rgba(10, 10, 10, 0.92);
-  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(14, 14, 14, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
   color: var(--color-white);
-  padding: 0.75rem;
-  z-index: 10;
+  padding: 0.85rem 1rem;
+  z-index: 12;
 }
 
 .product-card:hover .quick-add-bar {
-  transform: translateY(0);
+  transform: translateY(0%);
+  opacity: 1;
+}
+
+/* Quick-Buy Size Buttons Active Press Compression */
+.quick-buy-size-btn {
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
+  padding: 6px 10px;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  min-width: 34px;
+  text-align: center;
+  transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.18s ease, color 0.18s ease;
+  user-select: none;
+}
+
+.quick-buy-size-btn:hover:not(:disabled) {
+  background-color: var(--color-campaign-red);
+  border-color: var(--color-campaign-red);
+  color: #ffffff;
+}
+
+.quick-buy-size-btn:active:not(:disabled) {
+  transform: scale(0.92) !important;
+}
+
+.quick-buy-size-btn:disabled {
+  background-color: #222222;
+  color: #666666;
+  border-color: #333333;
+  cursor: not-allowed;
+  text-decoration: line-through;
 }
 
 /* Drawer & Modal Transitions */
@@ -829,5 +972,85 @@ button:active, .btn-primary:active, .btn-secondary:active, .btn-crimson:active, 
     padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
   }
 }
+
+/* Typography & Masked Text Reveal Classes */
+.font-serif-italic {
+  font-family: var(--font-serif-italic);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.font-mono-tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.masked-line-wrap {
+  display: block;
+  overflow: hidden;
+}
+
+.masked-line {
+  display: block;
+  transform: translateY(110%) rotate(2deg);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.masked-line.is-revealed {
+  transform: translateY(0%) rotate(0deg) !important;
+  opacity: 1 !important;
+}
+
+.masked-header-element {
+  will-change: letter-spacing;
+}
+
+.masked-header-element.initial-tracking {
+  letter-spacing: -0.04em;
+}
+
+.masked-header-element.revealed-tracking {
+  letter-spacing: 0.01em;
+}
+
+/* Light Editorial Gray for Product Grid Section Breaks */
+.section-editorial-break {
+  background-color: var(--color-editorial-gray);
+  color: var(--color-charcoal);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.section-dark-thematic {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Sticky Header Scroll Direction & Blur Physics */
+.header-sticky-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms ease, backdrop-filter 300ms ease, border-bottom 300ms ease;
+  will-change: transform;
+}
+
+.header-sticky-nav.header-hidden {
+  transform: translateY(-100%);
+}
+
+.header-sticky-nav.header-scrolled-revealed {
+  transform: translateY(0%);
+  background-color: rgba(0, 0, 0, 0.75) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
 
 

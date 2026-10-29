@@ -3,6 +3,8 @@ import { Search, X, ArrowRight, CornerDownLeft } from 'lucide-react';
 import { api } from '../../services/api';
 import { useCurrency } from '../../context/CurrencyContext';
 
+import { smoothScrollEngine } from '../../utils/smoothScroll';
+
 interface SearchOverlayProps {
   isOpen: boolean;
   onClose: () => void;
@@ -21,12 +23,17 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose, o
 
   useEffect(() => {
     if (isOpen) {
+      smoothScrollEngine.lockScroll();
       setTimeout(() => inputRef.current?.focus(), 50);
     } else {
+      smoothScrollEngine.unlockScroll();
       setQuery('');
       setSuggestions([]);
       setMatchingProducts([]);
     }
+    return () => {
+      smoothScrollEngine.unlockScroll();
+    };
   }, [isOpen]);
 
   useEffect(() => {

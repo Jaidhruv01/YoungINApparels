@@ -30,9 +30,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
     <footer
       style={{
-        backgroundColor: '#0a0a0a',
+        backgroundColor: '#000000',
         color: '#ffffff',
-        borderTop: '1px solid #1a1a1a',
+        borderTop: '1px solid #141414',
         paddingTop: '5rem',
         paddingBottom: '3rem',
       }}
@@ -46,7 +46,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             gap: '3.5rem',
             marginBottom: '4.5rem',
             paddingBottom: '3.5rem',
-            borderBottom: '1px solid #1c1c1c',
+            borderBottom: '1px solid #141414',
           }}
         >
           {/* Brand Manifesto */}
@@ -61,7 +61,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 marginBottom: '1rem',
               }}
             >
-              YOUNG<span style={{ color: '#b51224' }}>IN</span> APPARELS
+              YOUNG<span style={{ color: 'var(--color-campaign-red)' }}>IN</span> APPARELS
             </span>
             <p
               style={{
@@ -74,7 +74,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               Direct-to-consumer activewear defined by industrial aesthetics and elite performance. Engineered in India with zero compromise on craftsmanship.
             </p>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <span className="eyebrow" style={{ color: '#b51224', fontSize: '0.6875rem', letterSpacing: '0.12em' }}>
+              <span className="eyebrow" style={{ color: 'var(--color-campaign-red)', fontSize: '0.6875rem', letterSpacing: '0.12em' }}>
                 PROUDLY ENGINEERED & MANUFACTURED IN INDIA • PAN-INDIA EXPRESS SHIPPING
               </span>
             </div>
@@ -334,7 +334,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     onMouseLeave={(e) => (e.currentTarget.style.color = '#a3a3a3')}
                     title={`${social.name}: ${social.handle}`}
                   >
-                    {social.name} <span style={{ color: '#b51224', fontSize: '0.625rem' }}>({social.handle})</span>
+                    {social.name} <span style={{ color: 'var(--color-campaign-red)', fontSize: '0.625rem' }}>({social.handle})</span>
                   </span>
                 ))}
               </div>
@@ -368,9 +368,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 fontSize: '0.625rem',
                 fontWeight: 900,
                 letterSpacing: '0.06em',
-                backgroundColor: '#b51224',
+                backgroundColor: 'var(--color-campaign-red)',
                 color: '#ffffff',
-                border: '1px solid #d4172c',
+                border: '1px solid var(--color-deep-red)',
                 padding: '3px 8px',
                 borderRadius: '2px',
                 display: 'inline-flex',

@@ -24,6 +24,7 @@ import { PoliciesPage } from './pages/PoliciesPage';
 import { TrackOrderPage } from './pages/TrackOrderPage';
 
 import { api } from './services/api';
+import { smoothScrollEngine } from './utils/smoothScroll';
 
 const StorefrontApp: React.FC = () => {
   const [currentPath, setCurrentPath] = useState<string>(() => window.location.pathname || '/');
@@ -32,6 +33,13 @@ const StorefrontApp: React.FC = () => {
     'FREE PAN-INDIA EXPRESS SHIPPING ON ORDERS OVER ₹1,999 • USE CODE: FIRST10 FOR 10% OFF • 350GSM HEAVYWEIGHT LOWERS & MULTI-TIER COMPRESSIONS LIVE • HIGH-PERFORMANCE GYMWEAR CRAFTED IN INDIA • 7-DAY EASY SIZE SWAP'
   );
   const { toastMessage } = useCart();
+
+  useEffect(() => {
+    smoothScrollEngine.init();
+    return () => {
+      smoothScrollEngine.destroy();
+    };
+  }, []);
 
   useEffect(() => {
     api.getHomepageCMS()
@@ -54,7 +62,7 @@ const StorefrontApp: React.FC = () => {
   const navigate = (path: string) => {
     window.history.pushState({}, '', path);
     setCurrentPath(path);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    smoothScrollEngine.scrollTo(0);
   };
 
   // Keyboard shortcut ⌘K / Ctrl+K for search
@@ -167,6 +175,7 @@ const StorefrontApp: React.FC = () => {
 
   return (
     <div
+      className="smooth-scroll-wrapper"
       style={{
         display: 'flex',
         flexDirection: 'column',

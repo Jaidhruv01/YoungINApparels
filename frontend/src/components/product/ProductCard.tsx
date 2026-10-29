@@ -64,7 +64,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
       }}
       onClick={() => onNavigate(`/products/${product.slug}`)}
     >
-      {/* Image Container */}
+      {/* Image Container with Dual Image Stack */}
       <div className="product-image-container">
         <img
           src={product.cover_image}
@@ -72,14 +72,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
           className="product-image-primary"
           loading="lazy"
         />
-        {product.hover_image && (
-          <img
-            src={product.hover_image}
-            alt={`${product.title} alternative view`}
-            className="product-image-hover"
-            loading="lazy"
-          />
-        )}
+        <img
+          src={product.hover_image || product.cover_image}
+          alt={`${product.title} technical fit view`}
+          className="product-image-hover"
+          loading="lazy"
+        />
 
         {/* Left Badges */}
         <div
@@ -117,7 +115,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
             width: '32px',
             height: '32px',
             borderRadius: '50%',
-            backgroundColor: wishlisted ? '#b51224' : 'rgba(255, 255, 255, 0.9)',
+            backgroundColor: wishlisted ? 'var(--color-campaign-red)' : 'rgba(255, 255, 255, 0.92)',
             backdropFilter: 'blur(4px)',
             border: 'none',
             display: 'flex',
@@ -136,54 +134,36 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
           />
         </button>
 
-        {/* Desktop Quick-buy Action Trigger on Hover */}
-        <div className="quick-add-bar desktop-quick-bar">
+        {/* Quick-Buy Slide-Up Overlay (Radian Style) */}
+        <div
+          className="quick-add-bar desktop-quick-bar"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.6875rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#e5e5e5' }}>
               SELECT SIZE FOR QUICK-BUY
             </span>
-            <ShoppingBag size={14} />
+            <ShoppingBag size={13} color="var(--color-campaign-red)" />
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-            {colorVariants.map((variant) => {
-              const isOutOfStock = variant.available_quantity <= 0;
-              const isAdding = addingVariantId === variant.id;
+            {['S', 'M', 'L', 'XL'].map((sizeKey) => {
+              const matchingVariant =
+                colorVariants.find((v) => v.size.toUpperCase() === sizeKey) ||
+                product.variants.find((v) => v.size.toUpperCase() === sizeKey);
+
+              const isOutOfStock = !matchingVariant || matchingVariant.available_quantity <= 0;
+              const isAdding = matchingVariant ? addingVariantId === matchingVariant.id : false;
 
               return (
                 <button
-                  key={variant.id}
+                  key={sizeKey}
+                  className="quick-buy-size-btn"
                   disabled={isOutOfStock || isAdding}
-                  onClick={(e) => handleQuickAdd(e, variant.id)}
-                  style={{
-                    backgroundColor: isOutOfStock ? '#333333' : '#ffffff',
-                    color: isOutOfStock ? '#777777' : '#0a0a0a',
-                    border: '1px solid #ffffff',
-                    padding: '4px 8px',
-                    fontSize: '0.6875rem',
-                    fontWeight: 800,
-                    cursor: isOutOfStock ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.15s ease',
-                    minWidth: '32px',
-                    textDecoration: isOutOfStock ? 'line-through' : 'none',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isOutOfStock) {
-                      e.currentTarget.style.backgroundColor = '#b51224';
-                      e.currentTarget.style.borderColor = '#b51224';
-                      e.currentTarget.style.color = '#ffffff';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isOutOfStock) {
-                      e.currentTarget.style.backgroundColor = '#ffffff';
-                      e.currentTarget.style.borderColor = '#ffffff';
-                      e.currentTarget.style.color = '#0a0a0a';
-                    }
-                  }}
-                  title={isOutOfStock ? 'Sold out' : `Stock: ${variant.available_quantity}`}
+                  onClick={(e) => matchingVariant && handleQuickAdd(e, matchingVariant.id)}
+                  title={isOutOfStock ? `${sizeKey} Sold Out` : `Stock: ${matchingVariant?.available_quantity || 0}`}
                 >
-                  {isAdding ? '...' : variant.size}
+                  {isAdding ? '...' : sizeKey}
                 </button>
               );
             })}
@@ -286,7 +266,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
               fontWeight: 800,
               letterSpacing: '0.04em',
               textTransform: 'uppercase',
-              color: '#0a0a0a',
+              color: '#111111',
               lineHeight: 1.35,
               flex: 1,
             }}
@@ -300,7 +280,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
             style={{
               fontSize: '0.875rem',
               fontWeight: 800,
-              color: product.is_sale ? '#b51224' : '#0a0a0a',
+              color: product.is_sale ? 'var(--color-campaign-red)' : '#111111',
             }}
           >
             {formatPrice(product.price)}

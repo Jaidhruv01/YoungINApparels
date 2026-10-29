@@ -112,7 +112,7 @@ export const StoryCircles: React.FC<StoryCirclesProps> = ({ collections, onNavig
                         fontSize: '0.5625rem',
                         fontWeight: 800,
                         letterSpacing: '0.06em',
-                        color: '#b51224',
+                        color: 'var(--color-campaign-red)',
                         textTransform: 'uppercase',
                       }}
                     >
@@ -135,8 +135,8 @@ export const StoryCircles: React.FC<StoryCirclesProps> = ({ collections, onNavig
         }
         .story-circle-wrapper:hover {
           transform: scale(1.06);
-          border-color: #b51224 !important;
-          box-shadow: 0 4px 16px rgba(181, 18, 36, 0.25);
+          border-color: var(--color-campaign-red) !important;
+          box-shadow: 0 4px 16px rgba(138, 3, 3, 0.28);
         }
       `}</style>
     </section>

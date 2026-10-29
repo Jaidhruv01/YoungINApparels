@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { CMSSection } from '../../types';
+import { MaskedRevealHeader } from '../common/MaskedRevealHeader';
 
 interface EditorialSplitProps {
   cmsData?: CMSSection | null;
@@ -17,7 +18,7 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
   return (
     <section
       style={{
-        backgroundColor: '#0a0a0a',
+        backgroundColor: '#000000',
         color: '#ffffff',
         paddingTop: '6rem',
         paddingBottom: '6rem',
@@ -41,7 +42,7 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
               style={{
                 aspectRatio: '3/4',
                 overflow: 'hidden',
-                backgroundColor: '#161616',
+                backgroundColor: '#121212',
                 position: 'relative',
               }}
             >
@@ -65,7 +66,7 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
                 left: '-15px',
                 right: '15px',
                 bottom: '15px',
-                border: '1px solid rgba(181, 18, 36, 0.4)',
+                border: '1px solid rgba(138, 3, 3, 0.45)',
                 pointerEvents: 'none',
                 zIndex: 0,
               }}
@@ -74,21 +75,16 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
 
           {/* Text Editorial Column */}
           <div style={{ maxWidth: '540px' }}>
-            <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '1rem' }}>
-              THE PERFORMANCE PHILOSOPHY
-            </span>
-
-            <h2
+            <MaskedRevealHeader
+              tag="THE PERFORMANCE PHILOSOPHY // BRUTALIST ROOTS"
+              lines={['UNCOMPROMISING', 'PERFORMANCE']}
+              italicSuffix="Industrial Force"
               style={{
                 fontSize: 'clamp(2.25rem, 4.2vw, 3.5rem)',
-                lineHeight: 1.05,
                 marginBottom: '1.75rem',
                 color: '#ffffff',
-                overflowWrap: 'break-word',
               }}
-            >
-              {title}
-            </h2>
+            />
 
             <p
               style={{
@@ -103,7 +99,7 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
 
             <blockquote
               style={{
-                borderLeft: '2px solid #b51224',
+                borderLeft: '2px solid var(--color-campaign-red)',
                 paddingLeft: '1.25rem',
                 marginBottom: '2.5rem',
                 fontStyle: 'italic',

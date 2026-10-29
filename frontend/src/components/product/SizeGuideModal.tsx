@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { X, Ruler, CheckCircle, Info } from 'lucide-react';
 
+import { smoothScrollEngine } from '../../utils/smoothScroll';
+
 interface SizeGuideModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -26,8 +28,14 @@ export const SizeGuideModal: React.FC<SizeGuideModalProps> = ({ isOpen, onClose,
 
   useEffect(() => {
     if (isOpen) {
+      smoothScrollEngine.lockScroll();
       setActiveTab(getInitialTab());
+    } else {
+      smoothScrollEngine.unlockScroll();
     }
+    return () => {
+      smoothScrollEngine.unlockScroll();
+    };
   }, [isOpen, category]);
 
   if (!isOpen) return null;

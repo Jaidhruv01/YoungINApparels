@@ -1,18 +1,68 @@
-import React from 'react';
-import { ArrowRight, Eye } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, Eye, ShieldAlert } from 'lucide-react';
 import { CMSSection } from '../../types';
+import { MaskedRevealHeader } from '../common/MaskedRevealHeader';
 
 interface CampaignHeroProps {
   cmsData?: CMSSection | null;
   onNavigate: (path: string) => void;
 }
 
+interface HeroHotspot {
+  id: string;
+  tag: string;
+  title: string;
+  fabric: string;
+  price: string;
+  xPercent: number;
+  yPercent: number;
+  link: string;
+}
+
 export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate }) => {
-  const title = cmsData?.title || 'ENGINEERED FOR THE GRIND';
-  const subtitle = cmsData?.subtitle || 'High-performance activewear built for high-intensity training. Featuring our signature 4-way stretch poly-nylon compression wear and heavy-duty 350GSM training joggers.';
+  const subtitle =
+    cmsData?.subtitle ||
+    'High-performance activewear built for high-intensity training. Featuring our signature 4-way stretch poly-nylon compression wear and heavy-duty 350GSM training joggers.';
   const ctaText = cmsData?.cta_text || 'SHOP THE DROP';
   const ctaLink = cmsData?.cta_link || '/collections/compression';
   const image = cmsData?.image_url || '/images/campaign-hero.jpg';
+
+  const [scrollY, setScrollY] = useState(0);
+  const [activeHotspotId, setActiveHotspotId] = useState<string | null>(null);
+
+  // Parallax Motion: translates down at 0.3x scroll velocity
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY < window.innerHeight * 1.5) {
+        setScrollY(window.scrollY);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const heroHotspots: HeroHotspot[] = [
+    {
+      id: 'hotspot-compression',
+      tag: 'CORE ARMOR',
+      title: 'PRO-ARMOR COMPRESSION TEE',
+      fabric: '4-Way Stretch Poly-Nylon • Flatlock Seams',
+      price: '₹2,499',
+      xPercent: 64,
+      yPercent: 42,
+      link: '/collections/compression',
+    },
+    {
+      id: 'hotspot-jogger',
+      tag: 'HEAVYWEIGHT 350GSM',
+      title: '350GSM HEAVYWEIGHT LOWER',
+      fabric: 'Brushed Combed Fleece • Deadlift Barbell Panels',
+      price: '₹3,499',
+      xPercent: 71,
+      yPercent: 72,
+      link: '/collections/350gsm-lowers',
+    },
+  ];
 
   return (
     <section
@@ -20,38 +70,52 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
         position: 'relative',
         width: '100%',
         maxWidth: '100%',
-        minHeight: 'clamp(580px, 85vh, 880px)',
-        backgroundColor: '#0a0a0a',
+        minHeight: 'clamp(620px, 90vh, 940px)',
+        backgroundColor: '#000000',
         display: 'flex',
         alignItems: 'flex-end',
         overflow: 'hidden',
       }}
     >
-      {/* Background Campaign Visual */}
+      {/* Background Ambient Media with Parallax Motion (0.3x velocity) */}
       <div
         style={{
           position: 'absolute',
-          inset: 0,
+          inset: '-5% 0 0 0',
           zIndex: 1,
+          willChange: 'transform',
+          transform: `translate3d(0, ${scrollY * 0.3}px, 0)`,
         }}
       >
         <img
           src={image}
-          alt="YoungIN Performance Campaign"
+          alt="YoungIN Technical Performance Campaign"
           style={{
             width: '100%',
-            height: '100%',
+            height: '110%',
             objectFit: 'cover',
-            objectPosition: 'center 20%',
-            filter: 'brightness(0.92) contrast(1.05)',
+            objectPosition: 'center 22%',
+            filter: 'brightness(0.88) contrast(1.08)',
           }}
         />
-        {/* Subtle cinematic gradient vignette */}
+
+        {/* Ambient Media Dark Radial Gradient Overlay for text contrast */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(180deg, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.4) 50%, rgba(10,10,10,0.92) 100%)',
+            background: 'radial-gradient(circle at 65% 45%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.85) 100%)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Bottom Vignette Bleed */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.95) 100%)',
+            pointerEvents: 'none',
           }}
         />
       </div>
@@ -63,15 +127,17 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
           position: 'absolute',
           top: '2.5rem',
           right: 'clamp(1rem, 4vw, 3.5rem)',
-          zIndex: 10,
-          backgroundColor: 'rgba(10, 10, 10, 0.75)',
-          backdropFilter: 'blur(8px)',
+          zIndex: 15,
+          backgroundColor: 'rgba(14, 14, 14, 0.82)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
           border: '1px solid rgba(255, 255, 255, 0.15)',
-          padding: '0.6rem 1.2rem',
+          padding: '0.65rem 1.25rem',
           color: '#ffffff',
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
         }}
       >
         <span
@@ -79,7 +145,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
             width: '8px',
             height: '8px',
             borderRadius: '50%',
-            backgroundColor: '#b51224',
+            backgroundColor: 'var(--color-campaign-red)',
             display: 'inline-block',
           }}
         />
@@ -88,62 +154,122 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
         </span>
       </div>
 
-      {/* Hero Headline & Actions */}
+      {/* Interactive Hotspot Pins on Hero Imagery */}
+      <div className="hero-hotspots-layer" style={{ position: 'absolute', inset: 0, zIndex: 12, pointerEvents: 'none' }}>
+        {heroHotspots.map((pin) => {
+          const isActive = activeHotspotId === pin.id;
+
+          return (
+            <div
+              key={pin.id}
+              className={`hotspot-pin ${isActive ? 'is-active' : ''}`}
+              style={{
+                left: `${pin.xPercent}%`,
+                top: `${pin.yPercent}%`,
+                pointerEvents: 'auto',
+              }}
+              onMouseEnter={() => setActiveHotspotId(pin.id)}
+              onMouseLeave={() => setActiveHotspotId(null)}
+              onClick={() => onNavigate(pin.link)}
+            >
+              {/* Idle Pulse Ring */}
+              <div className="hotspot-ring" />
+              {/* Center Dot */}
+              <div className="hotspot-center" />
+
+              {/* Connecting Line Vector */}
+              <svg className="hotspot-connecting-line" width="40" height="2" viewBox="0 0 40 2">
+                <line x1="0" y1="1" x2="40" y2="1" className="hotspot-connecting-path" />
+              </svg>
+
+              {/* Floating Glass Card Expansion Adjacent to Pin */}
+              <div className="hotspot-glass-card">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '0.5625rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.14em',
+                      color: 'var(--color-campaign-red)',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {pin.tag}
+                  </span>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#ffffff' }}>
+                    {pin.price}
+                  </span>
+                </div>
+                <h4
+                  style={{
+                    fontSize: '0.8125rem',
+                    fontWeight: 900,
+                    textTransform: 'uppercase',
+                    color: '#ffffff',
+                    lineHeight: 1.25,
+                    marginBottom: '4px',
+                    letterSpacing: '0.04em',
+                  }}
+                >
+                  {pin.title}
+                </h4>
+                <p style={{ fontSize: '0.6875rem', color: '#aaaaaa', lineHeight: 1.4, marginBottom: '8px' }}>
+                  {pin.fabric}
+                </p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#ffffff', fontSize: '0.6875rem', fontWeight: 800 }}>
+                  <span>VIEW SPECIFICATION</span>
+                  <ArrowRight size={11} color="var(--color-campaign-red)" />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Hero Content & Masked Split Typography Reveal */}
       <div
         className="container-custom"
         style={{
           position: 'relative',
-          zIndex: 10,
-          paddingBottom: 'clamp(2.5rem, 5vw, 5rem)',
-          paddingTop: 'clamp(3rem, 6vw, 4rem)',
+          zIndex: 14,
+          paddingBottom: 'clamp(3rem, 6vw, 5.5rem)',
+          paddingTop: 'clamp(4rem, 8vw, 6rem)',
           color: '#ffffff',
-          maxWidth: '900px',
+          maxWidth: '920px',
         }}
       >
-        <span
-          className="eyebrow"
+        <MaskedRevealHeader
+          as="h1"
+          tag="HIGH-PERFORMANCE GYMWEAR // INDIA"
+          lines={['ENGINEERED FOR', 'THE GRIND']}
+          italicSuffix="Archive 01"
+          staggerDelay={0.08}
           style={{
-            color: '#b51224',
-            display: 'inline-block',
-            marginBottom: '0.75rem',
-          }}
-        >
-          HIGH-PERFORMANCE GYMWEAR // INDIA
-        </span>
-
-        <h1
-          style={{
-            fontSize: 'clamp(1.85rem, 6vw, 5.25rem)',
-            lineHeight: 1.02,
-            letterSpacing: '-0.01em',
-            marginBottom: '1.25rem',
+            fontSize: 'clamp(2.2rem, 6.5vw, 5.5rem)',
             color: '#ffffff',
-            overflowWrap: 'break-word',
-            wordBreak: 'normal',
-            hyphens: 'none',
+            marginBottom: '1.5rem',
           }}
-        >
-          {title}
-        </h1>
+        />
 
         <p
           style={{
-            fontSize: 'clamp(0.875rem, 1.25vw, 1.15rem)',
-            color: '#cccccc',
-            maxWidth: '620px',
-            lineHeight: 1.6,
-            marginBottom: '2rem',
+            fontSize: 'clamp(0.875rem, 1.2vw, 1.125rem)',
+            color: '#d4d4d4',
+            maxWidth: '640px',
+            lineHeight: 1.65,
+            marginBottom: '2.25rem',
           }}
         >
           {subtitle}
         </p>
 
-        <div className="hero-actions-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.875rem', alignItems: 'center' }}>
+        <div className="hero-actions-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
           <button
             onClick={() => onNavigate(ctaLink)}
             className="btn-crimson"
             style={{
-              padding: '1rem 2rem',
+              padding: '1.05rem 2.25rem',
               fontSize: '0.8125rem',
             }}
           >
@@ -155,21 +281,27 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
             onClick={() => onNavigate('/collections/joggers')}
             className="btn-white"
             style={{
-              padding: '1rem 1.75rem',
+              padding: '1.05rem 2rem',
               fontSize: '0.8125rem',
-              backgroundColor: 'rgba(255,255,255,0.1)',
-              borderColor: 'rgba(255,255,255,0.3)',
+              backgroundColor: 'rgba(255,255,255,0.08)',
+              borderColor: 'rgba(255,255,255,0.25)',
               color: '#ffffff',
-              backdropFilter: 'blur(6px)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
             }}
           >
             <Eye size={16} />
-            <span>EXPLORE JOGGERS</span>
+            <span>EXPLORE JOGGERS (350GSM)</span>
           </button>
         </div>
       </div>
 
       <style>{`
+        @media (max-width: 768px) {
+          .hero-hotspots-layer {
+            display: none !important;
+          }
+        }
         @media (max-width: 640px) {
           .hero-badge-floating {
             top: 1rem !important;

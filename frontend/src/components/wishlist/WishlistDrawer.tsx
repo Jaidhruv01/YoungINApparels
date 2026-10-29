@@ -6,6 +6,8 @@ import { useCurrency } from '../../context/CurrencyContext';
 import { api } from '../../services/api';
 import { Product } from '../../types';
 
+import { smoothScrollEngine } from '../../utils/smoothScroll';
+
 interface WishlistDrawerProps {
   onNavigate: (path: string) => void;
 }
@@ -17,6 +19,17 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({ onNavigate }) =>
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [addingId, setAddingId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (isWishlistOpen) {
+      smoothScrollEngine.lockScroll();
+    } else {
+      smoothScrollEngine.unlockScroll();
+    }
+    return () => {
+      smoothScrollEngine.unlockScroll();
+    };
+  }, [isWishlistOpen]);
 
   useEffect(() => {
     if (isWishlistOpen && wishlist.length > 0) {

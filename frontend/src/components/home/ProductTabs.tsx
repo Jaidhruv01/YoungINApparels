@@ -3,6 +3,8 @@ import { Product } from '../../types';
 import { ProductCard } from '../product/ProductCard';
 import { ArrowRight } from 'lucide-react';
 
+import { MaskedRevealHeader } from '../common/MaskedRevealHeader';
+
 interface ProductTabsProps {
   products: Product[];
   onNavigate: (path: string) => void;
@@ -27,10 +29,12 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ products, onNavigate }
 
   return (
     <section
+      className="section-editorial-break"
       style={{
-        paddingTop: '5rem',
-        paddingBottom: '5rem',
-        backgroundColor: '#ffffff',
+        paddingTop: '6rem',
+        paddingBottom: '6rem',
+        backgroundColor: '#f5f5f5',
+        color: '#111111',
       }}
     >
       <div className="container-custom">
@@ -44,19 +48,17 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ products, onNavigate }
             textAlign: 'center',
           }}
         >
-          <span className="eyebrow" style={{ color: '#b51224', marginBottom: '0.75rem' }}>
-            CORE ESSENTIALS
-          </span>
-          <h2
+          <MaskedRevealHeader
+            tag="NEW PERSPECTIVE // THE SELECTED"
+            lines={['THE LAUNCH CAPSULE', 'CORE ESSENTIALS']}
+            italicSuffix="Edition 01"
             style={{
-              fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
-              marginBottom: '2rem',
-              color: '#0a0a0a',
-              letterSpacing: '-0.01em',
+              fontSize: 'clamp(1.85rem, 3.8vw, 2.75rem)',
+              marginBottom: '1.75rem',
+              color: '#111111',
+              textAlign: 'center',
             }}
-          >
-            THE LAUNCH CAPSULE / CORE ESSENTIALS
-          </h2>
+          />
 
           {/* Tab Buttons */}
           <div
