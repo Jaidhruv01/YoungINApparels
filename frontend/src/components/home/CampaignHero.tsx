@@ -143,6 +143,18 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate,
         <div
           style={{
             position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '240px',
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, transparent 100%)',
+            pointerEvents: 'none',
+            zIndex: 2,
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
             inset: 0,
             background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.85) 100%)',
             pointerEvents: 'none',
@@ -291,6 +303,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate,
           position: 'relative',
           zIndex: 12,
           padding: '0 clamp(1.5rem, 5vw, 5rem)',
+          paddingTop: 'calc(64px + 32px + 2rem)',
           paddingBottom: 'clamp(3rem, 7vw, 6rem)',
           maxWidth: '1500px',
           width: '100%',
@@ -326,7 +339,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate,
               }}
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 'clamp(3.8rem, 11vw, 12.5rem)',
+                fontSize: 'clamp(2.75rem, 7.8vw, 9.5rem)',
                 fontWeight: 900,
                 letterSpacing: '-0.035em',
                 lineHeight: 0.92,
@@ -347,7 +360,7 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate,
               }}
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 'clamp(3.8rem, 11vw, 12.5rem)',
+                fontSize: 'clamp(2.75rem, 7.8vw, 9.5rem)',
                 fontWeight: 900,
                 letterSpacing: '-0.035em',
                 lineHeight: 0.92,
@@ -364,11 +377,14 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate,
                   letterSpacing: '0.01em',
                   textTransform: 'none',
                   marginRight: '0.22em',
+                  display: 'inline-block',
                 }}
               >
                 effortless
               </span>
-              PRECISION
+              <span style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+                PRECISION
+              </span>
             </h1>
           </div>
         </div>

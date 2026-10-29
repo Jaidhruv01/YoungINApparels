@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Search, Menu, X, Globe, User, ChevronDown, ChevronRight, Shield } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Globe, User, ChevronDown, ChevronRight } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import { useWishlist } from '../../context/WishlistContext';
 import { smoothScrollEngine } from '../../utils/smoothScroll';
 
 interface HeaderProps {
@@ -13,15 +12,16 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNavigate }) => {
   const { cart, openCart } = useCart();
-  const { wishlistCount } = useWishlist();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isAtTop, setIsAtTop] = useState(true);
-  const [headerTheme, setHeaderTheme] = useState<'light' | 'dark'>('dark');
+  const [isScrolledPastHero, setIsScrolledPastHero] = useState(false);
+  const [headerTheme, setHeaderTheme] = useState<'light' | 'dark'>('light');
   const [isHeaderHidden, setIsHeaderHidden] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const lastScrollYRef = useRef(0);
   const scrollUpDeltaRef = useRef(0);
+
+  const isHomePage = currentPath === '/' || currentPath === '';
 
   // Scroll position & theme detector
   useEffect(() => {
@@ -29,17 +29,19 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
       const currentY = window.scrollY;
       const deltaY = currentY - lastScrollYRef.current;
 
-      const atTop = currentY < 60;
-      setIsAtTop(atTop);
+      // Scrolled past the hero threshold (viewport height minus 80px)
+      const heroThreshold = Math.max(500, window.innerHeight - 80);
+      const pastHero = currentY > heroThreshold;
+      setIsScrolledPastHero(pastHero);
 
-      // Hide / Reveal behavior
+      // Hide / Reveal behavior on scroll
       if (currentY <= 60) {
         setIsHeaderHidden(false);
         scrollUpDeltaRef.current = 0;
       } else if (deltaY > 0) {
-        // Scrolling down past 100px hides the header
+        // Scrolling down past 120px hides the header
         scrollUpDeltaRef.current = 0;
-        if (currentY > 100) {
+        if (currentY > 120) {
           setIsHeaderHidden(true);
           setActiveDropdown(null);
         }
@@ -51,22 +53,19 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
         }
       }
 
-      // Detect background under header for theme switching (Radiant requirement #58 & #59)
-      if (!atTop) {
+      // Detect background under header for theme switching (Radiant requirements #58 & #59)
+      if (pastHero || !isHomePage) {
         try {
-          const sampleEl = document.elementFromPoint(window.innerWidth / 2, 60);
+          const sampleEl = document.elementFromPoint(window.innerWidth / 2, 50);
           if (sampleEl) {
-            const darkSection = sampleEl.closest('[data-header-theme="dark"]') ||
+            const darkSection =
+              sampleEl.closest('[data-header-theme="dark"]') ||
               sampleEl.closest('.dark-section') ||
               sampleEl.closest('footer') ||
               sampleEl.closest('#hero-narrative') ||
               sampleEl.closest('#lookbook-section');
 
-            if (darkSection) {
-              setHeaderTheme('dark');
-            } else {
-              setHeaderTheme('light');
-            }
+            setHeaderTheme(darkSection ? 'dark' : 'light');
           }
         } catch {
           setHeaderTheme('light');
@@ -79,7 +78,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isHomePage]);
 
   // Lock body scroll when mobile drawer is open
   useEffect(() => {
@@ -100,22 +99,24 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
   };
 
   // Determine current active colors
-  const isTransparent = isAtTop && (currentPath === '/' || currentPath === '');
-  const isDarkTheme = isTransparent || headerTheme === 'dark';
+  // Over hero: transparent/subtle scrim with white text (Radiant requirement #57)
+  // Scrolled past hero or on non-hero pages: solid white (black text) or solid black (white text) (Radiant requirement #58)
+  const isOverHero = isHomePage && !isScrolledPastHero;
+  const isDark = isOverHero || headerTheme === 'dark';
 
-  const textColor = isDarkTheme ? '#ffffff' : '#000000';
-  const bgColor = isTransparent
-    ? 'transparent'
-    : isDarkTheme
-    ? 'rgba(0, 0, 0, 0.92)'
-    : 'rgba(255, 255, 255, 0.95)';
-  const borderColor = isTransparent
-    ? 'transparent'
-    : isDarkTheme
+  const textColor = isDark ? '#ffffff' : '#000000';
+  const bgColor = isOverHero
+    ? 'rgba(0, 0, 0, 0.40)' // Dark protective scrim so white text is ALWAYS 100% visible over hero image
+    : isDark
+    ? 'rgba(0, 0, 0, 0.95)'
+    : 'rgba(255, 255, 255, 0.98)';
+  const borderColor = isOverHero
+    ? 'rgba(255, 255, 255, 0.12)'
+    : isDark
     ? 'rgba(255, 255, 255, 0.15)'
-    : 'rgba(0, 0, 0, 0.1)';
-  const badgeBg = isDarkTheme ? '#ffffff' : '#000000';
-  const badgeText = isDarkTheme ? '#000000' : '#ffffff';
+    : 'rgba(0, 0, 0, 0.08)';
+  const badgeBg = isDark ? '#ffffff' : '#000000';
+  const badgeText = isDark ? '#000000' : '#ffffff';
 
   return (
     <>
@@ -126,14 +127,15 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
           top: 0,
           left: 0,
           right: 0,
-          zIndex: 40,
+          zIndex: 90,
           backgroundColor: bgColor,
           color: textColor,
           borderBottom: `1px solid ${borderColor}`,
-          backdropFilter: isTransparent ? 'none' : 'blur(12px)',
-          WebkitBackdropFilter: isTransparent ? 'none' : 'blur(12px)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
           transform: isHeaderHidden ? 'translateY(-100%)' : 'translateY(0%)',
-          transition: 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease',
+          transition:
+            'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease',
         }}
       >
         <div
@@ -155,7 +157,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'inherit',
+                color: textColor,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -190,7 +192,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: 'inherit',
+                    color: textColor,
                     fontFamily: 'var(--font-sans)',
                     fontSize: '0.75rem',
                     fontWeight: 700,
@@ -215,9 +217,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                       top: '100%',
                       left: 0,
                       minWidth: '240px',
-                      backgroundColor: isDarkTheme ? '#0a0a0a' : '#ffffff',
-                      color: isDarkTheme ? '#ffffff' : '#000000',
-                      border: `1px solid ${isDarkTheme ? '#262626' : '#eaeaea'}`,
+                      backgroundColor: isDark ? '#0a0a0a' : '#ffffff',
+                      color: isDark ? '#ffffff' : '#000000',
+                      border: `1px solid ${isDark ? '#262626' : '#eaeaea'}`,
                       padding: '0.75rem 0',
                       boxShadow: '0 12px 30px rgba(0,0,0,0.25)',
                       zIndex: 100,
@@ -248,7 +250,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                           transition: 'background-color 0.15s ease',
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = isDarkTheme ? '#1a1a1a' : '#f5f5f5';
+                          e.currentTarget.style.backgroundColor = isDark ? '#1a1a1a' : '#f5f5f5';
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.backgroundColor = 'transparent';
@@ -267,7 +269,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: 'inherit',
+                  color: textColor,
                   fontFamily: 'var(--font-sans)',
                   fontSize: '0.75rem',
                   fontWeight: 700,
@@ -292,7 +294,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: 'inherit',
+                    color: textColor,
                     fontFamily: 'var(--font-sans)',
                     fontSize: '0.75rem',
                     fontWeight: 700,
@@ -317,9 +319,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                       top: '100%',
                       left: 0,
                       minWidth: '200px',
-                      backgroundColor: isDarkTheme ? '#0a0a0a' : '#ffffff',
-                      color: isDarkTheme ? '#ffffff' : '#000000',
-                      border: `1px solid ${isDarkTheme ? '#262626' : '#eaeaea'}`,
+                      backgroundColor: isDark ? '#0a0a0a' : '#ffffff',
+                      color: isDark ? '#ffffff' : '#000000',
+                      border: `1px solid ${isDark ? '#262626' : '#eaeaea'}`,
                       padding: '0.75rem 0',
                       boxShadow: '0 12px 30px rgba(0,0,0,0.25)',
                       zIndex: 100,
@@ -350,7 +352,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                           transition: 'background-color 0.15s ease',
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = isDarkTheme ? '#1a1a1a' : '#f5f5f5';
+                          e.currentTarget.style.backgroundColor = isDark ? '#1a1a1a' : '#f5f5f5';
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.backgroundColor = 'transparent';
@@ -372,7 +374,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'inherit',
+                color: textColor,
                 cursor: 'pointer',
                 padding: '4px 8px',
                 textDecoration: 'none',
@@ -408,6 +410,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
                 fontWeight: 600,
                 letterSpacing: '0.04em',
                 cursor: 'pointer',
+                color: textColor,
                 opacity: 0.85,
               }}
               title="Region: India (₹)"
@@ -424,7 +427,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'inherit',
+                color: textColor,
                 cursor: 'pointer',
                 padding: '6px',
                 display: 'flex',
@@ -445,7 +448,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'inherit',
+                color: textColor,
                 cursor: 'pointer',
                 padding: '6px',
                 display: 'flex',
@@ -465,7 +468,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'inherit',
+                color: textColor,
                 cursor: 'pointer',
                 padding: '6px',
                 display: 'flex',
