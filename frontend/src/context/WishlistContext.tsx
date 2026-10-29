@@ -43,12 +43,12 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const exists = prev.includes(productId);
       if (exists) {
         if (productTitle && showToast) {
-          showToast(`Removed from your Atelier Wishlist`);
+          showToast(`Removed from your Wishlist`);
         }
         return prev.filter((id) => id !== productId);
       } else {
         if (productTitle && showToast) {
-          showToast(`Saved to your Atelier Wishlist`);
+          showToast(`Saved to your Wishlist`);
         }
         return [...prev, productId];
       }

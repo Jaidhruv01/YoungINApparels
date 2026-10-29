@@ -1089,7 +1089,7 @@ button:active, .btn-primary:active, .btn-secondary:active, .btn-crimson:active, 
   width: 100%;
   overflow: hidden;
   text-align: center;
-  padding-top: 3.5rem;
+  padding-top: 3rem;
   padding-bottom: 0.5rem;
   user-select: none;
 }
@@ -1097,11 +1097,14 @@ button:active, .btn-primary:active, .btn-secondary:active, .btn-crimson:active, 
 .footer-wordmark-text {
   display: block;
   font-family: var(--font-display);
-  font-size: clamp(4.5rem, 16vw, 16rem);
+  font-size: clamp(2.4rem, 14.5vw, 16rem);
   font-weight: 900;
-  letter-spacing: -0.03em;
-  line-height: 0.82;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
   text-transform: uppercase;
+  white-space: nowrap;
+  text-align: center;
+  width: 100%;
   color: transparent;
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.25);
   transition: color 600ms ease, -webkit-text-stroke 600ms ease, text-shadow 600ms ease;
@@ -1115,6 +1118,85 @@ footer:hover .footer-wordmark-text,
   -webkit-text-stroke: 1px rgba(255, 255, 255, 1);
   text-shadow: 0 0 50px rgba(255, 255, 255, 0.25);
 }
+
+/* ==========================================================================
+   MOBILE TEXT & OVERFLOW CORRECTIONS (< 768px)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .footer-wordmark-container {
+    padding-top: 1.75rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  .footer-wordmark-text {
+    font-size: clamp(2.2rem, 13.8vw, 4.5rem) !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+
+  .footer-bottom-bar {
+    flex-direction: column !important;
+    text-align: center !important;
+    align-items: center !important;
+    gap: 1.25rem !important;
+  }
+
+  .footer-bottom-bar > div {
+    display: flex !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  /* Masked Header Mobile Wrap & Clipping Fix */
+  .masked-line-wrap {
+    overflow: visible !important;
+    padding-bottom: 2px !important;
+  }
+
+  .masked-line {
+    transform: translateY(0%) rotate(0deg) !important;
+    opacity: 1 !important;
+  }
+
+  .masked-header-element {
+    letter-spacing: -0.01em !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    line-height: 1.15 !important;
+  }
+
+  /* Headings on small phones */
+  h1 {
+    font-size: clamp(1.85rem, 6.5vw, 2.75rem) !important;
+    line-height: 1.15 !important;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 5.5vw, 2.25rem) !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Horizontal Tabs Left Alignment on Mobile to prevent clipping first tab */
+  .tabs-scroll-container {
+    justify-content: flex-start !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+
+  /* Checkout mobile form stacking and padding */
+  .checkout-card {
+    padding: clamp(1rem, 3.5vw, 1.5rem) !important;
+  }
+  .checkout-grid-2col {
+    grid-template-columns: 1fr !important;
+  }
+  .checkout-grid-2col > div {
+    grid-column: span 1 !important;
+  }
+}
+
 
 
 

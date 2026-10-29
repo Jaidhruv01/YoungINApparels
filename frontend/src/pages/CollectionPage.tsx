@@ -143,7 +143,9 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
             </span>
             <h1
               style={{
-                fontSize: 'clamp(2.25rem, 4.5vw, 3.75rem)',
+                fontSize: 'clamp(1.75rem, 5.5vw, 3.75rem)',
+                lineHeight: 1.12,
+                wordBreak: 'break-word',
                 marginBottom: '1rem',
                 color: '#ffffff',
               }}
@@ -295,7 +297,7 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
               NO GARMENTS MATCH YOUR SELECTION
             </h3>
             <p style={{ color: '#6b6b6b', fontSize: '0.875rem', marginBottom: '2rem' }}>
-              Try adjusting your active filters or reset your criteria to view the entire atelier archive.
+              Try adjusting your active filters or reset your criteria to view the entire YoungIN gear archive.
             </p>
             <button onClick={resetFilters} className="btn-primary">
               <RotateCcw size={16} />

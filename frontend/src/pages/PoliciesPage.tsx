@@ -100,7 +100,7 @@ export const PoliciesPage: React.FC<PoliciesPageProps> = ({ type, onNavigate }) 
           <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '0.75rem' }}>
             {content.eyebrow}
           </span>
-          <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3.25rem)', textTransform: 'uppercase', marginBottom: '1rem', color: '#ffffff' }}>
+          <h1 style={{ fontSize: 'clamp(1.5rem, 5.5vw, 3.25rem)', lineHeight: 1.15, wordBreak: 'break-word', textTransform: 'uppercase', marginBottom: '1rem', color: '#ffffff' }}>
             {content.title}
           </h1>
         </div>

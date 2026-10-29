@@ -22,7 +22,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '1rem' }}>
             YOUNGIN // ATHLETE MANIFESTO
           </span>
-          <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', lineHeight: 1.05, marginBottom: '1.5rem', color: '#ffffff' }}>
+          <h1 style={{ fontSize: 'clamp(1.75rem, 5.5vw, 4.25rem)', lineHeight: 1.12, wordBreak: 'break-word', marginBottom: '1.5rem', color: '#ffffff' }}>
             PEAK STRENGTH & ANATOMICAL PRECISION
           </h1>
           <p style={{ color: '#a0a0a0', fontSize: '1.05rem', lineHeight: 1.7, maxWidth: '680px', margin: '0 auto' }}>
@@ -36,7 +36,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
             gap: 'clamp(2rem, 5vw, 5rem)',
             alignItems: 'center',
           }}
@@ -45,7 +45,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '0.75rem' }}>
               CHAPTER I — ORIGINS
             </span>
-            <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.75rem)', marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: 'clamp(1.5rem, 4.5vw, 2.75rem)', lineHeight: 1.15, wordBreak: 'break-word', marginBottom: '1.5rem' }}>
               STRENGTH MEETS MODERN CRAFT
             </h2>
             <p style={{ fontSize: '0.9375rem', color: '#555555', lineHeight: 1.8, marginBottom: '1.25rem' }}>
@@ -73,7 +73,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '0.5rem' }}>
               CORE PILLARS
             </span>
-            <h2 style={{ fontSize: '2.25rem', textTransform: 'uppercase' }}>
+            <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.25rem)', textTransform: 'uppercase' }}>
               OUR FOUR FOUNDATIONS
             </h2>
           </div>
@@ -120,7 +120,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
 
       {/* CTA Section */}
       <div className="container-custom" style={{ textAlign: 'center', paddingTop: '6rem' }}>
-        <h2 style={{ fontSize: '2.5rem', marginBottom: '1.25rem', textTransform: 'uppercase' }}>
+        <h2 style={{ fontSize: 'clamp(1.65rem, 5vw, 2.5rem)', lineHeight: 1.15, marginBottom: '1.25rem', textTransform: 'uppercase' }}>
           ENGINEERED FOR THE GRIND
         </h2>
         <p style={{ color: '#6b6b6b', maxWidth: '520px', margin: '0 auto 2.5rem auto', fontSize: '0.9375rem' }}>

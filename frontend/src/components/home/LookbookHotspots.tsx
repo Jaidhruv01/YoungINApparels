@@ -51,9 +51,10 @@ export const LookbookHotspots: React.FC<LookbookHotspotsProps> = ({ lookbookData
             lines={['DYNAMIC ATHLETE', 'SPECIFICATION PINPOINT']}
             italicSuffix="Performance Rig"
             style={{
-              fontSize: 'clamp(2rem, 4vw, 3.25rem)',
+              fontSize: 'clamp(1.5rem, 4.5vw, 3.25rem)',
               color: '#ffffff',
               marginBottom: '1rem',
+              lineHeight: 1.12,
             }}
           />
           <p style={{ color: '#a0a0a0', fontSize: '0.9375rem', lineHeight: 1.6 }}>

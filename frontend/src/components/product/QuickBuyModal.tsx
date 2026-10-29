@@ -267,7 +267,7 @@ export const QuickBuyModal: React.FC<QuickBuyModalProps> = ({
         </div>
 
         {/* Right Column: Spec Details, Swatches & Quick Add */}
-        <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div className="quick-buy-details-col" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
             {/* Category Eyebrow */}
             <span
@@ -296,6 +296,7 @@ export const QuickBuyModal: React.FC<QuickBuyModalProps> = ({
                 color: '#ffffff',
                 lineHeight: 1.25,
                 marginBottom: '0.75rem',
+                wordBreak: 'break-word',
               }}
             >
               {product.title}
@@ -541,6 +542,9 @@ export const QuickBuyModal: React.FC<QuickBuyModalProps> = ({
           .quick-buy-card-wrapper {
             grid-template-columns: 1fr !important;
             max-height: 85vh !important;
+          }
+          .quick-buy-details-col {
+            padding: 1.25rem 1rem !important;
           }
         }
       `}</style>

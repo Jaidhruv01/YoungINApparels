@@ -246,9 +246,10 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
           italicSuffix="Archive 01"
           staggerDelay={0.08}
           style={{
-            fontSize: 'clamp(2.2rem, 6.5vw, 5.5rem)',
+            fontSize: 'clamp(1.75rem, 6.5vw, 5.5rem)',
             color: '#ffffff',
             marginBottom: '1.5rem',
+            lineHeight: 1.12,
           }}
         />
 

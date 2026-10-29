@@ -248,10 +248,12 @@ export const PinnedStrengthSection: React.FC<PinnedStrengthSectionProps> = ({
             <h2
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(2.2rem, 4.5vw, 4rem)',
+                fontSize: 'clamp(1.5rem, 5.2vw, 3.75rem)',
                 fontWeight: 900,
                 letterSpacing: '-0.02em',
-                lineHeight: 1.05,
+                lineHeight: 1.12,
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
                 textTransform: 'uppercase',
                 color: '#ffffff',
                 marginBottom: '1.25rem',
@@ -526,16 +528,20 @@ export const PinnedStrengthSection: React.FC<PinnedStrengthSectionProps> = ({
           .pinned-strength-wrapper #series-01-strength-pin {
             height: auto !important;
             min-height: auto !important;
-            padding: 5rem 0 !important;
+            padding: 4rem 0 !important;
           }
           .pinned-strength-wrapper .container-custom {
             grid-template-columns: 1fr !important;
-            gap: 2.5rem !important;
+            gap: 2.25rem !important;
           }
           .pinned-floating-card {
             transform: none !important;
             opacity: 1 !important;
             max-width: 100% !important;
+            padding: 1.25rem !important;
+          }
+          .pinned-floating-card h3 {
+            font-size: 1.1rem !important;
           }
         }
       `}</style>

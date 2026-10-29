@@ -211,9 +211,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigate }) => {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              fontSize: '0.75rem',
+              fontSize: 'clamp(0.6875rem, 2.5vw, 0.75rem)',
               fontWeight: 800,
               marginBottom: '6px',
+              gap: '8px',
             }}
           >
             <span
@@ -223,7 +224,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigate }) => {
                 alignItems: 'center',
                 gap: '6px',
                 color: isUnlocked ? 'var(--color-campaign-red)' : '#0a0a0a',
-                letterSpacing: '0.04em',
+                letterSpacing: '0.02em',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
               }}
             >
               {isUnlocked && <Sparkles size={13} color="var(--color-campaign-red)" />}
@@ -231,7 +235,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigate }) => {
                 ? 'FREE EXPRESS SHIPPING UNLOCKED'
                 : `ADD ${formatPrice(amountNeeded)} FOR FREE SHIPPING`}
             </span>
-            <span style={{ color: isUnlocked ? 'var(--color-campaign-red)' : '#666666', fontFamily: 'var(--font-mono)' }}>
+            <span style={{ color: isUnlocked ? 'var(--color-campaign-red)' : '#666666', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>
               {Math.round(progressPercent)}%
             </span>
           </div>

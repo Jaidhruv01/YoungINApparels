@@ -532,7 +532,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
                     textAlign: 'left',
                   }}
                 >
-                  <span>FABRIC & ATELIER CARE</span>
+                  <span>FABRIC & GEAR CARE</span>
                   <span className={`accordion-icon-rotate ${openAccordions.craftsmanship ? 'rotated-180' : ''}`}>
                     <ChevronDown size={18} />
                   </span>
@@ -624,8 +624,8 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
               <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '0.5rem' }}>
                 COMPLETE THE UNIFORM
               </span>
-              <h2 style={{ fontSize: '2rem', textTransform: 'uppercase' }}>
-                COMPLEMENTARY ATELIER PIECES
+              <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', lineHeight: 1.15, wordBreak: 'break-word', textTransform: 'uppercase' }}>
+                COMPLEMENTARY TRAINING PIECES
               </h2>
             </div>
 

@@ -72,7 +72,9 @@ export const MaskedRevealHeader: React.FC<MaskedRevealHeaderProps> = ({
           fontFamily: 'var(--font-display)',
           textTransform: 'uppercase',
           fontWeight: 900,
-          lineHeight: 1.05,
+          lineHeight: 1.12,
+          wordBreak: 'break-word',
+          overflowWrap: 'break-word',
           letterSpacing: isRevealed ? '0.01em' : '-0.04em',
           transition: 'letter-spacing 800ms cubic-bezier(0.16, 1, 0.3, 1)',
           ...style,
@@ -102,10 +104,12 @@ export const MaskedRevealHeader: React.FC<MaskedRevealHeaderProps> = ({
                     textTransform: 'none',
                     fontStyle: 'italic',
                     fontWeight: 400,
-                    marginLeft: '0.5rem',
-                    letterSpacing: '0.02em',
+                    marginLeft: '0.45rem',
+                    letterSpacing: '0.01em',
                     color: 'inherit',
                     opacity: 0.9,
+                    display: 'inline-block',
+                    fontSize: '0.85em',
                   }}
                 >
                   {italicSuffix}

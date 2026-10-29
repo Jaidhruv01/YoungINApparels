@@ -27,7 +27,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
           <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '0.75rem' }}>
             ATHLETE CARE & CONCIERGE
           </span>
-          <h1 style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)', textTransform: 'uppercase', marginBottom: '1rem', color: '#ffffff' }}>
+          <h1 style={{ fontSize: 'clamp(1.65rem, 5.5vw, 3.5rem)', lineHeight: 1.15, wordBreak: 'break-word', textTransform: 'uppercase', marginBottom: '1rem', color: '#ffffff' }}>
             CONTACT YOUNGIN INDIA
           </h1>
           <p style={{ color: '#a0a0a0', fontSize: '0.95rem', maxWidth: '580px', margin: '0 auto' }}>
@@ -40,12 +40,12 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
             gap: 'clamp(2rem, 5vw, 4.5rem)',
           }}
         >
           {/* Inquiry Form */}
-          <div style={{ backgroundColor: '#faf9f8', border: '1px solid #e7e5e3', padding: '2.5rem' }}>
+          <div style={{ backgroundColor: '#faf9f8', border: '1px solid #e7e5e3', padding: 'clamp(1.25rem, 4vw, 2.5rem)' }}>
             <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', textTransform: 'uppercase' }}>
               DIRECT INQUIRY
             </h3>
@@ -105,7 +105,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                     className="input-editorial"
                   >
                     <option value="Order Support">Order & Shipment Logistics</option>
-                    <option value="Sizing">Atelier Sizing & Fit Consultation</option>
+                    <option value="Sizing">Athlete Sizing & Fit Consultation</option>
                     <option value="Press">Press & Editorial Loan</option>
                     <option value="Wholesale">Wholesale & Private Client</option>
                   </select>

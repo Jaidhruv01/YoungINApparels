@@ -30,7 +30,8 @@ export const CuratedFeature: React.FC<CuratedFeatureProps> = ({ products, onNavi
             lines={['ULTIMATE', 'COMPRESSION']}
             italicSuffix="Second-Skin Rig"
             style={{
-              fontSize: 'clamp(2rem, 3.8vw, 2.75rem)',
+              fontSize: 'clamp(1.5rem, 5.5vw, 2.75rem)',
+              lineHeight: 1.12,
               color: '#111111',
               marginBottom: '1rem',
               textAlign: 'center',

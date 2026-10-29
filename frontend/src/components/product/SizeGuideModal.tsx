@@ -103,7 +103,7 @@ export const SizeGuideModal: React.FC<SizeGuideModalProps> = ({ isOpen, onClose,
                 YOUNGIN ATHLETE FIT SYSTEM
               </span>
             </div>
-            <h3 style={{ fontSize: '1.4rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <h3 style={{ fontSize: 'clamp(1.1rem, 4vw, 1.4rem)', lineHeight: 1.2, wordBreak: 'break-word', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               PHYSIQUE-ENGINEERED SIZING GUIDE
             </h3>
           </div>

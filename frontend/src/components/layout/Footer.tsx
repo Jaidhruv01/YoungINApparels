@@ -54,11 +54,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <span
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '1.4rem',
+                fontSize: 'clamp(1.2rem, 4vw, 1.4rem)',
                 fontWeight: 900,
-                letterSpacing: '0.16em',
+                letterSpacing: '0.14em',
                 display: 'block',
-                marginBottom: '1rem',
+                marginBottom: '0.85rem',
               }}
             >
               YOUNG<span style={{ color: 'var(--color-campaign-red)' }}>IN</span> APPARELS
@@ -67,14 +67,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               style={{
                 fontSize: '0.875rem',
                 color: '#9e9e9e',
-                lineHeight: 1.7,
-                marginBottom: '1.5rem',
+                lineHeight: 1.65,
+                marginBottom: '1.25rem',
               }}
             >
               Direct-to-consumer activewear defined by industrial aesthetics and elite performance. Engineered in India with zero compromise on craftsmanship.
             </p>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <span className="eyebrow" style={{ color: 'var(--color-campaign-red)', fontSize: '0.6875rem', letterSpacing: '0.12em' }}>
+              <span className="eyebrow" style={{ color: 'var(--color-campaign-red)', fontSize: '0.6875rem', letterSpacing: '0.12em', lineHeight: 1.5 }}>
                 PROUDLY ENGINEERED & MANUFACTURED IN INDIA • PAN-INDIA EXPRESS SHIPPING
               </span>
             </div>
@@ -309,7 +309,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               YoungIN Performance Logistics Hub<br />
               Plot 42, Industrial Area Phase II<br />
               Chandigarh 160002, India<br />
-              <span style={{ color: '#ffffff', fontWeight: 600 }}>care@younginapparels.com</span>
+              <span style={{ color: '#ffffff', fontWeight: 600, wordBreak: 'break-all' }}>care@younginapparels.com</span>
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.85rem' }}>
               <span style={{ fontSize: '0.625rem', color: '#6b6b6b', letterSpacing: '0.08em', fontWeight: 800 }}>
@@ -344,6 +344,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         {/* Bottom Bar: Copyright & Domestic Payment Gateways */}
         <div
+          className="footer-bottom-bar"
           style={{
             display: 'flex',
             flexWrap: 'wrap',
@@ -402,8 +403,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         </div>
 
         {/* Section 10: Massive Outlined Brand Footer Wordmark */}
-        <div className="footer-wordmark-container">
-          <span className="footer-wordmark-text">
+        <div className="footer-wordmark-container" style={{ width: '100%', overflow: 'hidden', textAlign: 'center' }}>
+          <span className="footer-wordmark-text" style={{ whiteSpace: 'nowrap', display: 'block' }}>
             YOUNGIN
           </span>
         </div>

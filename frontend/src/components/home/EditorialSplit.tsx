@@ -80,7 +80,8 @@ export const EditorialSplit: React.FC<EditorialSplitProps> = ({ cmsData, onNavig
               lines={['UNCOMPROMISING', 'PERFORMANCE']}
               italicSuffix="Industrial Force"
               style={{
-                fontSize: 'clamp(2.25rem, 4.2vw, 3.5rem)',
+                fontSize: 'clamp(1.65rem, 5.5vw, 3.5rem)',
+                lineHeight: 1.12,
                 marginBottom: '1.75rem',
                 color: '#ffffff',
               }}

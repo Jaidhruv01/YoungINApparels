@@ -39,8 +39,8 @@ export const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ orderNumbe
 
   const steps = [
     { label: 'CONFIRMED', date: 'Just now', done: true },
-    { label: 'ATELIER PACKING', date: 'Processing', done: order.status !== 'confirmed' },
-    { label: 'IN TRANSIT (DHL)', date: 'Estimated 2 Days', done: order.status === 'shipped' || order.status === 'delivered' },
+    { label: 'GEAR FULFILLMENT', date: 'Processing', done: order.status !== 'confirmed' },
+    { label: 'IN TRANSIT (BLUEDART)', date: 'Estimated 2 Days', done: order.status === 'shipped' || order.status === 'delivered' },
     { label: 'DELIVERED', date: 'Signature required', done: order.status === 'delivered' },
   ];
 
@@ -66,10 +66,10 @@ export const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ orderNumbe
           </div>
 
           <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '0.5rem' }}>
-            ORDER CONFIRMED & LOGGED IN ATELIER ARCHIVE
+            ORDER CONFIRMED & DISPATCH LOGGED
           </span>
 
-          <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.75rem)', lineHeight: 1.15, wordBreak: 'break-word', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
             THANK YOU, {order.first_name}
           </h1>
 
@@ -248,7 +248,7 @@ export const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ orderNumbe
               className="btn-primary"
               style={{ width: '100%', padding: '1rem' }}
             >
-              <span>RETURN TO ATELIER STOREFRONT</span>
+              <span>RETURN TO GYMWEAR STOREFRONT</span>
               <ArrowRight size={16} />
             </button>
           </div>

@@ -277,7 +277,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
               }}
             >
               <Shield size={12} />
-              <span>ATELIER CONSOLE</span>
+              <span>ADMIN CONSOLE</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', fontWeight: 900, letterSpacing: '0.14em' }}>
@@ -517,7 +517,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
                   <div>
                     <h3 style={{ fontSize: '0.9375rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                      WEEKLY ATELIER VELOCITY
+                      WEEKLY SALES VELOCITY
                     </h3>
                     <span style={{ fontSize: '0.75rem', color: '#6b6b6b' }}>Real-time 7-day revenue performance trajectory</span>
                   </div>
@@ -630,7 +630,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                   <h3 style={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                     RECENT CLIENT ORDERS
                   </h3>
-                  <span style={{ fontSize: '0.75rem', color: '#6b6b6b' }}>Latest high-priority atelier dispatches</span>
+                  <span style={{ fontSize: '0.75rem', color: '#6b6b6b' }}>Latest high-priority gear dispatches</span>
                 </div>
                 <button
                   onClick={() => setActiveTab('orders')}
@@ -1780,7 +1780,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                   YOUNG<span style={{ color: '#b51224' }}>IN</span> APPARELS
                 </span>
                 <div style={{ fontSize: '0.6875rem', color: '#666', marginTop: '2px' }}>
-                  ATELIER FULFILLMENT // COMMERCIAL PACKING SLIP
+                  GEAR FULFILLMENT // COMMERCIAL PACKING SLIP
                 </div>
               </div>
               <button

@@ -561,7 +561,7 @@ export const api = {
         body: JSON.stringify({ email }),
       });
     } catch {
-      return { success: true, message: `Subscription confirmed for ${email}. Welcome to the Atelier.` };
+      return { success: true, message: `Subscription confirmed for ${email}. Welcome to YoungIN.` };
     }
   },
 

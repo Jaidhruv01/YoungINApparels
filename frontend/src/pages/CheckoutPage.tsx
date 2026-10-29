@@ -171,7 +171,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
           </span>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#aaaaaa' }}>
             <Lock size={14} color="#10b981" />
-            <span>256-BIT ENCRYPTED ATELIER CHECKOUT</span>
+            <span>256-BIT ENCRYPTED CHECKOUT</span>
           </div>
         </div>
       </div>
@@ -189,11 +189,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
             {/* Left Column: Contact, Shipping, Payment */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
               {/* Section 1: Contact */}
-              <div style={{ backgroundColor: '#ffffff', padding: '2rem', border: '1px solid #e7e5e3' }}>
+              <div className="checkout-card" style={{ backgroundColor: '#ffffff', padding: '2rem', border: '1px solid #e7e5e3' }}>
                 <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', textTransform: 'uppercase' }}>
                   1. CONTACT INFORMATION
                 </h3>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="checkout-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   <div style={{ gridColumn: 'span 2' }}>
                     <label style={{ fontSize: '0.6875rem', fontWeight: 800, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
                       EMAIL ADDRESS FOR DISPATCH CONFIRMATION *
@@ -208,7 +208,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                   </div>
                   <div style={{ gridColumn: 'span 2' }}>
                     <label style={{ fontSize: '0.6875rem', fontWeight: 800, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
-                      MOBILE TELEPHONE (FOR DHL SMS UPDATES)
+                      MOBILE TELEPHONE (FOR SMS UPDATES)
                     </label>
                     <input
                       type="tel"
@@ -221,11 +221,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
               </div>
 
               {/* Section 2: Shipping Address */}
-              <div style={{ backgroundColor: '#ffffff', padding: '2rem', border: '1px solid #e7e5e3' }}>
+              <div className="checkout-card" style={{ backgroundColor: '#ffffff', padding: '2rem', border: '1px solid #e7e5e3' }}>
                 <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', textTransform: 'uppercase' }}>
-                  2. ATELIER DELIVERY DESTINATION
+                  2. DELIVERY DESTINATION (INDIA)
                 </h3>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="checkout-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   <div>
                     <label style={{ fontSize: '0.6875rem', fontWeight: 800, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
                       FIRST NAME *
@@ -331,7 +331,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
               </div>
 
               {/* Section 3: Shipping Method */}
-              <div style={{ backgroundColor: '#ffffff', padding: '2rem', border: '1px solid #e7e5e3' }}>
+              <div className="checkout-card" style={{ backgroundColor: '#ffffff', padding: '2rem', border: '1px solid #e7e5e3' }}>
                 <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', textTransform: 'uppercase' }}>
                   3. COURIER LOGISTICS
                 </h3>
@@ -356,10 +356,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                       />
                       <div>
                         <span style={{ fontSize: '0.8125rem', fontWeight: 800, display: 'block' }}>
-                          DHL STANDARD ARCHIVE DISPATCH (3-5 BUSINESS DAYS)
+                          STANDARD EXPRESS DISPATCH (3-5 BUSINESS DAYS)
                         </span>
                         <span style={{ fontSize: '0.75rem', color: '#6b6b6b' }}>
-                          Complimentary on orders over ₹5,000. Real-time SMS tracking included.
+                          Complimentary on orders over ₹1,999. Real-time SMS tracking included.
                         </span>
                       </div>
                     </div>
@@ -391,7 +391,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                           BLUEDART / DHL PRIORITY EXPRESS AIR (1-2 BUSINESS DAYS)
                         </span>
                         <span style={{ fontSize: '0.75rem', color: '#6b6b6b' }}>
-                          Expedited atelier packaging with dedicated concierge handoff
+                          Expedited activewear packaging with priority carrier tracking
                         </span>
                       </div>
                     </div>
@@ -403,7 +403,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
               </div>
 
               {/* Section 4: Payment Simulation */}
-              <div style={{ backgroundColor: '#ffffff', padding: '2rem', border: '1px solid #e7e5e3' }}>
+              <div className="checkout-card" style={{ backgroundColor: '#ffffff', padding: '2rem', border: '1px solid #e7e5e3' }}>
                 <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', textTransform: 'uppercase' }}>
                   4. PAYMENT ARCHITECTURE
                 </h3>
@@ -500,6 +500,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
 
             {/* Right Column: Order Summary & Placement */}
             <div
+              className="checkout-card"
               style={{
                 backgroundColor: '#ffffff',
                 border: '1px solid #e7e5e3',

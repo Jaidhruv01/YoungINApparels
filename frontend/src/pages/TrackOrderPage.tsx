@@ -81,7 +81,7 @@ export const TrackOrderPage: React.FC<TrackOrderPageProps> = ({ onNavigate }) =>
           <span className="eyebrow" style={{ color: '#b51224', display: 'inline-block', marginBottom: '0.75rem' }}>
             ATHLETE DISPATCH INTELLIGENCE // INDIA
           </span>
-          <h1 style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)', textTransform: 'uppercase', marginBottom: '1rem', color: '#ffffff' }}>
+          <h1 style={{ fontSize: 'clamp(1.65rem, 5.5vw, 3.5rem)', lineHeight: 1.15, wordBreak: 'break-word', textTransform: 'uppercase', marginBottom: '1rem', color: '#ffffff' }}>
             TRACK YOUR GEAR DISPATCH
           </h1>
           <p style={{ color: '#a0a0a0', fontSize: '0.95rem', maxWidth: '620px', margin: '0 auto' }}>

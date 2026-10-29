@@ -53,7 +53,8 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ products, onNavigate }
             lines={['THE LAUNCH CAPSULE', 'CORE ESSENTIALS']}
             italicSuffix="Edition 01"
             style={{
-              fontSize: 'clamp(1.85rem, 3.8vw, 2.75rem)',
+              fontSize: 'clamp(1.5rem, 5vw, 2.75rem)',
+              lineHeight: 1.12,
               marginBottom: '1.75rem',
               color: '#111111',
               textAlign: 'center',
@@ -62,7 +63,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ products, onNavigate }
 
           {/* Tab Buttons */}
           <div
-            className="touch-scroll-x"
+            className="touch-scroll-x tabs-scroll-container"
             style={{
               display: 'flex',
               maxWidth: '100%',

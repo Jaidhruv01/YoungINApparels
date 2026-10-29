@@ -190,26 +190,28 @@ export const BundleDrawer: React.FC<BundleDrawerProps> = ({
         {/* Drawer Header */}
         <div
           style={{
-            padding: '1.25rem 2rem',
+            padding: '1rem clamp(1rem, 3vw, 2rem)',
             borderBottom: '1px solid #1a1a1a',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             backgroundColor: '#0e0e0e',
+            gap: '12px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', flex: 1 }}>
             <span
               style={{
                 fontFamily: 'var(--font-mono)',
                 fontSize: '0.625rem',
                 fontWeight: 800,
-                letterSpacing: '0.14em',
+                letterSpacing: '0.12em',
                 backgroundColor: 'var(--color-campaign-red)',
                 color: '#ffffff',
-                padding: '3px 8px',
+                padding: '2px 6px',
                 borderRadius: '2px',
                 textTransform: 'uppercase',
+                whiteSpace: 'nowrap',
               }}
             >
               BETTER TOGETHER
@@ -217,11 +219,12 @@ export const BundleDrawer: React.FC<BundleDrawerProps> = ({
             <h3
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '1.15rem',
+                fontSize: 'clamp(0.8125rem, 3vw, 1.15rem)',
                 fontWeight: 900,
-                letterSpacing: '0.08em',
+                letterSpacing: '0.06em',
                 textTransform: 'uppercase',
                 margin: 0,
+                lineHeight: 1.25,
               }}
             >
               ATHLETE FULL-RIG BUNDLE // 3-PIECE SYSTEM
@@ -252,9 +255,9 @@ export const BundleDrawer: React.FC<BundleDrawerProps> = ({
         <div
           className="bundle-scroll-track"
           style={{
-            padding: '1.5rem 2rem',
+            padding: '1.25rem clamp(1rem, 3vw, 2rem)',
             display: 'flex',
-            gap: '1.5rem',
+            gap: '1.25rem',
             overflowX: 'auto',
             scrollSnapType: 'x mandatory',
             WebkitOverflowScrolling: 'touch',
@@ -267,7 +270,7 @@ export const BundleDrawer: React.FC<BundleDrawerProps> = ({
               key={item.id}
               className={`bundle-item-card ${item.included ? 'included' : 'excluded'}`}
               style={{
-                flex: '0 0 310px',
+                flex: '0 0 min(290px, 80vw)',
                 scrollSnapAlign: 'start',
                 backgroundColor: item.included ? '#141414' : '#0d0d0d',
                 border: item.included ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid #1c1c1c',
@@ -416,18 +419,18 @@ export const BundleDrawer: React.FC<BundleDrawerProps> = ({
         {/* Drawer Footer & Dynamic Subtotal Calculation */}
         <div
           style={{
-            padding: '1.25rem 2rem',
+            padding: '1rem clamp(1rem, 3vw, 2rem)',
             borderTop: '1px solid #1a1a1a',
             backgroundColor: '#0c0c0c',
             display: 'flex',
             flexWrap: 'wrap',
             justifyContent: 'space-between',
             alignItems: 'center',
-            gap: '1.5rem',
+            gap: '1rem',
           }}
         >
           {/* Bundle Savings & Calculation Counter with Vertical Slide Roll */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                 <span style={{ fontSize: '0.75rem', color: '#888888', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
@@ -480,13 +483,13 @@ export const BundleDrawer: React.FC<BundleDrawerProps> = ({
           </div>
 
           {/* Action CTA */}
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div className="bundle-footer-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <button
               onClick={handleAddBundleToBag}
               disabled={includedItems.length === 0 || isAdding}
               className="btn-crimson"
               style={{
-                padding: '0.9rem 2rem',
+                padding: '0.85rem 1.75rem',
                 fontSize: '0.8125rem',
                 letterSpacing: '0.12em',
                 opacity: includedItems.length === 0 ? 0.5 : 1,
@@ -521,6 +524,15 @@ export const BundleDrawer: React.FC<BundleDrawerProps> = ({
           100% {
             transform: translateY(0%);
             opacity: 1;
+          }
+        }
+        @media (max-width: 640px) {
+          .bundle-footer-actions {
+            width: 100% !important;
+          }
+          .bundle-footer-actions button {
+            width: 100% !important;
+            justify-content: center !important;
           }
         }
       `}</style>
