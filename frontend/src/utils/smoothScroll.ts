@@ -1,8 +1,14 @@
 import Lenis from 'lenis';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 class SmoothScrollEngine {
   private lenis: Lenis | null = null;
-  private rafId: number | null = null;
+  private tickerCallback: ((time: number) => void) | null = null;
   private lockCount = 0;
   private isMobile = false;
 
@@ -40,30 +46,32 @@ class SmoothScrollEngine {
       this.lenis = new Lenis({
         lerp: 0.08,
         duration: 1.2,
-        // Smooth easing curve cubic-bezier(0.25, 1, 0.5, 1) approximation
-        easing: (t: number) => 1 - Math.pow(1 - t, 4),
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
-        wheelMultiplier: 0.95,
+        wheelMultiplier: 1.0,
         touchMultiplier: 1.5,
       });
 
-      const onRaf = (time: number) => {
+      // Synchronize GSAP ScrollTrigger with Lenis scroll updates
+      this.lenis.on('scroll', ScrollTrigger.update);
+
+      // Connect Lenis RAF directly to GSAP's ticker for zero-jitter, unified loop
+      this.tickerCallback = (time: number) => {
         if (this.lenis) {
-          this.lenis.raf(time);
-          this.rafId = requestAnimationFrame(onRaf);
+          this.lenis.raf(time * 1000);
         }
       };
-
-      this.rafId = requestAnimationFrame(onRaf);
+      gsap.ticker.add(this.tickerCallback);
+      gsap.ticker.lagSmoothing(0);
     } catch (err) {
       console.warn('Lenis smooth scroll failed to initialize:', err);
     }
   }
 
   private destroyLenis() {
-    if (this.rafId) {
-      cancelAnimationFrame(this.rafId);
-      this.rafId = null;
+    if (this.tickerCallback) {
+      gsap.ticker.remove(this.tickerCallback);
+      this.tickerCallback = null;
     }
     if (this.lenis) {
       this.lenis.destroy();
@@ -71,19 +79,25 @@ class SmoothScrollEngine {
     }
   }
 
-  public scrollTo(target: string | number | HTMLElement, offset = 0) {
+  public scrollTo(target: string | number | HTMLElement, offset = 0, immediate = false) {
     if (this.lenis) {
-      this.lenis.scrollTo(target, { offset, duration: 1.2 });
+      this.lenis.scrollTo(target, {
+        offset,
+        duration: immediate ? 0 : 1.2,
+        immediate,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      });
+      ScrollTrigger.refresh();
     } else {
       if (typeof target === 'number') {
-        window.scrollTo({ top: target + offset, behavior: 'smooth' });
+        window.scrollTo({ top: target + offset, behavior: immediate ? 'auto' : 'smooth' });
       } else if (typeof target === 'string') {
         const el = document.querySelector(target);
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
+          el.scrollIntoView({ behavior: immediate ? 'auto' : 'smooth' });
         }
       } else if (target instanceof HTMLElement) {
-        target.scrollIntoView({ behavior: 'smooth' });
+        target.scrollIntoView({ behavior: immediate ? 'auto' : 'smooth' });
       }
     }
   }

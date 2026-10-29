@@ -42,7 +42,7 @@ export const PinnedStrengthSection: React.FC<PinnedStrengthSectionProps> = ({
           pin: true,
           start: 'top top',
           end: '+=150%',
-          scrub: 0.8,
+          scrub: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {

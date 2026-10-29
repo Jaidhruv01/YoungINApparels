@@ -45,6 +45,7 @@ button, a, input, select, textarea {
 /* Lenis Smooth Scroll Engine Support */
 html.lenis, html.lenis body {
   height: auto;
+  scroll-behavior: auto !important;
 }
 
 .lenis.lenis-smooth {
@@ -65,8 +66,6 @@ html.lenis, html.lenis body {
 
 /* GPU Accelerated Smooth Scroll Wrapper */
 .smooth-scroll-wrapper {
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
   width: 100%;
 }
 
@@ -76,10 +75,10 @@ html {
   background-color: var(--color-white);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -89,6 +88,7 @@ body {
   overflow-x: hidden;
   position: relative;
   line-height: 1.5;
+  -webkit-overflow-scrolling: touch;
 }
 
 #root {

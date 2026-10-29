@@ -42,7 +42,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
       const currentY = window.scrollY;
       const deltaY = currentY - lastScrollYRef.current;
 
-      setIsScrolledPastHero(currentY > 100);
+      const scrolled = currentY > 100;
+      setIsScrolledPastHero((prev) => (prev !== scrolled ? scrolled : prev));
 
       if (currentY <= 60) {
         // At the very top: always visible in default header state

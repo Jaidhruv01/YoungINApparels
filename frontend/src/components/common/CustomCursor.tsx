@@ -166,7 +166,7 @@ export const CustomCursor: React.FC = () => {
           alignItems: 'center',
           justifyContent: 'center',
           willChange: 'transform, width, height, background-color',
-          transition: 'width 250ms cubic-bezier(0.16, 1, 0.3, 1), height 250ms cubic-bezier(0.16, 1, 0.3, 1), margin 250ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms ease, border-color 200ms ease, transform 0.05s linear',
+          transition: 'width 250ms cubic-bezier(0.16, 1, 0.3, 1), height 250ms cubic-bezier(0.16, 1, 0.3, 1), margin 250ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms ease, border-color 200ms ease',
           boxShadow: isDragging ? '0 0 20px rgba(181, 18, 36, 0.6)' : 'none',
         }}
       >

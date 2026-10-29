@@ -27,14 +27,21 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
   const ctaLink = cmsData?.cta_link || '/collections/compression';
   const image = cmsData?.image_url || '/images/campaign-hero.jpg';
 
-  const [scrollY, setScrollY] = useState(0);
   const [activeHotspotId, setActiveHotspotId] = useState<string | null>(null);
+  const parallaxRef = React.useRef<HTMLDivElement>(null);
 
-  // Parallax Motion: translates down at 0.3x scroll velocity
+  // Parallax Motion: translates down at 0.3x scroll velocity via RAF without React re-renders
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      if (window.scrollY < window.innerHeight * 1.5) {
-        setScrollY(window.scrollY);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (parallaxRef.current && window.scrollY < window.innerHeight * 1.5) {
+            parallaxRef.current.style.transform = `translate3d(0, ${window.scrollY * 0.3}px, 0)`;
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -79,12 +86,13 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
     >
       {/* Background Ambient Media with Parallax Motion (0.3x velocity) */}
       <div
+        ref={parallaxRef}
         style={{
           position: 'absolute',
           inset: '-5% 0 0 0',
           zIndex: 1,
           willChange: 'transform',
-          transform: `translate3d(0, ${scrollY * 0.3}px, 0)`,
+          transform: 'translate3d(0, 0px, 0)',
         }}
       >
         <img

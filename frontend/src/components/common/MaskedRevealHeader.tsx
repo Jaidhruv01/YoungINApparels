@@ -81,7 +81,7 @@ export const MaskedRevealHeader: React.FC<MaskedRevealHeaderProps> = ({
         }}
       >
         {lines.map((line, idx) => (
-          <span key={idx} className="masked-line-wrap" style={{ display: 'block', overflow: 'hidden' }}>
+          <span key={idx} className="masked-line-wrap" style={{ display: 'block', overflow: 'hidden', paddingBottom: '0.12em', marginBottom: '-0.12em' }}>
             <span
               className={`masked-line ${isRevealed ? 'is-revealed' : ''}`}
               style={{

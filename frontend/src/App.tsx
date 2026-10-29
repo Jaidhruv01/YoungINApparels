@@ -63,7 +63,7 @@ const StorefrontApp: React.FC = () => {
   const navigate = (path: string) => {
     window.history.pushState({}, '', path);
     setCurrentPath(path);
-    smoothScrollEngine.scrollTo(0);
+    smoothScrollEngine.scrollTo(0, 0, true);
   };
 
   // Keyboard shortcut ⌘K / Ctrl+K for search
