@@ -200,10 +200,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigate }) => {
           className={`cart-shipping-banner ${isUnlocked ? 'threshold-unlocked' : ''}`}
           style={{
             padding: '1rem 1.5rem',
-            backgroundColor: isUnlocked ? '#fef2f2' : '#f7f6f4',
+            backgroundColor: '#f9f9f9',
             borderBottom: '1px solid #e7e5e3',
             animation: isCartOpen ? 'cartStaggerSlideUp 350ms cubic-bezier(0.16, 1, 0.3, 1) 50ms both' : 'none',
-            transition: 'background-color 400ms ease',
           }}
         >
           <div
@@ -218,24 +217,23 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigate }) => {
             }}
           >
             <span
-              className={isUnlocked ? 'threshold-scale-bump' : ''}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                color: isUnlocked ? 'var(--color-campaign-red)' : '#0a0a0a',
-                letterSpacing: '0.02em',
+                color: '#000000',
+                letterSpacing: '0.04em',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
               }}
             >
-              {isUnlocked && <Sparkles size={13} color="var(--color-campaign-red)" />}
+              {isUnlocked && <Sparkles size={13} color="#000000" />}
               {isUnlocked
-                ? 'FREE EXPRESS SHIPPING UNLOCKED'
-                : `ADD ${formatPrice(amountNeeded)} FOR FREE SHIPPING`}
+                ? "You've unlocked free shipping!"
+                : `Add ${formatPrice(amountNeeded)} for free shipping`}
             </span>
-            <span style={{ color: isUnlocked ? 'var(--color-campaign-red)' : '#666666', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>
+            <span style={{ color: '#000000', fontFamily: 'var(--font-mono)', flexShrink: 0, fontWeight: 700 }}>
               {Math.round(progressPercent)}%
             </span>
           </div>
@@ -244,19 +242,18 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigate }) => {
           <div
             style={{
               width: '100%',
-              height: '5px',
-              backgroundColor: '#e5e3df',
-              borderRadius: '2px',
+              height: '4px',
+              backgroundColor: '#e5e5e5',
               overflow: 'hidden',
             }}
           >
-            {/* Dynamic Fill Bar: expands over 800ms using cubic-bezier(0.65, 0, 0.35, 1) */}
+            {/* Dynamic Fill Bar: Pure stark black */}
             <div
               style={{
                 width: `${animatedPercent}%`,
                 height: '100%',
-                backgroundColor: isUnlocked ? 'var(--color-campaign-red)' : '#0a0a0a',
-                transition: 'width 800ms cubic-bezier(0.65, 0, 0.35, 1), background-color 400ms ease',
+                backgroundColor: '#000000',
+                transition: 'width 600ms cubic-bezier(0.16, 1, 0.3, 1)',
               }}
             />
           </div>

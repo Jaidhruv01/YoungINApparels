@@ -1,33 +1,34 @@
 import React, { useState } from 'react';
-import { Pause, Play } from 'lucide-react';
 
 interface AnnouncementTickerProps {
   text?: string;
 }
 
 export const AnnouncementTicker: React.FC<AnnouncementTickerProps> = ({
-  text = 'ENGINEERED FOR THE GRIND • FREE PAN-INDIA EXPRESS SHIPPING ON ORDERS OVER ₹1,999 • USE CODE: FIRST10 FOR 10% OFF • 4-WAY STRETCH POLY-NYLON & 350GSM HEAVYWEIGHT JOGGERS • CRAFTED IN INDIA • 7-DAY EASY SIZE SWAP',
+  text = 'MEMBERS SAVE 20% ON THEIR FIRST ORDER • FREE PAN-INDIA EXPRESS SHIPPING OVER ₹1,999 • ELEVATED ARCHITECTURAL ACTIVEWEAR • USE CODE: FIRST10 • 7-DAY EASY SIZE SWAP',
 }) => {
-  const [isPaused, setIsPaused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <aside
       aria-label="Store Announcements"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
-        backgroundColor: '#0a0a0a',
-        color: '#ffffff',
-        borderBottom: '1px solid #1a1a1a',
+        backgroundColor: '#121212',
+        color: '#e5e5e5',
+        borderBottom: '1px solid #222222',
         position: 'relative',
         overflow: 'hidden',
         width: '100%',
-        maxWidth: '100%',
-        height: '36px',
+        height: '32px',
         display: 'flex',
         alignItems: 'center',
         userSelect: 'none',
+        zIndex: 50,
       }}
     >
-      {/* Left Gradient Mask for smooth entry */}
+      {/* Left Gradient Mask */}
       <div
         style={{
           position: 'absolute',
@@ -35,20 +36,21 @@ export const AnnouncementTicker: React.FC<AnnouncementTickerProps> = ({
           top: 0,
           bottom: 0,
           width: '32px',
-          background: 'linear-gradient(to right, #0a0a0a 20%, transparent)',
+          background: 'linear-gradient(to right, #121212 10%, transparent)',
           pointerEvents: 'none',
           zIndex: 4,
         }}
       />
 
-      {/* Marquee Track: Seamless mathematically infinite loop with 4 cloned groups to eliminate gap artifacts */}
+      {/* Marquee Track: Infinite linear marquee moving right to left */}
       <div
         className="marquee-track"
         style={{
-          animationPlayState: isPaused ? 'paused' : undefined,
           display: 'inline-flex',
           whiteSpace: 'nowrap',
           willChange: 'transform',
+          animation: 'marqueeLinear 26s linear infinite',
+          animationPlayState: isHovered ? 'paused' : 'running',
         }}
       >
         {[0, 1, 2, 3].map((idx) => (
@@ -61,14 +63,15 @@ export const AnnouncementTicker: React.FC<AnnouncementTickerProps> = ({
               alignItems: 'center',
               gap: '2.5rem',
               paddingRight: '2.5rem',
-              fontSize: '0.6875rem',
-              fontWeight: 800,
-              letterSpacing: '0.12em',
+              fontSize: '0.65rem',
+              fontWeight: 600,
+              letterSpacing: '0.14em',
               textTransform: 'uppercase',
+              color: '#d4d4d4',
             }}
           >
             <span>{text}</span>
-            <span style={{ color: 'var(--color-campaign-red)', fontWeight: 900 }}>•</span>
+            <span style={{ color: '#666666' }}>•</span>
           </div>
         ))}
       </div>
@@ -77,47 +80,26 @@ export const AnnouncementTicker: React.FC<AnnouncementTickerProps> = ({
       <div
         style={{
           position: 'absolute',
-          right: '34px',
+          right: 0,
           top: 0,
           bottom: 0,
           width: '32px',
-          background: 'linear-gradient(to left, #0a0a0a 20%, transparent)',
+          background: 'linear-gradient(to left, #121212 10%, transparent)',
           pointerEvents: 'none',
           zIndex: 4,
         }}
       />
 
-      {/* Pause/Play Toggle */}
-      <button
-        onClick={() => setIsPaused(!isPaused)}
-        style={{
-          position: 'absolute',
-          right: '6px',
-          background: 'rgba(10, 10, 10, 0.92)',
-          border: '1px solid #282828',
-          color: '#888888',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '4px',
-          borderRadius: '2px',
-          zIndex: 5,
-          transition: 'color 0.15s ease, border-color 0.15s ease',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.color = '#ffffff';
-          e.currentTarget.style.borderColor = '#444444';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.color = '#888888';
-          e.currentTarget.style.borderColor = '#282828';
-        }}
-        title={isPaused ? 'Resume ticker' : 'Pause ticker'}
-        aria-label="Pause ticker animation"
-      >
-        {isPaused ? <Play size={11} /> : <Pause size={11} />}
-      </button>
+      <style>{`
+        @keyframes marqueeLinear {
+          0% {
+            transform: translateX(0%);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
     </aside>
   );
 };

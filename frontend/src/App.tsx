@@ -247,7 +247,7 @@ const StorefrontApp: React.FC = () => {
             textTransform: 'uppercase',
             zIndex: 99999,
             boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-            borderLeft: '4px solid #b51224',
+            borderLeft: '4px solid #ffffff',
           }}
         >
           {toastMessage}

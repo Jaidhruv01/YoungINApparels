@@ -1,32 +1,39 @@
 :root {
+  /* Radiant Theme Tokens */
+  --bg-dark: #000000;
+  --bg-light: #ffffff;
+  --bg-soft: #f9f9f9;
+  --accent-oxblood: #800000;
+
   --color-ink: #000000;
   --color-ink-surface: #0a0a0a;
   --color-ink-elevated: #141414;
   --color-white: #ffffff;
   --color-charcoal: #111111;
-  --color-editorial-gray: #f5f5f5;
+  --color-editorial-gray: #f9f9f9;
   --color-editorial-light: #f9f9f9;
-  --color-campaign-red: #8A0303;
+  --color-campaign-red: #800000;
   --color-oxblood: #800000;
   --color-deep-red: #5e0202;
-  --color-warm-neutral: #f5f5f5;
-  --color-muted: #6b6b6b;
-  --color-muted-light: #9e9e9e;
-  --color-border: #e2e0dc;
-  --color-border-dark: #202020;
+  --color-warm-neutral: #f9f9f9;
+  --color-muted: #666666;
+  --color-muted-light: #888888;
+  --color-border: rgba(0, 0, 0, 0.12);
+  --color-border-dark: rgba(255, 255, 255, 0.20);
 
-  --font-display: 'Syne', sans-serif;
+  /* Modern bold sans-serif & transitional serif accent */
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-serif-italic: 'Cormorant Garamond', Georgia, serif;
   --font-mono: 'Space Mono', monospace;
-  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  --transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.25s ease;
   --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-hover: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-scale: 0.7s cubic-bezier(0.25, 1, 0.5, 1);
-  --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.06);
-  --shadow-floating: 0 12px 40px rgba(0, 0, 0, 0.16);
-  --shadow-dark: 0 20px 50px rgba(0, 0, 0, 0.5);
+  --transition-hover: 0.25s ease;
+  --transition-scale: 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  --shadow-subtle: none;
+  --shadow-floating: none;
+  --shadow-dark: none;
 
   --scrollbar-compensation: 0px;
 }
@@ -155,10 +162,9 @@ h1, h2, h3, h4, h5, h6, .font-display {
 }
 
 .btn-primary:hover {
-  background-color: var(--color-campaign-red);
-  border-color: var(--color-campaign-red);
-  color: var(--color-white);
-  transform: translateY(-1px);
+  background-color: #ffffff;
+  border-color: #000000;
+  color: #000000;
 }
 
 .btn-secondary {
@@ -167,21 +173,21 @@ h1, h2, h3, h4, h5, h6, .font-display {
   justify-content: center;
   gap: 0.5rem;
   background-color: transparent;
-  color: var(--color-ink);
+  color: #000000;
   padding: 0.85rem 1.75rem;
   font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  border: 1px solid var(--color-ink);
+  border: 1px solid #000000;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.25s ease;
   text-decoration: none;
 }
 
 .btn-secondary:hover {
-  background-color: var(--color-ink);
-  color: var(--color-white);
+  background-color: #000000;
+  color: #ffffff;
 }
 
 .btn-white {
@@ -189,23 +195,23 @@ h1, h2, h3, h4, h5, h6, .font-display {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: var(--color-white);
-  color: var(--color-ink);
+  background-color: #ffffff;
+  color: #000000;
   padding: 0.85rem 1.75rem;
   font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  border: 1px solid var(--color-white);
+  border: 1px solid #ffffff;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.25s ease;
   text-decoration: none;
 }
 
 .btn-white:hover {
-  background-color: var(--color-campaign-red);
-  border-color: var(--color-campaign-red);
-  color: var(--color-white);
+  background-color: #000000;
+  border-color: #ffffff;
+  color: #ffffff;
 }
 
 .btn-crimson {
@@ -213,53 +219,84 @@ h1, h2, h3, h4, h5, h6, .font-display {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: var(--color-campaign-red);
-  color: var(--color-white);
+  background-color: #000000;
+  color: #ffffff;
   padding: 0.85rem 1.75rem;
   font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  border: 1px solid var(--color-campaign-red);
+  border: 1px solid #000000;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.25s ease;
   text-decoration: none;
 }
 
 .btn-crimson:hover {
-  background-color: #920c1b;
-  border-color: #920c1b;
+  background-color: #ffffff;
+  color: #000000;
+  border-color: #000000;
 }
 
-/* Badges */
+/* Badges: Black or White Pills, No Red */
 .badge-sale {
-  background-color: var(--color-campaign-red);
-  color: var(--color-white);
-  font-size: 0.6875rem;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.25rem 0.5rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  display: inline-block;
 }
 
 .badge-new {
-  background-color: var(--color-ink);
-  color: var(--color-white);
-  font-size: 0.6875rem;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  display: inline-block;
 }
 
 .badge-outline {
-  border: 1px solid var(--color-border);
-  color: var(--color-muted);
-  font-size: 0.6875rem;
-  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  color: #000000;
+  font-size: 0.65rem;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.25rem 0.5rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+/* Radiant Animated Link Underline */
+.link-hover-underline {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.link-hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: bottom left;
+  transition: transform 0.25s ease;
+}
+
+.link-hover-underline:hover::after {
+  transform: scaleX(1);
 }
 
 /* Hotspot Physics & Micro-Interactions */

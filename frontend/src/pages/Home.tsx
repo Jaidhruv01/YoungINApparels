@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { Product, Collection, LookbookData, CMSSection } from '../types';
-import { StoryCircles } from '../components/home/StoryCircles';
 import { CampaignHero } from '../components/home/CampaignHero';
+import { ScrollDrivenNarrative } from '../components/home/ScrollDrivenNarrative';
+import { TypographyStatement } from '../components/home/TypographyStatement';
+import { SplitPromoSection } from '../components/home/SplitPromoSection';
 import { ProductTabs } from '../components/home/ProductTabs';
 import { PinnedStrengthSection } from '../components/home/PinnedStrengthSection';
-import { LookbookHotspots } from '../components/home/LookbookHotspots';
 import { EditorialSplit } from '../components/home/EditorialSplit';
+import { LookbookHotspots } from '../components/home/LookbookHotspots';
 import { CuratedFeature } from '../components/home/CuratedFeature';
+import { ReviewsAndJournalSection } from '../components/home/ReviewsAndJournalSection';
 
 interface HomeProps {
   onNavigate: (path: string) => void;
@@ -18,7 +21,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [lookbookData, setLookbookData] = useState<LookbookData | null>(null);
   const [cmsSections, setCmsSections] = useState<Record<string, CMSSection>>({});
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
 
   useEffect(() => {
     const loadHomeData = async () => {
@@ -44,27 +47,36 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
   }, []);
 
   return (
-    <main>
-      {/* 1. Collection Story Circles */}
-      <StoryCircles collections={collections} onNavigate={onNavigate} />
-
-      {/* 2. Campaign Hero Banner */}
+    <main style={{ width: '100%', overflow: 'hidden' }}>
+      {/* 1. Hero Section (Radiant Section 8) */}
       <CampaignHero cmsData={cmsSections['hero']} onNavigate={onNavigate} />
 
-      {/* 3. Product Discovery Tabs */}
-      <ProductTabs products={products} onNavigate={onNavigate} />
+      {/* 2. Scroll-Driven Background Changes (Radiant Section 9) */}
+      <ScrollDrivenNarrative onNavigate={onNavigate} />
 
-      {/* 4. Section 6: Pinned Scroll Section & Horizontal Slide-In Card */}
+      {/* 3. Typography Statement & Category Grid (Radiant Section 10) */}
+      <TypographyStatement onNavigate={onNavigate} />
+
+      {/* 4. Promo Bar & Split Promo (Radiant Section 11) */}
+      <SplitPromoSection onNavigate={onNavigate} />
+
+      {/* 5. Collection Carousel with Tabs & Strict 4-Column Product Grid (Radiant Sections 12 & 13) */}
+      <ProductTabs products={products} collections={collections} onNavigate={onNavigate} />
+
+      {/* 6. Featured Collection - Oxblood Section (Radiant Section 14) */}
       <PinnedStrengthSection onNavigate={onNavigate} />
 
-      {/* 5. Shoppable Lookbook Hotspots & Section 7 Bundle Drawer */}
+      {/* 7. Category Split (Radiant Section 15) */}
+      <EditorialSplit onNavigate={onNavigate} />
+
+      {/* 8. Interactive Lookbook and Bundle (Radiant Section 16) */}
       <LookbookHotspots lookbookData={lookbookData} onNavigate={onNavigate} />
 
-      {/* 5. Editorial Split Section */}
-      <EditorialSplit cmsData={cmsSections['editorial_split']} onNavigate={onNavigate} />
-
-      {/* 6. Curated Capsule Feature */}
+      {/* 9. Product Detail Teaser, Archive Grid, Film Teaser (Radiant Section 17) */}
       <CuratedFeature products={products} onNavigate={onNavigate} />
+
+      {/* 10. Reviews, Journal, Stores, FAQ (Radiant Section 20) */}
+      <ReviewsAndJournalSection onNavigate={onNavigate} />
     </main>
   );
 };

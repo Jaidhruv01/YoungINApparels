@@ -1,233 +1,283 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight, Eye, ShieldAlert } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ArrowRight } from 'lucide-react';
 import { CMSSection } from '../../types';
-import { MaskedRevealHeader } from '../common/MaskedRevealHeader';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface CampaignHeroProps {
   cmsData?: CMSSection | null;
   onNavigate: (path: string) => void;
+  onOpenQuickBuy?: (productId?: string) => void;
 }
 
 interface HeroHotspot {
   id: string;
-  tag: string;
+  productId: string;
   title: string;
-  fabric: string;
   price: string;
   xPercent: number;
   yPercent: number;
   link: string;
 }
 
-export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate }) => {
-  const subtitle =
-    cmsData?.subtitle ||
-    'High-performance activewear built for high-intensity training. Featuring our signature 4-way stretch poly-nylon compression wear and heavy-duty 350GSM training joggers.';
-  const ctaText = cmsData?.cta_text || 'SHOP THE DROP';
-  const ctaLink = cmsData?.cta_link || '/collections/compression';
-  const image = cmsData?.image_url || '/images/campaign-hero.jpg';
+export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate, onOpenQuickBuy }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const textLineRefs = useRef<(HTMLElement | null)[]>([]);
+  const [hoveredHotspot, setHoveredHotspot] = useState<string | null>(null);
 
-  const [activeHotspotId, setActiveHotspotId] = useState<string | null>(null);
-  const parallaxRef = React.useRef<HTMLDivElement>(null);
+  const heroImage = cmsData?.image_url || '/images/campaign-hero.jpg';
 
-  // Parallax Motion: translates down at 0.3x scroll velocity via RAF without React re-renders
-  useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          if (parallaxRef.current && window.scrollY < window.innerHeight * 1.5) {
-            parallaxRef.current.style.transform = `translate3d(0, ${window.scrollY * 0.3}px, 0)`;
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const heroHotspots: HeroHotspot[] = [
+  const hotspots: HeroHotspot[] = [
     {
-      id: 'hotspot-compression',
-      tag: 'CORE ARMOR',
-      title: 'PRO-ARMOR COMPRESSION TEE',
-      fabric: '4-Way Stretch Poly-Nylon • Flatlock Seams',
+      id: 'hotspot-1',
+      productId: 'youngin-aero-compression-top',
+      title: 'PRO-ARMOR COMPRESSION',
       price: '₹2,499',
-      xPercent: 64,
-      yPercent: 42,
+      xPercent: 62,
+      yPercent: 44,
       link: '/collections/compression',
     },
     {
-      id: 'hotspot-jogger',
-      tag: 'HEAVYWEIGHT 350GSM',
+      id: 'hotspot-2',
+      productId: 'youngin-350gsm-heavyweight-lower',
       title: '350GSM HEAVYWEIGHT LOWER',
-      fabric: 'Brushed Combed Fleece • Deadlift Barbell Panels',
       price: '₹3,499',
-      xPercent: 71,
-      yPercent: 72,
-      link: '/collections/350gsm-lowers',
+      xPercent: 68,
+      yPercent: 74,
+      link: '/collections/joggers',
     },
   ];
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // 1. Text reveal on load: each line masked and sliding up (y: 100% to 0, stagger 0.1s, ease power4.out)
+      const validLines = textLineRefs.current.filter(Boolean);
+      if (validLines.length > 0) {
+        gsap.fromTo(
+          validLines,
+          { y: '105%', opacity: 0 },
+          {
+            y: '0%',
+            opacity: 1,
+            duration: 1.1,
+            stagger: 0.12,
+            ease: 'power4.out',
+            delay: 0.2,
+          }
+        );
+      }
+
+      // 2. Parallax: hero image moves slower than scroll (yPercent 0 to 20 with ScrollTrigger scrub)
+      if (imageRef.current && containerRef.current) {
+        gsap.fromTo(
+          imageRef.current,
+          { yPercent: 0, scale: 1.04 },
+          {
+            yPercent: 18,
+            scale: 1.0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: true,
+            },
+          }
+        );
+      }
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const handleHotspotClick = (spot: HeroHotspot) => {
+    if (onOpenQuickBuy) {
+      onOpenQuickBuy(spot.productId);
+    } else {
+      onNavigate(spot.link);
+    }
+  };
+
   return (
     <section
+      ref={containerRef}
+      data-header-theme="dark"
       style={{
         position: 'relative',
         width: '100%',
-        maxWidth: '100%',
-        minHeight: 'clamp(620px, 90vh, 940px)',
+        height: '100svh',
+        minHeight: '680px',
         backgroundColor: '#000000',
+        overflow: 'hidden',
         display: 'flex',
         alignItems: 'flex-end',
-        overflow: 'hidden',
       }}
     >
-      {/* Background Ambient Media with Parallax Motion (0.3x velocity) */}
+      {/* Parallax Background Container */}
       <div
-        ref={parallaxRef}
         style={{
           position: 'absolute',
-          inset: '-5% 0 0 0',
+          inset: '-8% 0 0 0',
+          overflow: 'hidden',
           zIndex: 1,
-          willChange: 'transform',
-          transform: 'translate3d(0, 0px, 0)',
         }}
       >
         <img
-          src={image}
-          alt="YoungIN Technical Performance Campaign"
+          ref={imageRef}
+          src={heroImage}
+          alt="Youngin Atelier Campaign"
           style={{
             width: '100%',
-            height: '110%',
+            height: '116%',
             objectFit: 'cover',
-            objectPosition: 'center 22%',
-            filter: 'brightness(0.88) contrast(1.08)',
+            objectPosition: 'center 28%',
+            filter: 'brightness(0.85) contrast(1.12)',
+            transformOrigin: 'center center',
           }}
         />
 
-        {/* Ambient Media Dark Radial Gradient Overlay for text contrast */}
+        {/* Ambient Dark Gradients */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(circle at 65% 45%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.85) 100%)',
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.85) 100%)',
             pointerEvents: 'none',
           }}
         />
-
-        {/* Bottom Vignette Bleed */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.95) 100%)',
+            background: 'radial-gradient(circle at 70% 40%, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.65) 100%)',
             pointerEvents: 'none',
           }}
         />
       </div>
 
-      {/* Floating Campaign Badge Top Right */}
+      {/* Interactive Hotspots Layer */}
       <div
-        className="hero-badge-floating"
         style={{
           position: 'absolute',
-          top: '2.5rem',
-          right: 'clamp(1rem, 4vw, 3.5rem)',
-          zIndex: 15,
-          backgroundColor: 'rgba(14, 14, 14, 0.82)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          padding: '0.65rem 1.25rem',
-          color: '#ffffff',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+          inset: 0,
+          zIndex: 10,
+          pointerEvents: 'none',
         }}
       >
-        <span
-          style={{
-            width: '8px',
-            height: '8px',
-            borderRadius: '50%',
-            backgroundColor: 'var(--color-campaign-red)',
-            display: 'inline-block',
-          }}
-        />
-        <span style={{ fontSize: '0.6875rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-          STRENGTH DROP // 01 — CRAFTED IN INDIA
-        </span>
-      </div>
-
-      {/* Interactive Hotspot Pins on Hero Imagery */}
-      <div className="hero-hotspots-layer" style={{ position: 'absolute', inset: 0, zIndex: 12, pointerEvents: 'none' }}>
-        {heroHotspots.map((pin) => {
-          const isActive = activeHotspotId === pin.id;
+        {hotspots.map((spot) => {
+          const isHovered = hoveredHotspot === spot.id;
 
           return (
             <div
-              key={pin.id}
-              className={`hotspot-pin ${isActive ? 'is-active' : ''}`}
+              key={spot.id}
               style={{
-                left: `${pin.xPercent}%`,
-                top: `${pin.yPercent}%`,
+                position: 'absolute',
+                left: `${spot.xPercent}%`,
+                top: `${spot.yPercent}%`,
                 pointerEvents: 'auto',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
               }}
-              onMouseEnter={() => setActiveHotspotId(pin.id)}
-              onMouseLeave={() => setActiveHotspotId(null)}
-              onClick={() => onNavigate(pin.link)}
+              onMouseEnter={() => setHoveredHotspot(spot.id)}
+              onMouseLeave={() => setHoveredHotspot(null)}
+              onClick={() => handleHotspotClick(spot)}
+              aria-label={`View ${spot.title}`}
             >
-              {/* Idle Pulse Ring */}
-              <div className="hotspot-ring" />
-              {/* Center Dot */}
-              <div className="hotspot-center" />
+              {/* Hotspot Pulse Circle (Radiant items #66 & #67) */}
+              <div
+                style={{
+                  position: 'relative',
+                  width: '18px',
+                  height: '18px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {/* 2s Pulse Ring */}
+                <span
+                  style={{
+                    position: 'absolute',
+                    inset: '-4px',
+                    borderRadius: '50%',
+                    border: '1.5px solid #ffffff',
+                    animation: 'hotspotPulseRing 2s cubic-bezier(0.25, 1, 0.5, 1) infinite',
+                    pointerEvents: 'none',
+                  }}
+                />
+                {/* Center White Dot */}
+                <span
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    backgroundColor: '#ffffff',
+                    boxShadow: '0 0 10px rgba(255,255,255,0.8)',
+                    display: 'block',
+                  }}
+                />
+              </div>
 
-              {/* Connecting Line Vector */}
-              <svg className="hotspot-connecting-line" width="40" height="2" viewBox="0 0 40 2">
-                <line x1="0" y1="1" x2="40" y2="1" className="hotspot-connecting-path" />
-              </svg>
+              {/* Extending Line on Hover (0 to 60px) + Sliding Label (Radiant item #68) */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  pointerEvents: 'none',
+                }}
+              >
+                {/* Connecting Line */}
+                <div
+                  style={{
+                    height: '1px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+                    width: isHovered ? '60px' : '0px',
+                    transition: 'width 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                  }}
+                />
 
-              {/* Floating Glass Card Expansion Adjacent to Pin */}
-              <div className="hotspot-glass-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                {/* Sliding Text Label */}
+                <div
+                  style={{
+                    paddingLeft: '10px',
+                    whiteSpace: 'nowrap',
+                    opacity: isHovered ? 1 : 0,
+                    transform: isHovered ? 'translateX(0px)' : 'translateX(-12px)',
+                    transition: 'opacity 0.35s ease 0.15s, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.15s',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '2px',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      color: '#ffffff',
+                      textShadow: '0 2px 6px rgba(0,0,0,0.8)',
+                    }}
+                  >
+                    {spot.title}
+                  </span>
                   <span
                     style={{
                       fontFamily: 'var(--font-mono)',
-                      fontSize: '0.5625rem',
-                      fontWeight: 700,
-                      letterSpacing: '0.14em',
-                      color: 'var(--color-campaign-red)',
-                      textTransform: 'uppercase',
+                      fontSize: '0.6875rem',
+                      fontWeight: 600,
+                      color: '#e0e0e0',
+                      letterSpacing: '0.05em',
+                      textShadow: '0 2px 6px rgba(0,0,0,0.8)',
                     }}
                   >
-                    {pin.tag}
+                    {spot.price}
                   </span>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#ffffff' }}>
-                    {pin.price}
-                  </span>
-                </div>
-                <h4
-                  style={{
-                    fontSize: '0.8125rem',
-                    fontWeight: 900,
-                    textTransform: 'uppercase',
-                    color: '#ffffff',
-                    lineHeight: 1.25,
-                    marginBottom: '4px',
-                    letterSpacing: '0.04em',
-                  }}
-                >
-                  {pin.title}
-                </h4>
-                <p style={{ fontSize: '0.6875rem', color: '#aaaaaa', lineHeight: 1.4, marginBottom: '8px' }}>
-                  {pin.fabric}
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#ffffff', fontSize: '0.6875rem', fontWeight: 800 }}>
-                  <span>VIEW SPECIFICATION</span>
-                  <ArrowRight size={11} color="var(--color-campaign-red)" />
                 </div>
               </div>
             </div>
@@ -235,102 +285,192 @@ export const CampaignHero: React.FC<CampaignHeroProps> = ({ cmsData, onNavigate 
         })}
       </div>
 
-      {/* Hero Content & Masked Split Typography Reveal */}
+      {/* Massive Left-Aligned Hero Content (Radiant items #23, #25, #26, #64, #71) */}
       <div
-        className="container-custom"
         style={{
           position: 'relative',
-          zIndex: 14,
-          paddingBottom: 'clamp(3rem, 6vw, 5.5rem)',
-          paddingTop: 'clamp(4rem, 8vw, 6rem)',
-          color: '#ffffff',
-          maxWidth: '920px',
+          zIndex: 12,
+          padding: '0 clamp(1.5rem, 5vw, 5rem)',
+          paddingBottom: 'clamp(3rem, 7vw, 6rem)',
+          maxWidth: '1500px',
+          width: '100%',
         }}
       >
-        <MaskedRevealHeader
-          as="h1"
-          tag="HIGH-PERFORMANCE GYMWEAR // INDIA"
-          lines={['ENGINEERED FOR', 'THE GRIND']}
-          italicSuffix="Archive 01"
-          staggerDelay={0.08}
-          style={{
-            fontSize: 'clamp(1.75rem, 6.5vw, 5.5rem)',
-            color: '#ffffff',
-            marginBottom: '1.5rem',
-            lineHeight: 1.12,
-          }}
-        />
+        {/* Subtitle / Season Tag */}
+        <div style={{ overflow: 'hidden', marginBottom: '0.85rem' }}>
+          <span
+            ref={(el) => {
+              textLineRefs.current[0] = el;
+            }}
+            style={{
+              display: 'inline-block',
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              color: 'rgba(255, 255, 255, 0.75)',
+            }}
+          >
+            SERIES 01 // AUTUMN WINTER 2026
+          </span>
+        </div>
 
-        <p
+        {/* Massive Masked Lines */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15em', marginBottom: '2.5rem' }}>
+          {/* Line 1 */}
+          <div style={{ overflow: 'hidden' }}>
+            <h1
+              ref={(el) => {
+                textLineRefs.current[1] = el;
+              }}
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 'clamp(3.8rem, 11vw, 12.5rem)',
+                fontWeight: 900,
+                letterSpacing: '-0.035em',
+                lineHeight: 0.92,
+                textTransform: 'uppercase',
+                color: '#ffffff',
+                margin: 0,
+              }}
+            >
+              TECHNICAL
+            </h1>
+          </div>
+
+          {/* Line 2 with italic serif accent word (Radiant item #25) */}
+          <div style={{ overflow: 'hidden' }}>
+            <h1
+              ref={(el) => {
+                textLineRefs.current[2] = el;
+              }}
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 'clamp(3.8rem, 11vw, 12.5rem)',
+                fontWeight: 900,
+                letterSpacing: '-0.035em',
+                lineHeight: 0.92,
+                textTransform: 'uppercase',
+                color: '#ffffff',
+                margin: 0,
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--font-serif)',
+                  fontStyle: 'italic',
+                  fontWeight: 400,
+                  letterSpacing: '0.01em',
+                  textTransform: 'none',
+                  marginRight: '0.22em',
+                }}
+              >
+                effortless
+              </span>
+              PRECISION
+            </h1>
+          </div>
+        </div>
+
+        {/* Stark Black & White CTA Buttons (Radiant items #20, #65) */}
+        <div
           style={{
-            fontSize: 'clamp(0.875rem, 1.2vw, 1.125rem)',
-            color: '#d4d4d4',
-            maxWidth: '640px',
-            lineHeight: 1.65,
-            marginBottom: '2.25rem',
+            overflow: 'hidden',
           }}
         >
-          {subtitle}
-        </p>
-
-        <div className="hero-actions-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
-          <button
-            onClick={() => onNavigate(ctaLink)}
-            className="btn-crimson"
+          <div
+            ref={(el) => {
+              textLineRefs.current[3] = el;
+            }}
             style={{
-              padding: '1.05rem 2.25rem',
-              fontSize: '0.8125rem',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1rem',
+              alignItems: 'center',
             }}
           >
-            <span>{ctaText}</span>
-            <ArrowRight size={16} />
-          </button>
+            {/* Button 1: Stark White Button */}
+            <button
+              onClick={() => onNavigate('/collections/compression')}
+              className="btn-stark-white"
+              style={{
+                backgroundColor: '#ffffff',
+                color: '#000000',
+                border: '1px solid #ffffff',
+                padding: '1rem 2.25rem',
+                fontSize: '0.8125rem',
+                fontWeight: 700,
+                letterSpacing: '0.10em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#000000';
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.borderColor = '#ffffff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#ffffff';
+                e.currentTarget.style.color = '#000000';
+                e.currentTarget.style.borderColor = '#ffffff';
+              }}
+            >
+              <span>EXPLORE SERIES</span>
+              <ArrowRight size={15} strokeWidth={1.5} />
+            </button>
 
-          <button
-            onClick={() => onNavigate('/collections/joggers')}
-            className="btn-white"
-            style={{
-              padding: '1.05rem 2rem',
-              fontSize: '0.8125rem',
-              backgroundColor: 'rgba(255,255,255,0.08)',
-              borderColor: 'rgba(255,255,255,0.25)',
-              color: '#ffffff',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-            }}
-          >
-            <Eye size={16} />
-            <span>EXPLORE JOGGERS (350GSM)</span>
-          </button>
+            {/* Button 2: Stark Black / Transparent Button */}
+            <button
+              onClick={() => onNavigate('/lookbook')}
+              className="btn-stark-dark"
+              style={{
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                color: '#ffffff',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                padding: '1rem 2.25rem',
+                fontSize: '0.8125rem',
+                fontWeight: 700,
+                letterSpacing: '0.10em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#ffffff';
+                e.currentTarget.style.color = '#000000';
+                e.currentTarget.style.borderColor = '#ffffff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+              }}
+            >
+              <span>VIEW LOOKBOOK</span>
+            </button>
+          </div>
         </div>
       </div>
 
       <style>{`
-        @media (max-width: 768px) {
-          .hero-hotspots-layer {
-            display: none !important;
+        @keyframes hotspotPulseRing {
+          0% {
+            transform: scale(1);
+            opacity: 0.9;
           }
-        }
-        @media (max-width: 640px) {
-          .hero-badge-floating {
-            top: 1rem !important;
-            left: 1rem !important;
-            right: auto !important;
-            max-width: calc(100% - 2rem) !important;
-            padding: 0.4rem 0.8rem !important;
-          }
-          .hero-badge-floating span:last-child {
-            font-size: 0.58rem !important;
-            letter-spacing: 0.1em !important;
-          }
-          .hero-actions-container {
-            flex-direction: column !important;
-            align-items: stretch !important;
-            width: 100% !important;
-          }
-          .hero-actions-container button {
-            width: 100% !important;
-            justify-content: center !important;
+          100% {
+            transform: scale(2.2);
+            opacity: 0;
           }
         }
       `}</style>

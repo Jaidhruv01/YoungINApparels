@@ -1,18 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, Zap, Shield, Activity, ShoppingBag } from 'lucide-react';
+import { ArrowRight, ShoppingBag } from 'lucide-react';
 import { useCurrency } from '../../context/CurrencyContext';
 import { useCart } from '../../context/CartContext';
 
-// Register GSAP ScrollTrigger
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
+gsap.registerPlugin(ScrollTrigger);
 
 interface PinnedStrengthSectionProps {
   onNavigate: (path: string) => void;
-  onOpenQuickBuy?: (productSlug: string) => void;
+  onOpenQuickBuy?: (productId: string) => void;
 }
 
 export const PinnedStrengthSection: React.FC<PinnedStrengthSectionProps> = ({
@@ -21,530 +18,359 @@ export const PinnedStrengthSection: React.FC<PinnedStrengthSectionProps> = ({
 }) => {
   const { formatPrice } = useCurrency();
   const { addToCart } = useCart();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const pinSectionRef = useRef<HTMLDivElement>(null);
-  const floatingCardRef = useRef<HTMLDivElement>(null);
-  const bgVisualRef = useRef<HTMLDivElement>(null);
-  const progressBarRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const bgImageRef = useRef<HTMLImageElement>(null);
+  const productCardRef = useRef<HTMLDivElement>(null);
+
+  const featuredProduct = {
+    id: 1,
+    slug: 'youngin-aero-compression-top',
+    title: 'CALM COMPRESSION PULLOVER',
+    subtitle: '4-Way Poly-Nylon • Oxblood Edition',
+    price: 2499,
+    image: '/images/product-bomber.jpg',
+  };
 
   useEffect(() => {
-    // Only enable ScrollTrigger pinning on desktop (>= 768px)
-    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
-    if (!isDesktop || !containerRef.current || !pinSectionRef.current || !floatingCardRef.current || !bgVisualRef.current) {
-      return;
-    }
-
     const ctx = gsap.context(() => {
-      // Create master pinning timeline
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: pinSectionRef.current,
-          pin: true,
-          start: 'top top',
-          end: '+=150%',
-          scrub: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            if (progressBarRef.current) {
-              progressBarRef.current.style.width = `${Math.round(self.progress * 100)}%`;
-            }
-          },
-        },
-      });
+      if (!sectionRef.current || !productCardRef.current) return;
 
-      // Entry phase (0% - 30% progress): Floating card enters from 100vw to 0, rotate 3deg -> 0deg
-      // Ambient background scales from 1.0 to 1.08 across the same window
-      tl.fromTo(
-        floatingCardRef.current,
+      // 1. Horizontal Slide-in Card over background: x 100% to 0, 1s, power3.out (Radiant item #107)
+      gsap.fromTo(
+        productCardRef.current,
+        { x: '120%', opacity: 0 },
         {
-          x: '100vw',
-          rotation: 3,
-          opacity: 0.8,
-        },
-        {
-          x: '0vw',
-          rotation: 0,
+          x: '0%',
           opacity: 1,
-          ease: 'power2.out',
-          duration: 0.3, // corresponds to 0% - 30% of timeline
-        },
-        0
+          duration: 1.0,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 70%',
+            toggleActions: 'play none none reverse',
+          },
+        }
       );
 
-      tl.fromTo(
-        bgVisualRef.current,
-        {
-          scale: 1.0,
-        },
-        {
-          scale: 1.08,
-          ease: 'none',
-          duration: 0.3,
-        },
-        0
-      );
+      // 2. Gentle Background Parallax: yPercent 0 to 15 (Radiant item #109)
+      if (bgImageRef.current) {
+        gsap.fromTo(
+          bgImageRef.current,
+          { yPercent: -5, scale: 1.05 },
+          {
+            yPercent: 12,
+            scale: 1.0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: true,
+            },
+          }
+        );
+      }
+    }, sectionRef);
 
-      // Remaining duration (30% - 100%): Card stays anchored in place with subtle breathing/spec highlights
-      tl.to(
-        floatingCardRef.current,
-        {
-          y: -15,
-          ease: 'power1.inOut',
-          duration: 0.7,
-        },
-        0.3
-      );
-    }, containerRef);
-
-    return () => {
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, []);
 
-  const handleQuickAdd = async (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onOpenQuickBuy) {
-      onOpenQuickBuy('pro-armor-seamless-compression');
-    } else {
-      onNavigate('/products/pro-armor-seamless-compression');
+    try {
+      await addToCart(featuredProduct.id, 1);
+    } catch {
+      onNavigate(`/products/${featuredProduct.slug}`);
     }
   };
 
   return (
-    <div
-      ref={containerRef}
-      className="pinned-strength-wrapper"
+    <section
+      ref={sectionRef}
+      data-header-theme="dark"
       style={{
         position: 'relative',
-        backgroundColor: '#000000',
+        width: '100%',
+        minHeight: 'clamp(550px, 85vh, 850px)',
+        backgroundColor: '#0a0a0a',
         overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
       }}
     >
-      {/* Pinned Target Section */}
-      <section
-        ref={pinSectionRef}
-        id="series-01-strength-pin"
+      {/* Oxblood Ambient Background Image with Gentle Parallax (Radiant items #105, #109) */}
+      <div
         style={{
-          position: 'relative',
-          width: '100%',
-          height: '100vh',
-          minHeight: '680px',
-          display: 'flex',
-          alignItems: 'center',
+          position: 'absolute',
+          inset: '-10% 0',
+          zIndex: 1,
           overflow: 'hidden',
-          backgroundColor: '#050505',
-          color: '#ffffff',
         }}
       >
-        {/* Background Visual Container (Scales 1.0 -> 1.08) */}
+        <img
+          ref={bgImageRef}
+          src="/images/campaign-hero.jpg"
+          alt="Oxblood Featured Collection"
+          style={{
+            width: '100%',
+            height: '120%',
+            objectFit: 'cover',
+            filter: 'brightness(0.45) contrast(1.2)',
+          }}
+        />
+
+        {/* Deep Oxblood Accent Layer (#800000 at 35% opacity) */}
         <div
-          ref={bgVisualRef}
           style={{
             position: 'absolute',
             inset: 0,
-            width: '100%',
-            height: '100%',
-            transformOrigin: 'center center',
-            willChange: 'transform',
-            zIndex: 1,
-          }}
-        >
-          <img
-            src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=2000&q=85"
-            alt="High Output Strength Rig"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              filter: 'brightness(0.38) contrast(1.25) grayscale(0.2)',
-            }}
-          />
-          {/* Subtle Industrial Grid Overlay */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundImage: 'radial-gradient(circle at 30% 50%, rgba(181, 18, 36, 0.18), transparent 60%)',
-              pointerEvents: 'none',
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.45)',
-              pointerEvents: 'none',
-            }}
-          />
-        </div>
-
-        {/* Top/Bottom Ambient Vignette Borders */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '120px',
-            background: 'linear-gradient(to bottom, #000000 0%, transparent 100%)',
-            zIndex: 2,
-            pointerEvents: 'none',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: '140px',
-            background: 'linear-gradient(to top, #000000 0%, transparent 100%)',
-            zIndex: 2,
+            backgroundColor: 'rgba(128, 0, 0, 0.38)',
+            mixBlendMode: 'multiply',
             pointerEvents: 'none',
           }}
         />
 
-        {/* Section Content Grid */}
+        {/* Ambient Dark Gradients */}
         <div
-          className="container-custom"
           style={{
-            position: 'relative',
-            zIndex: 10,
-            width: '100%',
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '3rem',
-            alignItems: 'center',
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.7) 100%)',
+            pointerEvents: 'none',
           }}
-        >
-          {/* Left Column: Atmospheric Typography & Mission Spec */}
-          <div style={{ maxWidth: '580px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1rem' }}>
-              <span
-                style={{
-                  display: 'inline-block',
-                  width: '8px',
-                  height: '8px',
-                  backgroundColor: 'var(--color-campaign-red)',
-                  borderRadius: '50%',
-                  boxShadow: '0 0 10px var(--color-campaign-red)',
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '0.6875rem',
-                  fontWeight: 800,
-                  letterSpacing: '0.2em',
-                  color: 'var(--color-campaign-red)',
-                  textTransform: 'uppercase',
-                }}
-              >
-                PINNED SERIES ARCHIVE // 01
-              </span>
-            </div>
+        />
+      </div>
 
-            <h2
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(1.5rem, 5.2vw, 3.75rem)',
-                fontWeight: 900,
-                letterSpacing: '-0.02em',
-                lineHeight: 1.12,
-                wordBreak: 'break-word',
-                overflowWrap: 'break-word',
-                textTransform: 'uppercase',
-                color: '#ffffff',
-                marginBottom: '1.25rem',
-              }}
-            >
-              SERIES 01 // HIGH-OUTPUT STRENGTH
-            </h2>
-
-            <p
-              style={{
-                color: '#c2c2c2',
-                fontSize: 'clamp(0.875rem, 1.2vw, 1.05rem)',
-                lineHeight: 1.7,
-                marginBottom: '2rem',
-                maxWidth: '500px',
-              }}
-            >
-              Engineered for extreme tensile resistance and maximum kinetic output. Featuring high-density 4-way stretch poly-nylon weave with biomechanically targeted compression panels.
-            </p>
-
-            {/* Performance Specifications Badges */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
-                gap: '1rem',
-                marginBottom: '2.5rem',
-              }}
-            >
-              <div
-                style={{
-                  borderLeft: '2px solid var(--color-campaign-red)',
-                  paddingLeft: '0.75rem',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#ffffff', marginBottom: '2px' }}>
-                  <Zap size={14} color="var(--color-campaign-red)" />
-                  <span style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em' }}>320 GSM</span>
-                </div>
-                <span style={{ fontSize: '0.625rem', color: '#888888', textTransform: 'uppercase' }}>
-                  High-Tensile Weave
-                </span>
-              </div>
-
-              <div
-                style={{
-                  borderLeft: '2px solid rgba(255, 255, 255, 0.25)',
-                  paddingLeft: '0.75rem',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#ffffff', marginBottom: '2px' }}>
-                  <Activity size={14} color="#ffffff" />
-                  <span style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em' }}>4-WAY POLY-NYLON</span>
-                </div>
-                <span style={{ fontSize: '0.625rem', color: '#888888', textTransform: 'uppercase' }}>
-                  Microfiber Recovery
-                </span>
-              </div>
-
-              <div
-                style={{
-                  borderLeft: '2px solid rgba(255, 255, 255, 0.25)',
-                  paddingLeft: '0.75rem',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#ffffff', marginBottom: '2px' }}>
-                  <Shield size={14} color="#ffffff" />
-                  <span style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em' }}>FLATLOCK 4-NEEDLE</span>
-                </div>
-                <span style={{ fontSize: '0.625rem', color: '#888888', textTransform: 'uppercase' }}>
-                  Zero Chafing Seams
-                </span>
-              </div>
-            </div>
-
-            {/* Scroll Lock Timeline Indicator */}
-            <div style={{ maxWidth: '320px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.6875rem', fontFamily: 'var(--font-mono)', color: '#888888', marginBottom: '6px' }}>
-                <span>SCROLL TIMELINE SYNC</span>
-                <span style={{ color: 'var(--color-campaign-red)' }}>PINNED LOCK</span>
-              </div>
-              <div style={{ width: '100%', height: '3px', backgroundColor: 'rgba(255, 255, 255, 0.15)', borderRadius: '2px', overflow: 'hidden' }}>
-                <div
-                  ref={progressBarRef}
-                  style={{
-                    width: '0%',
-                    height: '100%',
-                    backgroundColor: 'var(--color-campaign-red)',
-                    transition: 'width 0.1s linear',
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Floating Product Card ("PRO-ARMOR SEAMLESS COMPRESSION") */}
+      {/* Main Container */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          maxWidth: '1600px',
+          margin: '0 auto',
+          padding: '0 clamp(1.5rem, 5vw, 5rem)',
+          width: '100%',
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '3rem',
+        }}
+      >
+        {/* Left: Atmospheric Text Overlays "TIMELESS STYLE" (Radiant item #106) */}
+        <div style={{ maxWidth: '640px', color: '#ffffff' }}>
           <div
             style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              color: 'rgba(255, 255, 255, 0.75)',
+              marginBottom: '1rem',
               display: 'flex',
-              justifyContent: 'center',
               alignItems: 'center',
-              position: 'relative',
+              gap: '8px',
             }}
           >
-            <div
-              ref={floatingCardRef}
-              className="pinned-floating-card"
+            <span
               style={{
-                width: '100%',
-                maxWidth: '430px',
-                backgroundColor: 'rgba(16, 16, 16, 0.88)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                borderRadius: '3px',
-                padding: '1.75rem',
-                boxShadow: '0 30px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(181, 18, 36, 0.15)',
-                willChange: 'transform, opacity',
-                transformOrigin: 'bottom right',
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                backgroundColor: '#800000',
+                border: '1px solid rgba(255,255,255,0.6)',
+              }}
+            />
+            FEATURED CAPSULE // OXBLOOD ACCENT
+          </div>
+
+          <h2
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 'clamp(2.8rem, 6.5vw, 6rem)',
+              fontWeight: 900,
+              letterSpacing: '-0.035em',
+              lineHeight: 0.95,
+              textTransform: 'uppercase',
+              marginBottom: '1.5rem',
+            }}
+          >
+            TIMELESS{' '}
+            <span
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontStyle: 'italic',
+                fontWeight: 400,
+                letterSpacing: '0.01em',
+                textTransform: 'none',
               }}
             >
-              {/* Product Badge Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-                <span
-                  style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.625rem',
-                    fontWeight: 800,
-                    letterSpacing: '0.14em',
-                    backgroundColor: 'var(--color-campaign-red)',
-                    color: '#ffffff',
-                    padding: '3px 8px',
-                    borderRadius: '2px',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  FEATURED ARTIFACT
-                </span>
-                <span
-                  style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.625rem',
-                    color: '#888888',
-                    letterSpacing: '0.1em',
-                  }}
-                >
-                  SPEC // YIN-01-PRO
-                </span>
-              </div>
+              sculpture
+            </span>
+          </h2>
 
-              {/* Product Image Frame */}
-              <div
+          <p
+            style={{
+              fontSize: '1rem',
+              color: '#d4d4d4',
+              lineHeight: 1.65,
+              maxWidth: '520px',
+              marginBottom: '2.5rem',
+            }}
+          >
+            Restricted drop featuring deep oxblood hues, hyper-dense stitching, and high-tensile recovery fabrics made to move with unyielding grace.
+          </p>
+
+          <button
+            onClick={() => onNavigate('/collections/compression')}
+            className="btn-stark-white"
+            style={{
+              backgroundColor: '#ffffff',
+              color: '#000000',
+              border: '1px solid #ffffff',
+              padding: '1rem 2.25rem',
+              fontSize: '0.8125rem',
+              fontWeight: 700,
+              letterSpacing: '0.10em',
+              textTransform: 'uppercase',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'background-color 0.25s ease, color 0.25s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#000000';
+              e.currentTarget.style.color = '#ffffff';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#ffffff';
+              e.currentTarget.style.color = '#000000';
+            }}
+          >
+            <span>EXPLORE CAPSULE</span>
+            <ArrowRight size={14} strokeWidth={1.5} />
+          </button>
+        </div>
+
+        {/* Right: Floating Product Card sliding horizontally from right (Radiant items #107, #108) */}
+        <div
+          ref={productCardRef}
+          onClick={() => onNavigate(`/products/${featuredProduct.slug}`)}
+          style={{
+            width: '100%',
+            maxWidth: '380px',
+            backgroundColor: '#ffffff',
+            color: '#000000',
+            padding: '1.25rem',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+            cursor: 'pointer',
+            willChange: 'transform, opacity',
+          }}
+        >
+          {/* Card Image */}
+          <div
+            style={{
+              position: 'relative',
+              width: '100%',
+              aspectRatio: '3 / 4',
+              overflow: 'hidden',
+              backgroundColor: '#f5f5f5',
+              marginBottom: '1rem',
+            }}
+          >
+            <img
+              src={featuredProduct.image}
+              alt={featuredProduct.title}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                transition: 'transform 0.5s ease',
+              }}
+            />
+            {/* Oxblood pill badge */}
+            <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
+              <span
                 style={{
-                  position: 'relative',
-                  width: '100%',
-                  aspectRatio: '4/4.5',
-                  backgroundColor: '#0a0a0a',
-                  overflow: 'hidden',
-                  borderRadius: '2px',
-                  marginBottom: '1.25rem',
+                  backgroundColor: '#800000',
+                  color: '#ffffff',
+                  fontSize: '0.58rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  padding: '4px 8px',
+                  borderRadius: '999px',
                 }}
               >
-                <img
-                  src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=1000&q=85"
-                  alt="PRO-ARMOR SEAMLESS COMPRESSION"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                  }}
-                  className="pinned-product-img"
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '10px',
-                    left: '10px',
-                    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                    backdropFilter: 'blur(4px)',
-                    padding: '4px 8px',
-                    borderRadius: '2px',
-                    fontSize: '0.625rem',
-                    fontFamily: 'var(--font-mono)',
-                    color: '#ffffff',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                  }}
-                >
-                  DYNAMIC MUSCLE LOCK
-                </div>
-              </div>
-
-              {/* Title & Price */}
-              <div style={{ marginBottom: '1rem' }}>
-                <h3
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: '1.25rem',
-                    fontWeight: 900,
-                    letterSpacing: '0.04em',
-                    textTransform: 'uppercase',
-                    color: '#ffffff',
-                    lineHeight: 1.25,
-                    marginBottom: '4px',
-                  }}
-                >
-                  PRO-ARMOR SEAMLESS COMPRESSION
-                </h3>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-                  <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>
-                    {formatPrice(1899)}
-                  </span>
-                  <span style={{ fontSize: '0.875rem', color: '#777777', textDecoration: 'line-through' }}>
-                    {formatPrice(2499)}
-                  </span>
-                  <span style={{ fontSize: '0.6875rem', fontWeight: 800, color: 'var(--color-campaign-red)' }}>
-                    SAVE 24%
-                  </span>
-                </div>
-              </div>
-
-              {/* Quick Specs List */}
-              <p style={{ fontSize: '0.8125rem', color: '#9e9e9e', lineHeight: 1.6, marginBottom: '1.25rem' }}>
-                High-pressure poly-nylon compression with thermo-regulating breathability channels. Designed for zero slippage during heavy lifts.
-              </p>
-
-              {/* Actions */}
-              <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <button
-                  onClick={handleQuickAdd}
-                  className="btn-crimson"
-                  style={{
-                    flex: 1,
-                    padding: '0.85rem 1rem',
-                    fontSize: '0.75rem',
-                    letterSpacing: '0.1em',
-                  }}
-                >
-                  <ShoppingBag size={14} />
-                  <span>ACQUIRE ARTIFACT</span>
-                </button>
-                <button
-                  onClick={() => onNavigate('/products/pro-armor-seamless-compression')}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    color: '#ffffff',
-                    padding: '0.85rem',
-                    cursor: 'pointer',
-                    borderRadius: '2px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'background-color 0.2s ease',
-                  }}
-                  title="View complete specifications"
-                  aria-label="View specifications"
-                >
-                  <ArrowRight size={16} />
-                </button>
-              </div>
+                SPECIAL RUN
+              </span>
             </div>
           </div>
-        </div>
-      </section>
 
-      <style>{`
-        .pinned-product-img:hover {
-          transform: scale(1.05);
-        }
-        @media (max-width: 768px) {
-          .pinned-strength-wrapper #series-01-strength-pin {
-            height: auto !important;
-            min-height: auto !important;
-            padding: 4rem 0 !important;
-          }
-          .pinned-strength-wrapper .container-custom {
-            grid-template-columns: 1fr !important;
-            gap: 2.25rem !important;
-          }
-          .pinned-floating-card {
-            transform: none !important;
-            opacity: 1 !important;
-            max-width: 100% !important;
-            padding: 1.25rem !important;
-          }
-          .pinned-floating-card h3 {
-            font-size: 1.1rem !important;
-          }
-        }
-      `}</style>
-    </div>
+          {/* Title & Price */}
+          <h3
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.95rem',
+              fontWeight: 800,
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              margin: '0 0 0.25rem 0',
+            }}
+          >
+            {featuredProduct.title}
+          </h3>
+          <p style={{ fontSize: '0.75rem', color: '#666666', margin: '0 0 0.85rem 0' }}>
+            {featuredProduct.subtitle}
+          </p>
+          <div
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '1rem',
+              fontWeight: 700,
+              color: '#000000',
+              marginBottom: '1.25rem',
+            }}
+          >
+            {formatPrice(featuredProduct.price)}
+          </div>
+
+          {/* Add to Cart Stark Button (Radiant item #108) */}
+          <button
+            onClick={handleAddToCart}
+            style={{
+              width: '100%',
+              backgroundColor: '#000000',
+              color: '#ffffff',
+              border: '1px solid #000000',
+              padding: '0.85rem',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              letterSpacing: '0.10em',
+              textTransform: 'uppercase',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              transition: 'background-color 0.25s ease, color 0.25s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#ffffff';
+              e.currentTarget.style.color = '#000000';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#000000';
+              e.currentTarget.style.color = '#ffffff';
+            }}
+          >
+            <ShoppingBag size={14} strokeWidth={1.5} />
+            <span>ADD TO CART</span>
+          </button>
+        </div>
+      </div>
+    </section>
   );
 };

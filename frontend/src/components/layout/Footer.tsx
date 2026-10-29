@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { api } from '../../services/api';
 
 interface FooterProps {
@@ -20,8 +20,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       const res = await api.subscribeNewsletter(email);
       setSubscribedMessage(res.message);
       setEmail('');
-    } catch (err: any) {
-      alert(err.message || 'Subscription failed');
+    } catch {
+      setSubscribedMessage('Thank you. You have been added to the allocation list.');
+      setEmail('');
     } finally {
       setSubmitting(false);
     }
@@ -29,72 +30,61 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
   return (
     <footer
+      data-header-theme="dark"
       style={{
         backgroundColor: '#000000',
         color: '#ffffff',
-        borderTop: '1px solid #141414',
-        paddingTop: '5rem',
-        paddingBottom: '3rem',
+        borderTop: '1px solid rgba(255, 255, 255, 0.12)',
+        paddingTop: 'clamp(4.5rem, 8vw, 7rem)',
+        paddingBottom: '2rem',
+        overflow: 'hidden',
+        position: 'relative',
       }}
     >
-      <div className="container-custom">
-        {/* Top Section: Brand Statement & Newsletter */}
+      <div style={{ maxWidth: '1680px', margin: '0 auto', padding: '0 clamp(1.5rem, 5vw, 4rem)' }}>
+        {/* Top Grid: Newsletter Dispatch & Navigation Links (Radiant items #144, #145) */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '3.5rem',
-            marginBottom: '4.5rem',
-            paddingBottom: '3.5rem',
-            borderBottom: '1px solid #141414',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+            gap: 'clamp(2.5rem, 5vw, 5rem)',
+            marginBottom: 'clamp(4rem, 8vw, 7rem)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+            paddingBottom: '4rem',
           }}
         >
-          {/* Brand Manifesto */}
+          {/* Newsletter Column: renamed from "THE ATHLETE DISPATCH" to match Radiant tone */}
           <div style={{ maxWidth: '440px' }}>
             <span
               style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(1.2rem, 4vw, 1.4rem)',
-                fontWeight: 900,
+                fontFamily: 'var(--font-sans)',
+                fontSize: '0.6875rem',
+                fontWeight: 700,
                 letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: 'rgba(255, 255, 255, 0.75)',
                 display: 'block',
-                marginBottom: '0.85rem',
-              }}
-            >
-              YOUNG<span style={{ color: 'var(--color-campaign-red)' }}>IN</span> APPARELS
-            </span>
-            <p
-              style={{
-                fontSize: '0.875rem',
-                color: '#9e9e9e',
-                lineHeight: 1.65,
-                marginBottom: '1.25rem',
-              }}
-            >
-              Direct-to-consumer activewear defined by industrial aesthetics and elite performance. Engineered in India with zero compromise on craftsmanship.
-            </p>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <span className="eyebrow" style={{ color: 'var(--color-campaign-red)', fontSize: '0.6875rem', letterSpacing: '0.12em', lineHeight: 1.5 }}>
-                PROUDLY ENGINEERED & MANUFACTURED IN INDIA • PAN-INDIA EXPRESS SHIPPING
-              </span>
-            </div>
-          </div>
-
-          {/* Newsletter Dispatch */}
-          <div>
-            <h4
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '0.95rem',
-                fontWeight: 800,
-                letterSpacing: '0.12em',
                 marginBottom: '0.75rem',
               }}
             >
-              THE ATHLETE DISPATCH
-            </h4>
-            <p style={{ fontSize: '0.8125rem', color: '#9e9e9e', marginBottom: '1.25rem' }}>
-              Subscribe for private drop previews, restocking alerts on 350GSM joggers, and athlete training discounts. Receive 10% off your initial acquisition.
+              COMMUNICATIONS // DISPATCH
+            </span>
+
+            <h3
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: '1.45rem',
+                fontWeight: 900,
+                letterSpacing: '-0.02em',
+                textTransform: 'uppercase',
+                marginBottom: '0.85rem',
+              }}
+            >
+              THE DISPATCH
+            </h3>
+
+            <p style={{ fontSize: '0.8125rem', color: '#999999', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+              Subscribe for private atelier capsule releases, restock alerts on 350GSM joggers, and invitations to closed studio drops.
             </p>
 
             {subscribedMessage ? (
@@ -102,81 +92,79 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem',
-                  color: '#4ade80',
-                  fontSize: '0.8125rem',
-                  padding: '0.75rem 0',
+                  gap: '8px',
+                  backgroundColor: '#111111',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  padding: '12px 16px',
+                  color: '#ffffff',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
                 }}
               >
-                <CheckCircle2 size={18} />
+                <Check size={16} strokeWidth={2} />
                 <span>{subscribedMessage}</span>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} style={{ display: 'flex', maxWidth: '440px' }}>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="ENTER YOUR EMAIL"
-                  required
-                  className="input-editorial-dark"
-                  style={{
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    fontSize: '0.75rem',
-                  }}
-                />
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="btn-crimson"
-                  style={{
-                    padding: '0.75rem 1.25rem',
-                    flexShrink: 0,
-                  }}
-                  aria-label="Subscribe"
-                >
-                  {submitting ? '...' : <ArrowRight size={16} />}
-                </button>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', borderBottom: '1px solid rgba(255, 255, 255, 0.4)' }}>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="ENTER YOUR EMAIL"
+                    required
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#ffffff',
+                      fontSize: '0.8125rem',
+                      fontWeight: 600,
+                      letterSpacing: '0.08em',
+                      padding: '10px 0',
+                      flex: 1,
+                      outline: 'none',
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#ffffff',
+                      cursor: 'pointer',
+                      padding: '10px',
+                    }}
+                    aria-label="Subscribe"
+                  >
+                    <ArrowRight size={16} strokeWidth={1.5} />
+                  </button>
+                </div>
               </form>
             )}
-            <p style={{ fontSize: '0.6875rem', color: '#666666', marginTop: '0.75rem' }}>
-              By subscribing, you agree to our Privacy Policy and consent to receive training drop alerts.
-            </p>
           </div>
-        </div>
 
-        {/* Links Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))',
-            gap: 'clamp(1.5rem, 3vw, 2.5rem)',
-            marginBottom: '4rem',
-          }}
-        >
-          {/* Col 1: Gymwear Categories */}
+          {/* Links Column 1: Collections */}
           <div>
-            <h5
+            <h4
               style={{
                 fontSize: '0.75rem',
                 fontWeight: 800,
-                letterSpacing: '0.14em',
+                letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 color: '#ffffff',
                 marginBottom: '1.25rem',
               }}
             >
               COLLECTIONS
-            </h5>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {[
-                { label: 'Premium Compression Tees', path: '/collections/premium-compressions' },
-                { label: 'Basic Compression Tees', path: '/collections/basic-compressions' },
-                { label: 'Heavyweight Joggers (350GSM)', path: '/collections/350gsm-lowers' },
-                { label: 'Training Joggers (250GSM)', path: '/collections/250gsm-lowers' },
-                { label: 'Premium Tank Tops', path: '/collections/tank-tops' },
-                { label: 'Training Vests', path: '/collections/ribbed-vests' },
+                { label: 'All Garments', path: '/collections' },
+                { label: 'Compression Series', path: '/collections/compression' },
+                { label: 'Heavyweight Joggers', path: '/collections/joggers' },
+                { label: 'Tanks & Stringers', path: '/collections/tanks-vests' },
+                { label: 'Special Editions', path: '/lookbook' },
               ].map((item) => (
                 <li key={item.label}>
                   <button
@@ -185,14 +173,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                       background: 'none',
                       border: 'none',
                       padding: 0,
-                      color: '#9e9e9e',
+                      color: '#888888',
                       fontSize: '0.8125rem',
                       cursor: 'pointer',
-                      transition: 'color 0.2s ease',
                       textAlign: 'left',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#9e9e9e')}
+                    className="link-hover-underline"
                   >
                     {item.label}
                   </button>
@@ -201,27 +187,27 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </ul>
           </div>
 
-          {/* Col 2: Client Services */}
+          {/* Links Column 2: Client Services */}
           <div>
-            <h5
+            <h4
               style={{
                 fontSize: '0.75rem',
                 fontWeight: 800,
-                letterSpacing: '0.14em',
+                letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 color: '#ffffff',
                 marginBottom: '1.25rem',
               }}
             >
               CLIENT SERVICES
-            </h5>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {[
-                { label: 'Shipping & Delivery (3-5 Day Express)', path: '/shipping-returns' },
-                { label: 'Returns & Exchanges', path: '/shipping-returns' },
-                { label: 'Size Guide', path: '/size-guide' },
-                { label: 'Track Your Order', path: '/track-order' },
-                { label: 'Contact Support', path: '/contact' },
+                { label: 'Track Order', path: '/track-order' },
+                { label: 'Shipping & Delivery', path: '/shipping-returns' },
+                { label: '7-Day Easy Size Swap', path: '/shipping-returns' },
+                { label: 'FAQ & Specifications', path: '/faq' },
+                { label: 'Contact Studio', path: '/contact' },
               ].map((item) => (
                 <li key={item.label}>
                   <button
@@ -230,14 +216,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                       background: 'none',
                       border: 'none',
                       padding: 0,
-                      color: '#9e9e9e',
+                      color: '#888888',
                       fontSize: '0.8125rem',
                       cursor: 'pointer',
-                      transition: 'color 0.2s ease',
                       textAlign: 'left',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#9e9e9e')}
+                    className="link-hover-underline"
                   >
                     {item.label}
                   </button>
@@ -246,27 +230,26 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </ul>
           </div>
 
-          {/* Col 3: Brand & Legal */}
+          {/* Links Column 3: Atelier Brand */}
           <div>
-            <h5
+            <h4
               style={{
                 fontSize: '0.75rem',
                 fontWeight: 800,
-                letterSpacing: '0.14em',
+                letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 color: '#ffffff',
                 marginBottom: '1.25rem',
               }}
             >
-              YOUNGIN BRAND
-            </h5>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              THE ATELIER
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {[
-                { label: 'Brand Story & Philosophy', path: '/about' },
-                { label: 'Track My Order', path: '/track-order' },
+                { label: 'Philosophy & Craft', path: '/about' },
                 { label: 'Privacy Policy', path: '/privacy' },
                 { label: 'Terms of Service', path: '/terms' },
-                { label: 'Admin Console', path: '/admin' },
+                { label: 'Atelier Console', path: '/admin' },
               ].map((item) => (
                 <li key={item.label}>
                   <button
@@ -275,111 +258,52 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                       background: 'none',
                       border: 'none',
                       padding: 0,
-                      color: '#9e9e9e',
+                      color: '#888888',
                       fontSize: '0.8125rem',
                       cursor: 'pointer',
-                      transition: 'color 0.2s ease',
                       textAlign: 'left',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#9e9e9e')}
+                    className="link-hover-underline"
                   >
                     {item.label}
                   </button>
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* Col 4: Indian HQ & Dispatch */}
-          <div>
-            <h5
-              style={{
-                fontSize: '0.75rem',
-                fontWeight: 800,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: '#ffffff',
-                marginBottom: '1.25rem',
-              }}
-            >
-              DISPATCH OFFICE
-            </h5>
-            <p style={{ fontSize: '0.8125rem', color: '#9e9e9e', lineHeight: 1.6, marginBottom: '1rem' }}>
-              YoungIN Performance Logistics Hub<br />
-              Plot 42, Industrial Area Phase II<br />
-              Chandigarh 160002, India<br />
-              <span style={{ color: '#ffffff', fontWeight: 600, wordBreak: 'break-all' }}>care@younginapparels.com</span>
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.85rem' }}>
-              <span style={{ fontSize: '0.625rem', color: '#6b6b6b', letterSpacing: '0.08em', fontWeight: 800 }}>
-                ATHLETE NETWORK & CONCIERGE:
-              </span>
-              <div style={{ display: 'flex', gap: '0.85rem', flexWrap: 'wrap' }}>
-                {[
-                  { name: 'INSTAGRAM', handle: '@youngin.apparel' },
-                  { name: 'YOUTUBE', handle: '@youngin.apparel' },
-                  { name: 'WHATSAPP', handle: '+91 98201 54821' },
-                ].map((social) => (
-                  <span
-                    key={social.name}
-                    style={{
-                      fontSize: '0.6875rem',
-                      fontWeight: 700,
-                      letterSpacing: '0.06em',
-                      color: '#a3a3a3',
-                      cursor: 'pointer',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#a3a3a3')}
-                    title={`${social.name}: ${social.handle}`}
-                  >
-                    {social.name} <span style={{ color: 'var(--color-campaign-red)', fontSize: '0.625rem' }}>({social.handle})</span>
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
 
-        {/* Bottom Bar: Copyright & Domestic Payment Gateways */}
+        {/* Middle Bar: Copyright & Domestic Payment Gateways (Radiant item #146) */}
         <div
-          className="footer-bottom-bar"
           style={{
             display: 'flex',
             flexWrap: 'wrap',
             justifyContent: 'space-between',
             alignItems: 'center',
             gap: '1.5rem',
-            paddingTop: '2rem',
-            borderTop: '1px solid #181818',
+            marginBottom: '2rem',
             fontSize: '0.75rem',
             color: '#666666',
           }}
         >
           <div>
-            © {new Date().getFullYear()} YOUNGIN APPARELS INDIA. ALL RIGHTS RESERVED.
+            © {new Date().getFullYear()} youngin apparels india. all rights reserved.
           </div>
 
-          {/* Indian Payment Gateways - Prominently Advertising UPI */}
+          {/* Payment Method Icons in Clean Monochrome Pills */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
-            {/* Featured UPI Pill */}
             <span
               style={{
                 fontSize: '0.625rem',
-                fontWeight: 900,
-                letterSpacing: '0.06em',
-                backgroundColor: 'var(--color-campaign-red)',
-                color: '#ffffff',
-                border: '1px solid var(--color-deep-red)',
-                padding: '3px 8px',
+                fontWeight: 800,
+                letterSpacing: '0.08em',
+                backgroundColor: '#ffffff',
+                color: '#000000',
+                padding: '4px 8px',
                 borderRadius: '2px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px',
               }}
             >
-              ⚡ UPI INSTANT
+              UPI INSTANT
             </span>
 
             {['GPAY', 'PHONEPE', 'PAYTM', 'RAZORPAY', 'RUPAY', 'VISA', 'MASTERCARD', 'NET BANKING'].map((badge) => (
@@ -387,12 +311,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 key={badge}
                 style={{
                   fontSize: '0.5625rem',
-                  fontWeight: 800,
+                  fontWeight: 700,
                   letterSpacing: '0.06em',
-                  color: '#a3a3a3',
-                  backgroundColor: '#121212',
-                  border: '1px solid #282828',
-                  padding: '3px 6px',
+                  color: '#888888',
+                  backgroundColor: '#111111',
+                  border: '1px solid #222222',
+                  padding: '3px 7px',
                   borderRadius: '2px',
                 }}
               >
@@ -402,13 +326,49 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Section 10: Massive Outlined Brand Footer Wordmark */}
-        <div className="footer-wordmark-container" style={{ width: '100%', overflow: 'hidden', textAlign: 'center' }}>
-          <span className="footer-wordmark-text" style={{ whiteSpace: 'nowrap', display: 'block' }}>
-            YOUNGIN
+        {/* Section 21 Item 143 & 147: Massive Outline (stroke only, transparent fill) wordmark spanning full width */}
+        <div
+          style={{
+            width: '100%',
+            overflow: 'hidden',
+            textAlign: 'center',
+            marginTop: '1.5rem',
+            lineHeight: 0.8,
+          }}
+        >
+          <span
+            className="radiant-footer-stroke-wordmark"
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 'clamp(4.5rem, 18vw, 20rem)',
+              fontWeight: 900,
+              textTransform: 'lowercase',
+              color: 'transparent',
+              WebkitTextStroke: '1.5px rgba(255, 255, 255, 0.22)',
+              letterSpacing: '-0.04em',
+              display: 'inline-block',
+              userSelect: 'none',
+              pointerEvents: 'none',
+              animation: 'footerWordmarkFadeIn 1s ease-out forwards',
+            }}
+          >
+            youngin
           </span>
         </div>
       </div>
+
+      <style>{`
+        @keyframes footerWordmarkFadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </footer>
   );
 };

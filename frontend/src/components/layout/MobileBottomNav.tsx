@@ -156,8 +156,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             width: 4px;
             height: 4px;
             border-radius: 50%;
-            background-color: #b51224;
-            box-shadow: 0 0 8px #b51224;
+            background-color: #ffffff;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
           }
 
           .nav-tab span {
@@ -180,8 +180,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             position: absolute;
             top: -4px;
             right: -8px;
-            background-color: #b51224;
-            color: #ffffff;
+            background-color: #ffffff;
+            color: #000000;
             font-size: 0.5rem;
             font-weight: 800;
             min-width: 16px;
@@ -191,8 +191,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1.5px solid #0a0a0a;
-            box-shadow: 0 2px 6px rgba(181, 18, 36, 0.4);
+            border: 1.5px solid #000000;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
           }
 
           .badge-pill-counter.animate-pop {

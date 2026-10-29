@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Search, Menu, X, Shield, Globe, Heart, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ShoppingBag, Search, Menu, X, Globe, User, ChevronDown, ChevronRight, Shield } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import { useCurrency } from '../../context/CurrencyContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { smoothScrollEngine } from '../../utils/smoothScroll';
 
 interface HeaderProps {
   onOpenSearch: () => void;
@@ -10,56 +11,65 @@ interface HeaderProps {
   onNavigate: (path: string) => void;
 }
 
-interface NavSubItem {
-  label: string;
-  path: string;
-  subtext?: string;
-}
-
-interface NavItem {
-  label: string;
-  path: string;
-  tag?: string;
-  subItems?: NavSubItem[];
-}
-
-import { smoothScrollEngine } from '../../utils/smoothScroll';
-import { useRef } from 'react';
-
 export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNavigate }) => {
   const { cart, openCart } = useCart();
-  const { wishlistCount, openWishlist } = useWishlist();
+  const { wishlistCount } = useWishlist();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isScrolledPastHero, setIsScrolledPastHero] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
+  const [headerTheme, setHeaderTheme] = useState<'light' | 'dark'>('dark');
   const [isHeaderHidden, setIsHeaderHidden] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const lastScrollYRef = useRef(0);
   const scrollUpDeltaRef = useRef(0);
 
+  // Scroll position & theme detector
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;
       const deltaY = currentY - lastScrollYRef.current;
 
-      const scrolled = currentY > 100;
-      setIsScrolledPastHero((prev) => (prev !== scrolled ? scrolled : prev));
+      const atTop = currentY < 60;
+      setIsAtTop(atTop);
 
+      // Hide / Reveal behavior
       if (currentY <= 60) {
-        // At the very top: always visible in default header state
         setIsHeaderHidden(false);
         scrollUpDeltaRef.current = 0;
       } else if (deltaY > 0) {
-        // Sliding down past 120px triggers translateY(-100%) over 350ms
+        // Scrolling down past 100px hides the header
         scrollUpDeltaRef.current = 0;
-        if (currentY > 120) {
+        if (currentY > 100) {
           setIsHeaderHidden(true);
+          setActiveDropdown(null);
         }
       } else if (deltaY < 0) {
-        // Scrolling up by more than 15px instantly triggers reveal translateY(0%) with backdrop blur
+        // Scrolling up by >12px reveals the header
         scrollUpDeltaRef.current += Math.abs(deltaY);
-        if (scrollUpDeltaRef.current > 15) {
+        if (scrollUpDeltaRef.current > 12) {
           setIsHeaderHidden(false);
+        }
+      }
+
+      // Detect background under header for theme switching (Radiant requirement #58 & #59)
+      if (!atTop) {
+        try {
+          const sampleEl = document.elementFromPoint(window.innerWidth / 2, 60);
+          if (sampleEl) {
+            const darkSection = sampleEl.closest('[data-header-theme="dark"]') ||
+              sampleEl.closest('.dark-section') ||
+              sampleEl.closest('footer') ||
+              sampleEl.closest('#hero-narrative') ||
+              sampleEl.closest('#lookbook-section');
+
+            if (darkSection) {
+              setHeaderTheme('dark');
+            } else {
+              setHeaderTheme('light');
+            }
+          }
+        } catch {
+          setHeaderTheme('light');
         }
       }
 
@@ -67,10 +77,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock background scroll with scrollbar compensation when mobile drawer is open
+  // Lock body scroll when mobile drawer is open
   useEffect(() => {
     if (mobileMenuOpen) {
       smoothScrollEngine.lockScroll();
@@ -82,893 +93,621 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, currentPath, onNav
     };
   }, [mobileMenuOpen]);
 
-  const leftNavLinks: NavItem[] = [
-    {
-      label: 'COMPRESSION',
-      path: '/collections/compression',
-      tag: '2 TIERS',
-      subItems: [
-        { label: 'Basic Compression Tees', path: '/collections/basic-compressions', subtext: '4-Way Stretch Poly-Nylon Base' },
-        { label: 'Premium Compression Tees', path: '/collections/premium-compressions', subtext: 'High-Tensile Muscle Support & Flatlock' },
-      ],
-    },
-    {
-      label: 'JOGGERS',
-      path: '/collections/joggers',
-      tag: '350/250 GSM',
-      subItems: [
-        { label: 'Heavyweight Joggers (350GSM)', path: '/collections/350gsm-lowers', subtext: 'Ultra-Heavyweight Architectural Fleece' },
-        { label: 'Training Joggers (250GSM)', path: '/collections/250gsm-lowers', subtext: 'Lightweight Breathable French Terry' },
-      ],
-    },
-    {
-      label: 'TANKS & VESTS',
-      path: '/collections/tanks-and-vests',
-      tag: 'ATHLETIC',
-      subItems: [
-        { label: 'Premium Tank Tops', path: '/collections/tank-tops', subtext: 'Raw-Cut Deep Armhole Mobility Tanks' },
-        { label: 'Training Vests', path: '/collections/ribbed-vests', subtext: '2x2 Heavy Cotton Ribbed Physique Vests' },
-      ],
-    },
-  ];
-
-  const rightNavLinks: NavItem[] = [
-    {
-      label: 'PREMIUM SERIES',
-      path: '/collections/premium-series',
-      tag: 'ELITE',
-    },
-    {
-      label: 'TRACK MY ORDER',
-      path: '/track-order',
-      tag: 'PAN-INDIA',
-    },
-  ];
-
-  const allNavLinks: NavItem[] = [...leftNavLinks, ...rightNavLinks];
-
   const handleNav = (path: string) => {
     setMobileMenuOpen(false);
     setActiveDropdown(null);
     onNavigate(path);
   };
 
-  const renderNavItems = (items: NavItem[], alignDropdownRight = false) => (
-    <nav className="desktop-nav">
-      {items.map((link) => {
-        const isActive = currentPath === link.path || (link.subItems && link.subItems.some(s => s.path === currentPath));
-        const isDropdownOpen = activeDropdown === link.label;
-        const linkColor = isActive ? 'var(--color-campaign-red)' : (isScrolledPastHero ? '#ffffff' : '#0a0a0a');
+  // Determine current active colors
+  const isTransparent = isAtTop && (currentPath === '/' || currentPath === '');
+  const isDarkTheme = isTransparent || headerTheme === 'dark';
 
-        return (
-          <div
-            key={link.label}
-            className="nav-item-dropdown-container"
-            onMouseEnter={() => link.subItems && setActiveDropdown(link.label)}
-            onMouseLeave={() => setActiveDropdown(null)}
-            style={{ position: 'relative' }}
-          >
-            <button
-              onClick={() => handleNav(link.path)}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '0.72rem',
-                fontWeight: 800,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                color: linkColor,
-                position: 'relative',
-                padding: '8px 0',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                transition: 'color 0.2s ease',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              <span>{link.label}</span>
-              {link.subItems && (
-                <ChevronDown
-                  size={11}
-                  color={isActive ? 'var(--color-campaign-red)' : (isScrolledPastHero ? '#cccccc' : '#888888')}
-                />
-              )}
-              {isActive && (
-                <span
-                  style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    height: '2px',
-                    backgroundColor: 'var(--color-campaign-red)',
-                  }}
-                />
-              )}
-            </button>
-
-            {/* Desktop Dropdown Menu */}
-            {link.subItems && isDropdownOpen && (
-              <div
-                className="desktop-dropdown-card"
-                style={{
-                  position: 'absolute',
-                  top: '100%',
-                  ...(alignDropdownRight ? { right: 0 } : { left: 0 }),
-                  minWidth: '270px',
-                  backgroundColor: '#0a0a0a',
-                  color: '#ffffff',
-                  border: '1px solid #222222',
-                  boxShadow: '0 12px 35px rgba(0,0,0,0.3)',
-                  padding: '0.75rem 0',
-                  zIndex: 950,
-                  borderRadius: '2px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
-                {link.subItems.map((sub) => (
-                  <button
-                    key={sub.path}
-                    onClick={() => handleNav(sub.path)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      textAlign: 'left',
-                      padding: '10px 18px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '2px',
-                      transition: 'background-color 0.15s ease',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#161616')}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                  >
-                    <span
-                      style={{
-                        color: currentPath === sub.path ? 'var(--color-campaign-red)' : '#ffffff',
-                        fontSize: '0.8125rem',
-                        fontWeight: 800,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.06em',
-                      }}
-                    >
-                      {sub.label}
-                    </span>
-                    {sub.subtext && (
-                      <span style={{ fontSize: '0.6875rem', color: '#888888' }}>
-                        {sub.subtext}
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </nav>
-  );
+  const textColor = isDarkTheme ? '#ffffff' : '#000000';
+  const bgColor = isTransparent
+    ? 'transparent'
+    : isDarkTheme
+    ? 'rgba(0, 0, 0, 0.92)'
+    : 'rgba(255, 255, 255, 0.95)';
+  const borderColor = isTransparent
+    ? 'transparent'
+    : isDarkTheme
+    ? 'rgba(255, 255, 255, 0.15)'
+    : 'rgba(0, 0, 0, 0.1)';
+  const badgeBg = isDarkTheme ? '#ffffff' : '#000000';
+  const badgeText = isDarkTheme ? '#000000' : '#ffffff';
 
   return (
     <>
       <header
-        className={`site-header ${isScrolledPastHero ? 'scrolled-blur' : ''} ${isHeaderHidden ? 'header-hidden' : 'header-visible'}`}
+        className="single-sticky-header"
         style={{
+          position: 'sticky',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 40,
+          backgroundColor: bgColor,
+          color: textColor,
+          borderBottom: `1px solid ${borderColor}`,
+          backdropFilter: isTransparent ? 'none' : 'blur(12px)',
+          WebkitBackdropFilter: isTransparent ? 'none' : 'blur(12px)',
           transform: isHeaderHidden ? 'translateY(-100%)' : 'translateY(0%)',
-          backgroundColor: isScrolledPastHero ? 'rgba(0, 0, 0, 0.75)' : '#ffffff',
-          backdropFilter: isScrolledPastHero ? 'blur(16px)' : 'none',
-          WebkitBackdropFilter: isScrolledPastHero ? 'blur(16px)' : 'none',
-          borderBottom: isScrolledPastHero ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #f0efed',
+          transition: 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease',
         }}
       >
-        <div className="container-custom header-inner">
-          {/* Left: Mobile Toggle & Left Desktop Nav */}
-          <div className="header-left">
+        <div
+          style={{
+            maxWidth: '1800px',
+            margin: '0 auto',
+            padding: '0 1.5rem',
+            height: '64px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          {/* Left: Hamburger menu + SHOP, COLLECTION, MORE (Radiant requirement #54) */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.75rem', flex: 1 }}>
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="mobile-toggle"
               aria-label="Open navigation menu"
-              style={{ color: isScrolledPastHero ? '#ffffff' : '#0a0a0a' }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'inherit',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '6px',
+                margin: '-6px',
+                transition: 'opacity 0.2s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
             >
-              <Menu size={22} />
+              <Menu size={20} strokeWidth={1.5} />
             </button>
 
-            {renderNavItems(leftNavLinks)}
+            {/* Desktop Nav: SHOP, COLLECTION, MORE */}
+            <nav
+              className="desktop-header-nav"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1.75rem',
+              }}
+            >
+              {/* SHOP with dropdown */}
+              <div
+                style={{ position: 'relative' }}
+                onMouseEnter={() => setActiveDropdown('shop')}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <button
+                  onClick={() => handleNav('/collections')}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'inherit',
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '8px 0',
+                  }}
+                  className="link-hover-underline"
+                >
+                  <span>SHOP</span>
+                  <ChevronDown size={12} strokeWidth={1.5} />
+                </button>
+
+                {activeDropdown === 'shop' && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: 0,
+                      minWidth: '240px',
+                      backgroundColor: isDarkTheme ? '#0a0a0a' : '#ffffff',
+                      color: isDarkTheme ? '#ffffff' : '#000000',
+                      border: `1px solid ${isDarkTheme ? '#262626' : '#eaeaea'}`,
+                      padding: '0.75rem 0',
+                      boxShadow: '0 12px 30px rgba(0,0,0,0.25)',
+                      zIndex: 100,
+                    }}
+                  >
+                    {[
+                      { label: 'ALL PRODUCTS', path: '/collections' },
+                      { label: 'COMPRESSION WEAR', path: '/collections/compression' },
+                      { label: 'HEAVYWEIGHT JOGGERS', path: '/collections/joggers' },
+                      { label: 'TANKS & STRINGERS', path: '/collections/tanks-vests' },
+                      { label: 'PREMIUM SERIES', path: '/collections/premium-compressions' },
+                    ].map((item) => (
+                      <button
+                        key={item.path}
+                        onClick={() => handleNav(item.path)}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          background: 'none',
+                          border: 'none',
+                          padding: '8px 20px',
+                          color: 'inherit',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          letterSpacing: '0.06em',
+                          cursor: 'pointer',
+                          display: 'block',
+                          transition: 'background-color 0.15s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = isDarkTheme ? '#1a1a1a' : '#f5f5f5';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                        }}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* COLLECTION */}
+              <button
+                onClick={() => handleNav('/lookbook')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'inherit',
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  padding: '8px 0',
+                }}
+                className="link-hover-underline"
+              >
+                COLLECTION
+              </button>
+
+              {/* MORE with dropdown */}
+              <div
+                style={{ position: 'relative' }}
+                onMouseEnter={() => setActiveDropdown('more')}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <button
+                  onClick={() => setActiveDropdown(activeDropdown === 'more' ? null : 'more')}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'inherit',
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '8px 0',
+                  }}
+                  className="link-hover-underline"
+                >
+                  <span>MORE</span>
+                  <ChevronDown size={12} strokeWidth={1.5} />
+                </button>
+
+                {activeDropdown === 'more' && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: 0,
+                      minWidth: '200px',
+                      backgroundColor: isDarkTheme ? '#0a0a0a' : '#ffffff',
+                      color: isDarkTheme ? '#ffffff' : '#000000',
+                      border: `1px solid ${isDarkTheme ? '#262626' : '#eaeaea'}`,
+                      padding: '0.75rem 0',
+                      boxShadow: '0 12px 30px rgba(0,0,0,0.25)',
+                      zIndex: 100,
+                    }}
+                  >
+                    {[
+                      { label: 'ABOUT', path: '/about' },
+                      { label: 'FAQ & CARE', path: '/faq' },
+                      { label: 'CONTACT', path: '/contact' },
+                      { label: 'TRACK ORDER', path: '/track-order' },
+                      { label: 'ATELIER ADMIN', path: '/admin' },
+                    ].map((item) => (
+                      <button
+                        key={item.path}
+                        onClick={() => handleNav(item.path)}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          background: 'none',
+                          border: 'none',
+                          padding: '8px 20px',
+                          color: 'inherit',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          letterSpacing: '0.06em',
+                          cursor: 'pointer',
+                          display: 'block',
+                          transition: 'background-color 0.15s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = isDarkTheme ? '#1a1a1a' : '#f5f5f5';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                        }}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </nav>
           </div>
 
-          {/* Center: Brand Wordmark (Strictly Centered, YOUNG in black/white, IN in oxblood) */}
-          <div className="header-center">
+          {/* Center: Brand wordmark in lowercase bold sans-serif (Radiant requirement #55) */}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <button
               onClick={() => handleNav('/')}
-              className="brand-button"
-              aria-label="YoungIN Home"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'inherit',
+                cursor: 'pointer',
+                padding: '4px 8px',
+                textDecoration: 'none',
+              }}
+              aria-label="Youngin Home"
             >
-              <span className="brand-wordmark">
-                <span className="brand-part-name" style={{ color: isScrolledPastHero ? '#ffffff' : '#0a0a0a', transition: 'color 0.2s ease' }}>YOUNG</span>
-                <span style={{ color: 'var(--color-campaign-red)' }}>IN</span>
+              <span
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: '1.45rem',
+                  fontWeight: 800,
+                  letterSpacing: '-0.04em',
+                  textTransform: 'lowercase',
+                  lineHeight: 1,
+                  display: 'inline-block',
+                }}
+              >
+                youngin
               </span>
             </button>
           </div>
 
-          {/* Right: Right Desktop Nav & Actions */}
-          <div className="header-right">
-            {renderNavItems(rightNavLinks, true)}
-
-            {/* India Flag & Currency Selector (Desktop only) */}
-            <div className="currency-selector">
-              <Globe size={13} color="#b51224" />
-              <span className="currency-label">INDIA (₹)</span>
+          {/* Right: language selector, search icon, profile icon, bag icon with item count (Radiant requirement #56) */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '1.25rem', flex: 1 }}>
+            {/* Language / Region Selector */}
+            <div
+              className="desktop-currency-pill"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                fontSize: '0.72rem',
+                fontWeight: 600,
+                letterSpacing: '0.04em',
+                cursor: 'pointer',
+                opacity: 0.85,
+              }}
+              title="Region: India (₹)"
+            >
+              <Globe size={14} strokeWidth={1.5} />
+              <span>IN (₹)</span>
             </div>
 
-            {/* Wishlist Button (Desktop & Tablet) */}
-            <button
-              onClick={openWishlist}
-              className="header-action-btn wishlist-header-btn"
-              title="View saved items"
-              aria-label="View saved items"
-            >
-              <Heart size={18} />
-              {wishlistCount > 0 && (
-                <span className="cart-badge">{wishlistCount}</span>
-              )}
-            </button>
-
-            {/* Search Button */}
+            {/* Search Icon */}
             <button
               onClick={onOpenSearch}
-              className="header-action-btn search-btn"
-              title="Search collection (⌘K)"
               aria-label="Search collection"
+              title="Search collection (⌘K)"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'inherit',
+                cursor: 'pointer',
+                padding: '6px',
+                display: 'flex',
+                alignItems: 'center',
+                transition: 'opacity 0.2s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
             >
-              <Search size={19} />
-              <span className="desktop-search-label">SEARCH</span>
+              <Search size={18} strokeWidth={1.5} />
             </button>
 
-            {/* Admin Console Link (Desktop only) */}
+            {/* Profile / Account Icon */}
             <button
-              onClick={() => handleNav('/admin')}
-              className={`header-action-btn admin-btn ${currentPath.startsWith('/admin') ? 'active' : ''}`}
-              title="Admin Portal"
+              onClick={() => handleNav('/track-order')}
+              aria-label="Account and orders"
+              title="Track Order / Account"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'inherit',
+                cursor: 'pointer',
+                padding: '6px',
+                display: 'flex',
+                alignItems: 'center',
+                transition: 'opacity 0.2s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
             >
-              <Shield size={12} />
-              <span className="desktop-admin-label">ADMIN</span>
+              <User size={18} strokeWidth={1.5} />
             </button>
 
-            {/* Bag / Cart Button */}
+            {/* Bag Icon with Item Count & Scale Pop Animation (Radiant requirement #62) */}
             <button
               onClick={openCart}
-              className="header-action-btn bag-btn"
-              aria-label="Open shopping bag"
+              aria-label="Open bag"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'inherit',
+                cursor: 'pointer',
+                padding: '6px',
+                display: 'flex',
+                alignItems: 'center',
+                position: 'relative',
+                transition: 'opacity 0.2s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
             >
-              <ShoppingBag size={20} />
+              <ShoppingBag size={19} strokeWidth={1.5} />
               {cart && cart.item_count > 0 && (
-                <span className="cart-badge">{cart.item_count}</span>
+                <motion.span
+                  key={cart.item_count}
+                  initial={{ scale: 0.6, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 22 }}
+                  style={{
+                    position: 'absolute',
+                    top: '-1px',
+                    right: '-4px',
+                    backgroundColor: badgeBg,
+                    color: badgeText,
+                    fontSize: '0.625rem',
+                    fontWeight: 700,
+                    minWidth: '16px',
+                    height: '16px',
+                    borderRadius: '999px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0 4px',
+                    lineHeight: 1,
+                  }}
+                >
+                  {cart.item_count}
+                </motion.span>
               )}
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu Backdrop */}
-      <div
-        className={`drawer-backdrop ${mobileMenuOpen ? 'active' : ''}`}
-        onClick={() => setMobileMenuOpen(false)}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.78)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
-          zIndex: 1000,
-          opacity: mobileMenuOpen ? 1 : 0,
-          visibility: mobileMenuOpen ? 'visible' : 'hidden',
-          pointerEvents: mobileMenuOpen ? 'auto' : 'none',
-          transition: 'opacity 0.28s ease, visibility 0.28s',
-        }}
-      />
+      {/* Slide-in Full-Height Mobile / Global Menu (Radiant requirement #60: Framer Motion x: -100% to 0) */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setMobileMenuOpen(false)}
+              style={{
+                position: 'fixed',
+                inset: 0,
+                backgroundColor: '#000000',
+                zIndex: 1000,
+              }}
+            />
 
-      {/* Mobile Menu Drawer */}
-      <div
-        className="mobile-drawer-panel"
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          bottom: 0,
-          width: '85%',
-          maxWidth: '350px',
-          backgroundColor: '#0a0a0a',
-          color: '#ffffff',
-          zIndex: 1001,
-          transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
-          visibility: mobileMenuOpen ? 'visible' : 'hidden',
-          pointerEvents: mobileMenuOpen ? 'auto' : 'none',
-          transition: 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s',
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '1.5rem',
-          overflowX: 'hidden',
-          overflowY: 'auto',
-          boxShadow: mobileMenuOpen ? '10px 0 40px rgba(0,0,0,0.6)' : 'none',
-        }}
-      >
-        {/* Drawer Brand Bar (YOUNG in white/black, IN in red) */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '1.5rem',
-            paddingBottom: '0.875rem',
-            borderBottom: '1px solid #1f1f1f',
-          }}
-        >
-          <span
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: '1.25rem',
-              fontWeight: 900,
-              letterSpacing: '0.14em',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            YOUNG<span style={{ color: '#b51224' }}>IN</span>
-          </span>
-          <button
-            onClick={() => setMobileMenuOpen(false)}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#ffffff',
-              cursor: 'pointer',
-              padding: '6px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            aria-label="Close navigation menu"
-          >
-            <X size={22} />
-          </button>
-        </div>
-
-        {/* Quick Search inside Drawer */}
-        <div style={{ marginBottom: '1.5rem' }}>
-          <button
-            onClick={() => {
-              setMobileMenuOpen(false);
-              onOpenSearch();
-            }}
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              padding: '10px 14px',
-              backgroundColor: '#161616',
-              border: '1px solid #282828',
-              borderRadius: '2px',
-              color: '#888888',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              textAlign: 'left',
-              letterSpacing: '0.04em',
-            }}
-          >
-            <Search size={15} color="#b51224" />
-            <span>SEARCH GYMWEAR & LOWERS (⌘K)...</span>
-          </button>
-        </div>
-
-        {/* Gymwear Category Nav Links */}
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-          {allNavLinks.map((link) => {
-            const isActive = currentPath === link.path || (link.subItems && link.subItems.some(s => s.path === currentPath));
-
-            if (link.subItems) {
-              return (
-                <div key={link.label} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <button
-                    onClick={() => handleNav(link.path)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      textAlign: 'left',
-                      color: isActive ? '#b51224' : '#ffffff',
-                      fontFamily: 'var(--font-display)',
-                      fontSize: '1.05rem',
-                      fontWeight: 800,
-                      letterSpacing: '0.06em',
-                      cursor: 'pointer',
-                      padding: '4px 0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <span>{link.label}</span>
-                    <span
-                      style={{
-                        fontSize: '0.5625rem',
-                        padding: '2px 6px',
-                        backgroundColor: '#1f1f1f',
-                        color: '#b51224',
-                        borderRadius: '2px',
-                        fontFamily: 'var(--font-body)',
-                        fontWeight: 800,
-                      }}
-                    >
-                      {link.tag}
-                    </span>
-                  </button>
-
-                  {/* Sub-options for Compressions & Bottoms */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.5rem',
-                      paddingLeft: '0.85rem',
-                      borderLeft: '2px solid #222222',
-                      marginLeft: '4px',
-                    }}
-                  >
-                    {link.subItems.map((sub) => (
-                      <button
-                        key={sub.path}
-                        onClick={() => handleNav(sub.path)}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          textAlign: 'left',
-                          color: currentPath === sub.path ? '#b51224' : '#b0b0b0',
-                          fontSize: '0.8125rem',
-                          fontWeight: 700,
-                          letterSpacing: '0.04em',
-                          cursor: 'pointer',
-                          padding: '3px 0',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                        }}
-                      >
-                        <span style={{ color: '#b51224', fontSize: '0.625rem' }}>▸</span>
-                        <span>{sub.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              );
-            }
-
-            return (
-              <button
-                key={link.path}
-                onClick={() => handleNav(link.path)}
+            {/* Drawer Panel */}
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                width: '100%',
+                maxWidth: '420px',
+                backgroundColor: '#000000',
+                color: '#ffffff',
+                zIndex: 1001,
+                display: 'flex',
+                flexDirection: 'column',
+                overflowY: 'auto',
+                borderRight: '1px solid rgba(255, 255, 255, 0.15)',
+              }}
+            >
+              {/* Drawer Top Bar */}
+              <div
                 style={{
-                  background: 'none',
-                  border: 'none',
-                  textAlign: 'left',
-                  color: isActive ? '#b51224' : '#ffffff',
-                  fontFamily: 'var(--font-display)',
-                  fontSize: '1.05rem',
-                  fontWeight: 800,
-                  letterSpacing: '0.06em',
-                  cursor: 'pointer',
-                  padding: '4px 0',
+                  padding: '1.25rem 1.5rem',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  transition: 'color 0.15s ease',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
                 }}
               >
-                <span>{link.label}</span>
-                {link.tag && (
-                  <span
-                    style={{
-                      fontSize: '0.5625rem',
-                      padding: '2px 6px',
-                      backgroundColor: '#181818',
-                      color: '#888888',
-                      borderRadius: '2px',
-                      fontFamily: 'var(--font-body)',
-                      letterSpacing: '0.08em',
-                      fontWeight: 700,
-                    }}
-                  >
-                    {link.tag}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+                <span
+                  style={{
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: '1.35rem',
+                    fontWeight: 800,
+                    letterSpacing: '-0.04em',
+                    textTransform: 'lowercase',
+                  }}
+                >
+                  youngin
+                </span>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Close menu"
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#ffffff',
+                    cursor: 'pointer',
+                    padding: '6px',
+                  }}
+                >
+                  <X size={22} strokeWidth={1.5} />
+                </button>
+              </div>
 
-          {/* Saved Wishlist Drawer Link */}
-          <button
-            onClick={() => {
-              setMobileMenuOpen(false);
-              openWishlist();
-            }}
-            style={{
-              background: 'none',
-              border: 'none',
-              textAlign: 'left',
-              color: '#ffffff',
-              fontFamily: 'var(--font-display)',
-              fontSize: '1.05rem',
-              fontWeight: 800,
-              letterSpacing: '0.06em',
-              cursor: 'pointer',
-              padding: '4px 0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginTop: '0.5rem',
-            }}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Heart size={16} color="#b51224" fill={wishlistCount > 0 ? '#b51224' : 'none'} />
-              <span>SAVED WISHLIST</span>
-            </span>
-            {wishlistCount > 0 && (
-              <span
+              {/* Drawer Body */}
+              <div style={{ padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '2rem', flex: 1 }}>
+                {/* Search in Drawer */}
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenSearch();
+                  }}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    padding: '12px 14px',
+                    backgroundColor: '#121212',
+                    border: '1px solid #262626',
+                    color: '#888888',
+                    fontSize: '0.8125rem',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                  }}
+                >
+                  <Search size={16} strokeWidth={1.5} />
+                  <span>Search collection...</span>
+                </button>
+
+                {/* Primary Nav Links */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                  <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#666666', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                    COLLECTIONS
+                  </div>
+                  {[
+                    { label: 'ALL PRODUCTS', path: '/collections' },
+                    { label: 'COMPRESSION WEAR', path: '/collections/compression' },
+                    { label: 'HEAVYWEIGHT JOGGERS', path: '/collections/joggers' },
+                    { label: 'TANKS & STRINGERS', path: '/collections/tanks-vests' },
+                    { label: 'PREMIUM SERIES', path: '/collections/premium-compressions' },
+                    { label: 'LOOKBOOK / SERIES 01', path: '/lookbook' },
+                  ].map((link) => (
+                    <button
+                      key={link.path}
+                      onClick={() => handleNav(link.path)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: currentPath === link.path ? '#ffffff' : '#b0b0b0',
+                        fontSize: '1.15rem',
+                        fontWeight: 700,
+                        letterSpacing: '-0.02em',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        padding: '4px 0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <span>{link.label}</span>
+                      <ChevronRight size={14} color="#666" />
+                    </button>
+                  ))}
+                </div>
+
+                {/* Secondary Info Links */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                  <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#666666', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                    ATELIER INFORMATION
+                  </div>
+                  {[
+                    { label: 'About the Atelier', path: '/about' },
+                    { label: 'Track Order', path: '/track-order' },
+                    { label: 'FAQ & Care Instructions', path: '/faq' },
+                    { label: 'Contact Us', path: '/contact' },
+                    { label: 'Atelier Console Admin', path: '/admin' },
+                  ].map((link) => (
+                    <button
+                      key={link.path}
+                      onClick={() => handleNav(link.path)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#999999',
+                        fontSize: '0.875rem',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        padding: '3px 0',
+                        transition: 'color 0.15s ease',
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = '#999999')}
+                    >
+                      {link.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Drawer Footer */}
+              <div
                 style={{
-                  fontSize: '0.625rem',
-                  padding: '2px 8px',
-                  backgroundColor: '#b51224',
-                  color: '#ffffff',
-                  borderRadius: '10px',
-                  fontWeight: 800,
+                  padding: '1.25rem 1.5rem',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                  fontSize: '0.75rem',
+                  color: '#666666',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}
               >
-                {wishlistCount}
-              </span>
-            )}
-          </button>
-
-          {/* Admin Dashboard Link */}
-          <button
-            onClick={() => handleNav('/admin')}
-            style={{
-              background: 'none',
-              border: 'none',
-              textAlign: 'left',
-              color: '#b51224',
-              fontFamily: 'var(--font-display)',
-              fontSize: '0.85rem',
-              fontWeight: 800,
-              letterSpacing: '0.08em',
-              cursor: 'pointer',
-              padding: '6px 0',
-              marginTop: '0.5rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-            }}
-          >
-            <Shield size={14} />
-            <span>ADMIN DASHBOARD →</span>
-          </button>
-        </nav>
-
-        {/* Indian Gymwear Brand Info Card in Drawer */}
-        <div style={{ marginTop: 'auto', borderTop: '1px solid #222222', paddingTop: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.6875rem', color: '#999999' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 800, color: '#ffffff' }}>
-              <Globe size={13} color="#b51224" />
-              <span>INDIA (₹ INR)</span>
-            </span>
-            <span style={{ color: '#10b981', fontWeight: 700 }}>FREE DELIVERY OVER ₹1,999</span>
-          </div>
-
-          <div
-            style={{
-              backgroundColor: '#141414',
-              border: '1px solid #222222',
-              padding: '0.75rem 1rem',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              cursor: 'pointer',
-            }}
-            onClick={() => handleNav('/contact')}
-          >
-            <div>
-              <p style={{ fontSize: '0.6875rem', fontWeight: 800, color: '#ffffff', textTransform: 'uppercase' }}>
-                ATHLETE CONCIERGE (INDIA)
-              </p>
-              <p style={{ fontSize: '0.625rem', color: '#888888', marginTop: '2px' }}>
-                Direct WhatsApp Sizing & Training Gear Advice
-              </p>
-            </div>
-            <span style={{ color: '#b51224', fontSize: '0.875rem', fontWeight: 800 }}>→</span>
-          </div>
-
-          <p style={{ fontSize: '0.625rem', color: '#666666', marginTop: '0.25rem' }}>
-            Engineered in India • High-Performance Athletic Gymwear
-          </p>
-        </div>
-      </div>
+                <span>© {new Date().getFullYear()} youngin</span>
+                <span>INDIA (₹)</span>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       <style>{`
-        .site-header {
-          position: sticky;
-          top: 0;
-          z-index: 900;
-          background-color: #ffffff;
-          border-bottom: 1px solid #f0efed;
-          transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms ease, backdrop-filter 300ms ease, border-bottom 300ms ease, box-shadow 300ms ease;
-          width: 100%;
-          will-change: transform;
-          padding-right: var(--scrollbar-compensation, 0px);
-        }
-        .site-header.header-hidden {
-          transform: translateY(-100%) !important;
-        }
-        .site-header.header-visible {
-          transform: translateY(0%) !important;
-        }
-        .site-header.scrolled-blur {
-          background-color: rgba(0, 0, 0, 0.75) !important;
-          backdrop-filter: blur(16px) !important;
-          -webkit-backdrop-filter: blur(16px) !important;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
-        }
-        .site-header.scrolled-blur .header-action-btn,
-        .site-header.scrolled-blur .mobile-toggle,
-        .site-header.scrolled-blur .currency-label {
-          color: #ffffff !important;
-        }
-        .site-header.scrolled-blur .header-action-btn:hover {
-          background-color: rgba(255, 255, 255, 0.1) !important;
-        }
-        .header-inner {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          height: 60px;
-          width: 100%;
-        }
-        .header-left {
-          display: flex;
-          align-items: center;
-          justify-content: flex-start;
-          flex: 1 1 0%;
-          min-width: 0;
-        }
-        .header-center {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          flex-shrink: 0;
-          padding: 0 0.5rem;
-        }
-        .header-right {
-          display: flex;
-          align-items: center;
-          justify-content: flex-end;
-          flex: 1 1 0%;
-          min-width: 0;
-          gap: 0.25rem;
-        }
-        .mobile-toggle {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: none;
-          border: none;
-          cursor: pointer;
-          min-width: 44px;
-          min-height: 44px;
-          padding: 8px;
-          margin-left: -8px;
-          color: #0a0a0a;
-          border-radius: 4px;
-          transition: transform 0.15s ease, background-color 0.15s ease;
-          touch-action: manipulation;
-          -webkit-tap-highlight-color: transparent;
-        }
-        .mobile-toggle:active {
-          transform: scale(0.92);
-          background-color: rgba(0, 0, 0, 0.05);
-        }
-        .desktop-nav {
-          display: none;
-        }
-        .brand-button {
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 4px 6px;
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          transition: transform 0.15s ease, opacity 0.15s ease;
-          touch-action: manipulation;
-          -webkit-tap-highlight-color: transparent;
-        }
-        .brand-button:active {
-          transform: scale(0.96);
-          opacity: 0.85;
-        }
-        .brand-wordmark {
-          font-family: var(--font-display);
-          font-size: 1.15rem;
-          font-weight: 900;
-          letter-spacing: 0.10em;
-          text-transform: uppercase;
-          color: #0a0a0a;
-          white-space: nowrap;
-          display: inline-flex;
-          align-items: center;
-          user-select: none;
-        }
-        .currency-selector {
-          display: none !important;
-        }
-        .desktop-search-label, .desktop-admin-label {
-          display: none !important;
-        }
-        .admin-btn {
-          display: none !important;
-        }
-        .wishlist-header-btn {
-          display: none !important;
-        }
-        .header-action-btn {
-          background: none;
-          border: none;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          min-width: 40px;
-          min-height: 40px;
-          padding: 8px;
-          color: #0a0a0a;
-          position: relative;
-          border-radius: 4px;
-          transition: opacity 0.18s ease, transform 0.15s ease, background-color 0.18s ease;
-          touch-action: manipulation;
-          -webkit-tap-highlight-color: transparent;
-        }
-        .header-action-btn:hover {
-          background-color: rgba(0, 0, 0, 0.04);
-        }
-        .header-action-btn:active {
-          transform: scale(0.92);
-          opacity: 0.75;
-          background-color: rgba(0, 0, 0, 0.08);
-        }
-        .cart-badge {
-          position: absolute;
-          top: 0px;
-          right: 0px;
-          background-color: #b51224;
-          color: #ffffff;
-          font-size: 0.5625rem;
-          font-weight: 800;
-          width: 17px;
-          height: 17px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 2px 5px rgba(181, 18, 36, 0.4);
-        }
-
-        @media (max-width: 360px) {
-          .brand-wordmark {
-            font-size: 0.98rem;
-            letter-spacing: 0.06em;
-          }
-          .header-action-btn {
-            padding: 6px;
-            min-width: 36px;
-            min-height: 36px;
-          }
-        }
-
-        @media (min-width: 361px) and (max-width: 480px) {
-          .brand-wordmark {
-            font-size: 1.12rem;
-            letter-spacing: 0.09em;
-          }
-        }
-
-        @media (min-width: 481px) and (max-width: 1023px) {
-          .brand-wordmark {
-            font-size: 1.28rem;
-            letter-spacing: 0.12em;
-          }
-        }
-
-        @media (min-width: 769px) {
-          .wishlist-header-btn {
-            display: flex !important;
-          }
-        }
-
-        @media (min-width: 1024px) {
-          .header-inner {
-            height: 70px;
-          }
-          .mobile-toggle {
+        @media (max-width: 900px) {
+          .desktop-header-nav,
+          .desktop-currency-pill {
             display: none !important;
-          }
-          .header-left {
-            gap: 0.85rem !important;
-          }
-          .header-right {
-            gap: 0.65rem !important;
-          }
-          .desktop-nav {
-            display: flex !important;
-            align-items: center;
-            gap: 0.85rem !important;
-          }
-          .brand-wordmark {
-            font-size: 1.45rem;
-            letter-spacing: 0.16em;
-          }
-          .currency-selector {
-            display: flex !important;
-            align-items: center;
-            gap: 4px;
-          }
-          .currency-label {
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: #0a0a0a;
-            letter-spacing: 0.04em;
-          }
-          .desktop-search-label {
-            display: none !important;
-          }
-          .admin-btn {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #e7e5e3 !important;
-            padding: 5px 8px !important;
-            font-size: 0.6875rem !important;
-            font-weight: 700 !important;
-            letter-spacing: 0.08em !important;
-          }
-          .admin-btn.active {
-            background: #0a0a0a !important;
-            color: #ffffff !important;
-          }
-          .desktop-admin-label {
-            display: none !important;
-          }
-        }
-
-        @media (min-width: 1280px) {
-          .header-inner {
-            column-gap: 1.25rem;
-          }
-          .desktop-nav {
-            gap: 1.25rem !important;
-          }
-          .header-right {
-            gap: 0.85rem !important;
-          }
-          .desktop-search-label {
-            display: inline !important;
-            font-size: 0.6875rem;
-            font-weight: 600;
-            color: #888888;
-            letter-spacing: 0.05em;
-            margin-left: 6px;
           }
         }
       `}</style>
