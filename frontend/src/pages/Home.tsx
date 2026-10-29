@@ -47,7 +47,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
   }, []);
 
   return (
-    <main style={{ width: '100%', overflow: 'hidden', marginTop: '-64px' }}>
+    <main style={{ width: '100%', marginTop: '-64px' }}>
       {/* 1. Hero Section (Radiant Section 8) */}
       <CampaignHero cmsData={cmsSections['hero']} onNavigate={onNavigate} />
 

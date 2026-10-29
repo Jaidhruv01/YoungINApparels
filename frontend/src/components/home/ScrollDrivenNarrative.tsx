@@ -58,7 +58,6 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
   ];
 
   useEffect(() => {
-    // Respect prefers-reduced-motion (Radiant item #81)
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
@@ -71,17 +70,13 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
           start: 'top top',
           end: 'bottom bottom',
           pin: pinTargetRef.current,
-          scrub: 1,
-          snap: {
-            snapTo: [0, 0.5, 1],
-            duration: 0.45,
-            ease: 'power2.inOut',
-          },
+          anticipatePin: 1,
+          scrub: 0.6,
           onUpdate: (self) => {
             const p = self.progress;
-            if (p < 0.33) {
+            if (p < 0.35) {
               setActiveSlideIndex(0);
-            } else if (p < 0.75) {
+            } else if (p < 0.72) {
               setActiveSlideIndex(1);
             } else {
               setActiveSlideIndex(2);
@@ -90,32 +85,44 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
         },
       });
 
-      // Initial states
+      // Initial states: Slide 1 fully visible, Slide 2 & 3 hidden on top with zero opacity
       gsap.set(slide1Ref.current, { opacity: 1, scale: 1 });
-      gsap.set(slide2Ref.current, { clipPath: 'inset(100% 0% 0% 0%)', scale: 1.08 });
-      gsap.set(slide3Ref.current, { clipPath: 'inset(100% 0% 0% 0%)', scale: 1.08 });
+      gsap.set(slide2Ref.current, { opacity: 0, scale: 1.05 });
+      gsap.set(slide3Ref.current, { opacity: 0, scale: 1.05 });
 
       gsap.set(text1Ref.current, { opacity: 1, y: 0 });
-      gsap.set(text2Ref.current, { opacity: 0, y: 60 });
-      gsap.set(text3Ref.current, { opacity: 0, y: 60 });
+      gsap.set(text2Ref.current, { opacity: 0, y: 40 });
+      gsap.set(text3Ref.current, { opacity: 0, y: 40 });
 
-      // PHASE 1: Transition Slide 1 -> Slide 2 (Radiant items #74, #75, #76)
-      tl.to(slide1Ref.current, { scale: 1.1, opacity: 0.2, duration: 1, ease: 'none' }, 0)
-        .to(slide2Ref.current, { clipPath: 'inset(0% 0% 0% 0%)', scale: 1.0, duration: 1, ease: 'none' }, 0)
-        .to(text1Ref.current, { y: -60, opacity: 0, duration: 0.45, ease: 'power2.in' }, 0)
+      // PHASE 1: Slide 1 -> Slide 2 (Cross-dissolve without black gaps)
+      tl.to(slide2Ref.current, { opacity: 1, scale: 1.0, duration: 1, ease: 'power1.inOut' }, 0)
+        .to(slide1Ref.current, { opacity: 0, duration: 0.8, ease: 'power1.inOut' }, 0.2)
+        .to(text1Ref.current, { y: -30, opacity: 0, duration: 0.45, ease: 'power2.in' }, 0)
         .to(text2Ref.current, { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' }, 0.45)
         .to(progressLineRef.current, { scaleX: 0.66, duration: 1, ease: 'none' }, 0);
 
-      // PHASE 2: Transition Slide 2 -> Slide 3
-      tl.to(slide2Ref.current, { scale: 1.1, opacity: 0.2, duration: 1, ease: 'none' }, 1)
-        .to(slide3Ref.current, { clipPath: 'inset(0% 0% 0% 0%)', scale: 1.0, duration: 1, ease: 'none' }, 1)
-        .to(text2Ref.current, { y: -60, opacity: 0, duration: 0.45, ease: 'power2.in' }, 1)
+      // PHASE 2: Slide 2 -> Slide 3 (Cross-dissolve without black gaps)
+      tl.to(slide3Ref.current, { opacity: 1, scale: 1.0, duration: 1, ease: 'power1.inOut' }, 1)
+        .to(slide2Ref.current, { opacity: 0, duration: 0.8, ease: 'power1.inOut' }, 1.2)
+        .to(text2Ref.current, { y: -30, opacity: 0, duration: 0.45, ease: 'power2.in' }, 1)
         .to(text3Ref.current, { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' }, 1.45)
         .to(progressLineRef.current, { scaleX: 1.0, duration: 1, ease: 'none' }, 1);
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
+
+  const handleSlideSelect = (idx: number) => {
+    setActiveSlideIndex(idx);
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const scrollY = window.scrollY || window.pageYOffset;
+    const targetTop = scrollY + rect.top;
+    const progressOffsets = [0, 0.45, 0.85];
+    const totalScrollDist = containerRef.current.offsetHeight - window.innerHeight;
+    const destination = targetTop + totalScrollDist * progressOffsets[idx];
+    window.scrollTo({ top: destination, behavior: 'smooth' });
+  };
 
   return (
     <section
@@ -125,8 +132,8 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
       style={{
         position: 'relative',
         width: '100%',
-        height: '300vh',
-        backgroundColor: '#000000',
+        height: '240vh',
+        backgroundColor: '#0a0a0a',
       }}
     >
       {/* Pinned Viewport Container */}
@@ -139,10 +146,10 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
           overflow: 'hidden',
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: '#000000',
+          backgroundColor: '#0a0a0a',
         }}
       >
-        {/* Layer 1: Stacked Background Images (Radiant item #73) */}
+        {/* Layer 1: Stacked Background Images with continuous cross-fade */}
         <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
           {/* Slide 1 Image */}
           <div
@@ -152,77 +159,124 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
               inset: 0,
               overflow: 'hidden',
               willChange: 'transform, opacity',
+              zIndex: 1,
             }}
           >
             <img
               src={slides[0].image}
-              alt="Slide 1"
+              alt="Slide 1 - Architectural Compression"
               style={{
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                filter: 'brightness(0.72) contrast(1.15)',
+                filter: 'brightness(0.85) contrast(1.12)',
               }}
             />
           </div>
 
-          {/* Slide 2 Image with Clip Path Wipe */}
+          {/* Slide 2 Image */}
           <div
             ref={slide2Ref}
             style={{
               position: 'absolute',
               inset: 0,
               overflow: 'hidden',
-              willChange: 'clip-path, transform',
+              willChange: 'transform, opacity',
+              zIndex: 2,
             }}
           >
             <img
               src={slides[1].image}
-              alt="Slide 2"
+              alt="Slide 2 - Heavyweight Fleece"
               style={{
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                filter: 'brightness(0.68) contrast(1.15)',
+                filter: 'brightness(0.85) contrast(1.12)',
               }}
             />
           </div>
 
-          {/* Slide 3 Image with Clip Path Wipe */}
+          {/* Slide 3 Image */}
           <div
             ref={slide3Ref}
             style={{
               position: 'absolute',
               inset: 0,
               overflow: 'hidden',
-              willChange: 'clip-path, transform',
+              willChange: 'transform, opacity',
+              zIndex: 3,
             }}
           >
             <img
               src={slides[2].image}
-              alt="Slide 3"
+              alt="Slide 3 - Atelier Edition"
               style={{
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                filter: 'brightness(0.68) contrast(1.15)',
+                filter: 'brightness(0.85) contrast(1.12)',
               }}
             />
           </div>
 
-          {/* Contrast overlays */}
+          {/* Ambient Contrast Overlay (balanced so photography is always crisp and visible) */}
           <div
             style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.85) 100%)',
+              background: 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.75) 100%)',
               pointerEvents: 'none',
               zIndex: 5,
             }}
           />
         </div>
 
-        {/* Layer 2: Synced Text On Top (Radiant item #76) */}
+        {/* Top Story Tabs / Category Selectors */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 'clamp(5rem, 9vh, 7rem)',
+            left: 'clamp(1.5rem, 6vw, 6rem)',
+            right: 'clamp(1.5rem, 6vw, 6rem)',
+            zIndex: 15,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            overflowX: 'auto',
+            paddingBottom: '0.5rem',
+          }}
+        >
+          {slides.map((s, idx) => {
+            const isActive = activeSlideIndex === idx;
+            return (
+              <button
+                key={s.tag}
+                onClick={() => handleSlideSelect(idx)}
+                style={{
+                  background: isActive ? '#ffffff' : 'rgba(0, 0, 0, 0.5)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  color: isActive ? '#000000' : 'rgba(255, 255, 255, 0.75)',
+                  border: `1px solid ${isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.2)'}`,
+                  padding: '6px 14px',
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.10em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  borderRadius: '2px',
+                  transition: 'all 0.25s ease',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {s.tag}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Layer 2: Synced Text Overlays */}
         <div
           style={{
             position: 'relative',
@@ -231,13 +285,14 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
             maxWidth: '1600px',
             margin: '0 auto',
             padding: '0 clamp(1.5rem, 6vw, 6rem)',
+            paddingTop: '2rem',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             color: '#ffffff',
           }}
         >
-          <div style={{ position: 'relative', minHeight: '360px', display: 'flex', alignItems: 'center' }}>
+          <div style={{ position: 'relative', minHeight: '340px', display: 'flex', alignItems: 'center' }}>
             {/* Text Slide 1 */}
             <div
               ref={text1Ref}
@@ -267,7 +322,7 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
               <h2
                 style={{
                   fontFamily: 'var(--font-sans)',
-                  fontSize: 'clamp(2.5rem, 6vw, 5.5rem)',
+                  fontSize: 'clamp(2.2rem, 5.5vw, 5rem)',
                   fontWeight: 900,
                   letterSpacing: '-0.035em',
                   lineHeight: 0.95,
@@ -292,7 +347,7 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
               <p
                 style={{
                   fontSize: '1rem',
-                  color: '#cccccc',
+                  color: '#e0e0e0',
                   lineHeight: 1.6,
                   maxWidth: '560px',
                   marginBottom: '2rem',
@@ -361,7 +416,7 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
               <h2
                 style={{
                   fontFamily: 'var(--font-sans)',
-                  fontSize: 'clamp(2.5rem, 6vw, 5.5rem)',
+                  fontSize: 'clamp(2.2rem, 5.5vw, 5rem)',
                   fontWeight: 900,
                   letterSpacing: '-0.035em',
                   lineHeight: 0.95,
@@ -386,7 +441,7 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
               <p
                 style={{
                   fontSize: '1rem',
-                  color: '#cccccc',
+                  color: '#e0e0e0',
                   lineHeight: 1.6,
                   maxWidth: '560px',
                   marginBottom: '2rem',
@@ -455,7 +510,7 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
               <h2
                 style={{
                   fontFamily: 'var(--font-sans)',
-                  fontSize: 'clamp(2.5rem, 6vw, 5.5rem)',
+                  fontSize: 'clamp(2.2rem, 5.5vw, 5rem)',
                   fontWeight: 900,
                   letterSpacing: '-0.035em',
                   lineHeight: 0.95,
@@ -480,7 +535,7 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
               <p
                 style={{
                   fontSize: '1rem',
-                  color: '#cccccc',
+                  color: '#e0e0e0',
                   lineHeight: 1.6,
                   maxWidth: '560px',
                   marginBottom: '2rem',
@@ -522,7 +577,7 @@ export const ScrollDrivenNarrative: React.FC<ScrollDrivenNarrativeProps> = ({ on
           </div>
         </div>
 
-        {/* Progress Indicator: Numbers & Thin Line (Radiant item #79) */}
+        {/* Progress Indicator: Numbers & Thin Line */}
         <div
           style={{
             position: 'absolute',
