@@ -500,13 +500,17 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
                   }}
                 >
                   <span>GARMENT SPECIFICATIONS</span>
-                  {openAccordions.details ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  <span className={`accordion-icon-rotate ${openAccordions.details ? 'rotated-180' : ''}`}>
+                    <ChevronDown size={18} />
+                  </span>
                 </button>
-                {openAccordions.details && (
-                  <div style={{ paddingBottom: '1.25rem', color: '#555555', fontSize: '0.8125rem', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
-                    {product.details || 'Hand-finished tailored construction. Premium custom hardware and signature YoungINApparels detailing.'}
+                <div className={`accordion-content ${openAccordions.details ? 'open' : ''}`}>
+                  <div className="accordion-inner">
+                    <div style={{ paddingBottom: '1.25rem', color: '#555555', fontSize: '0.8125rem', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
+                      {product.details || 'Hand-finished tailored construction. Premium custom hardware and signature YoungINApparels detailing.'}
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
 
               {/* Accordion 2: Craftsmanship */}
@@ -529,13 +533,17 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
                   }}
                 >
                   <span>FABRIC & ATELIER CARE</span>
-                  {openAccordions.craftsmanship ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  <span className={`accordion-icon-rotate ${openAccordions.craftsmanship ? 'rotated-180' : ''}`}>
+                    <ChevronDown size={18} />
+                  </span>
                 </button>
-                {openAccordions.craftsmanship && (
-                  <div style={{ paddingBottom: '1.25rem', color: '#555555', fontSize: '0.8125rem', lineHeight: 1.8 }}>
-                    {product.fabric_care || 'Dry clean with hydrocarbon solvents only. Store hanging in breathable garment bag.'}
+                <div className={`accordion-content ${openAccordions.craftsmanship ? 'open' : ''}`}>
+                  <div className="accordion-inner">
+                    <div style={{ paddingBottom: '1.25rem', color: '#555555', fontSize: '0.8125rem', lineHeight: 1.8 }}>
+                      {product.fabric_care || 'Crafted with premium high-tensile four-way stretch poly-nylon / 350GSM loopback cotton fleece. Machine wash cold, hang dry in shade.'}
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
 
               {/* Accordion 3: Fit */}
@@ -558,13 +566,17 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
                   }}
                 >
                   <span>FIT & SILHOUETTE ARCHITECTURE</span>
-                  {openAccordions.fit ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  <span className={`accordion-icon-rotate ${openAccordions.fit ? 'rotated-180' : ''}`}>
+                    <ChevronDown size={18} />
+                  </span>
                 </button>
-                {openAccordions.fit && (
-                  <div style={{ paddingBottom: '1.25rem', color: '#555555', fontSize: '0.8125rem', lineHeight: 1.8 }}>
-                    {product.fit_info || 'Engineered with relaxed shoulders and tailored length. True to size for intentional editorial drape.'}
+                <div className={`accordion-content ${openAccordions.fit ? 'open' : ''}`}>
+                  <div className="accordion-inner">
+                    <div style={{ paddingBottom: '1.25rem', color: '#555555', fontSize: '0.8125rem', lineHeight: 1.8 }}>
+                      {product.fit_info || 'Engineered specifically for athletic physiques. Generous quad and shoulder clearance with snug tapered cuffs.'}
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
 
               {/* Accordion 4: Shipping */}
@@ -586,16 +598,20 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ slug, onNavigate }
                     textAlign: 'left',
                   }}
                 >
-                  <span>COMPLIMENTARY SHIPPING & RETURNS</span>
-                  {openAccordions.shipping ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  <span>COMPLIMENTARY SHIPPING & 7-DAY SIZE SWAP</span>
+                  <span className={`accordion-icon-rotate ${openAccordions.shipping ? 'rotated-180' : ''}`}>
+                    <ChevronDown size={18} />
+                  </span>
                 </button>
-                {openAccordions.shipping && (
-                  <div style={{ paddingBottom: '1.25rem', color: '#555555', fontSize: '0.8125rem', lineHeight: 1.8 }}>
-                    • Priority courier delivery via Bluedart / DHL Express (2-4 business days).<br />
-                    • Complimentary express courier shipping on orders exceeding ₹5,000.<br />
-                    • Returns accepted within 14 days of delivery in pristine, unworn condition with security tags attached.
+                <div className={`accordion-content ${openAccordions.shipping ? 'open' : ''}`}>
+                  <div className="accordion-inner">
+                    <div style={{ paddingBottom: '1.25rem', color: '#555555', fontSize: '0.8125rem', lineHeight: 1.8 }}>
+                      • Pan-India express delivery via Delhivery / Bluedart (2-4 business days).<br />
+                      • Complimentary express shipping automatically applied on orders exceeding ₹1,999.<br />
+                      • 7-day doorstep size swaps and returns with zero hassle.
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </div>

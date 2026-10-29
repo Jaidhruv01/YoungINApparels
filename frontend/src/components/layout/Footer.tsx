@@ -400,6 +400,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             ))}
           </div>
         </div>
+
+        {/* Section 10: Massive Outlined Brand Footer Wordmark */}
+        <div className="footer-wordmark-container">
+          <span className="footer-wordmark-text">
+            YOUNGIN
+          </span>
+        </div>
       </div>
     </footer>
   );

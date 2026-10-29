@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { LookbookData, LookbookHotspot } from '../../types';
 import { useCurrency } from '../../context/CurrencyContext';
 import { useCart } from '../../context/CartContext';
-import { ArrowRight, ShoppingBag, X } from 'lucide-react';
-
+import { ArrowRight, ShoppingBag, X, Layers } from 'lucide-react';
 import { MaskedRevealHeader } from '../common/MaskedRevealHeader';
+import { BundleDrawer } from '../product/BundleDrawer';
 
 interface LookbookHotspotsProps {
   lookbookData: LookbookData | null;
@@ -13,6 +13,7 @@ interface LookbookHotspotsProps {
 
 export const LookbookHotspots: React.FC<LookbookHotspotsProps> = ({ lookbookData, onNavigate }) => {
   const [activeHotspot, setActiveHotspot] = useState<LookbookHotspot | null>(null);
+  const [isBundleDrawerOpen, setIsBundleDrawerOpen] = useState(false);
   const { formatPrice } = useCurrency();
   const { addToCart } = useCart();
   const [addingId, setAddingId] = useState<number | null>(null);
@@ -102,6 +103,7 @@ export const LookbookHotspots: React.FC<LookbookHotspotsProps> = ({ lookbookData
                 onClick={(e) => {
                   e.stopPropagation();
                   setActiveHotspot(isSelected ? null : hotspot);
+                  setIsBundleDrawerOpen(true);
                 }}
                 title={hotspot.title}
               >
@@ -233,13 +235,33 @@ export const LookbookHotspots: React.FC<LookbookHotspotsProps> = ({ lookbookData
           )}
         </div>
 
-        {/* Hotspots Instruction Hint */}
-        <div style={{ textAlign: 'center', marginTop: '1.75rem' }}>
+        {/* Hotspots Instruction Hint & Bundle Drawer Trigger */}
+        <div style={{ textAlign: 'center', marginTop: '2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+          <button
+            onClick={() => setIsBundleDrawerOpen(true)}
+            className="btn-crimson"
+            style={{
+              padding: '0.85rem 1.75rem',
+              fontSize: '0.75rem',
+              letterSpacing: '0.12em',
+              boxShadow: '0 8px 24px rgba(181, 18, 36, 0.25)',
+            }}
+          >
+            <Layers size={15} />
+            <span>OPEN "BETTER TOGETHER" GEAR BUNDLE (SAVE 15%)</span>
+          </button>
           <span style={{ fontSize: '0.75rem', color: '#666666', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-            ● CLICK OR TAP ANY HOTSPOT PIN ON THE MODEL TO VIEW GARMENT DETAILS
+            ● CLICK OR TAP ANY HOTSPOT PIN ON THE ATHLETE TO OPEN THE GEAR BUNDLE DRAWER
           </span>
         </div>
       </div>
+
+      {/* Section 7: Better Together Bottom Drawer Component */}
+      <BundleDrawer
+        isOpen={isBundleDrawerOpen}
+        onClose={() => setIsBundleDrawerOpen(false)}
+        onNavigate={onNavigate}
+      />
     </section>
   );
 };

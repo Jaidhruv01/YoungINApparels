@@ -9,6 +9,7 @@ import { MobileBottomNav } from './components/layout/MobileBottomNav';
 import { CartDrawer } from './components/cart/CartDrawer';
 import { WishlistDrawer } from './components/wishlist/WishlistDrawer';
 import { SearchOverlay } from './components/search/SearchOverlay';
+import { CustomCursor } from './components/common/CustomCursor';
 
 // Pages
 import { Home } from './pages/Home';
@@ -224,6 +225,9 @@ const StorefrontApp: React.FC = () => {
           onOpenSearch={() => setSearchOverlayOpen(true)}
         />
       )}
+
+      {/* Section 11: Custom Cursor & Drag Follower (Fine pointer only) */}
+      <CustomCursor />
 
       {/* Toast Feedback with smooth spring animation */}
       {toastMessage && (

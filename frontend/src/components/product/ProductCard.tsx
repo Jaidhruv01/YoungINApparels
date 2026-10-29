@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Heart, Check } from 'lucide-react';
+import { ShoppingBag, Heart, Check, Eye } from 'lucide-react';
 import { Product } from '../../types';
 import { useCurrency } from '../../context/CurrencyContext';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { QuickBuyModal } from './QuickBuyModal';
 
 interface ProductCardProps {
   product: Product;
@@ -20,6 +21,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
   );
   const [addingVariantId, setAddingVariantId] = useState<number | null>(null);
   const [mobileQuickAddOpen, setMobileQuickAddOpen] = useState(false);
+  const [isQuickBuyOpen, setIsQuickBuyOpen] = useState(false);
 
   // Group variants by color
   const distinctColors = Array.from(
@@ -103,36 +105,71 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
           )}
         </div>
 
-        {/* Wishlist Heart Button Top Right */}
-        <button
-          onClick={handleHeartClick}
-          aria-label={wishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
+        {/* Action Buttons Top Right: Quick View & Wishlist */}
+        <div
           style={{
             position: 'absolute',
             top: '10px',
             right: '10px',
             zIndex: 15,
-            width: '32px',
-            height: '32px',
-            borderRadius: '50%',
-            backgroundColor: wishlisted ? 'var(--color-campaign-red)' : 'rgba(255, 255, 255, 0.92)',
-            backdropFilter: 'blur(4px)',
-            border: 'none',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+            flexDirection: 'column',
+            gap: '6px',
           }}
-          className="wishlist-btn-card"
+          onClick={(e) => e.stopPropagation()}
         >
-          <Heart
-            size={16}
-            color={wishlisted ? '#ffffff' : '#0a0a0a'}
-            fill={wishlisted ? '#ffffff' : 'none'}
-          />
-        </button>
+          {/* Wishlist Heart Button */}
+          <button
+            onClick={handleHeartClick}
+            aria-label={wishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              backgroundColor: wishlisted ? 'var(--color-campaign-red)' : 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(4px)',
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+            }}
+            className="wishlist-btn-card"
+          >
+            <Heart
+              size={16}
+              color={wishlisted ? '#ffffff' : '#0a0a0a'}
+              fill={wishlisted ? '#ffffff' : 'none'}
+            />
+          </button>
+
+          {/* Quick Buy / Inspect Modal Trigger Button */}
+          <button
+            onClick={() => setIsQuickBuyOpen(true)}
+            aria-label="Quick inspect modal"
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(4px)',
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+              color: '#0a0a0a',
+            }}
+            className="quick-view-btn-card"
+            title="Quick Acquisition Modal"
+          >
+            <Eye size={15} />
+          </button>
+        </div>
 
         {/* Quick-Buy Slide-Up Overlay (Radian Style) */}
         <div
@@ -340,6 +377,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNavigate })
           }
         }
       `}</style>
+
+      {/* Section 8: Quick Buy Modal & Swatch Micro-Interactions */}
+      <QuickBuyModal
+        isOpen={isQuickBuyOpen}
+        product={product}
+        onClose={() => setIsQuickBuyOpen(false)}
+        onNavigate={onNavigate}
+      />
     </div>
   );
 };

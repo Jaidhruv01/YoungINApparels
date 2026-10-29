@@ -515,12 +515,12 @@ h1, h2, h3, h4, h5, h6, .font-display {
   top: 0;
   right: 0;
   bottom: 0;
-  width: 100%;
-  max-width: 440px;
+  width: 420px;
+  max-width: 100vw;
   background: var(--color-white);
   z-index: 995;
   transform: translateX(100%);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 400ms ease;
   display: flex;
   flex-direction: column;
   box-shadow: -10px 0 40px rgba(0, 0, 0, 0.25);
@@ -1051,6 +1051,71 @@ button:active, .btn-primary:active, .btn-secondary:active, .btn-crimson:active, 
   -webkit-backdrop-filter: blur(16px) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
+
+/* ==========================================================================
+   SECTION 10: SMOOTH HEIGHT ACCORDION (CSS GRID TECHNIQUE) & FOOTER WORDMARK
+   ========================================================================== */
+
+.accordion-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accordion-content.open {
+  grid-template-rows: 1fr;
+}
+
+.accordion-inner {
+  overflow: hidden;
+}
+
+.accordion-icon-rotate {
+  transition: transform 300ms ease;
+  will-change: transform;
+  display: inline-flex;
+}
+
+.accordion-icon-rotate.rotated-180 {
+  transform: rotate(180deg);
+}
+
+.accordion-icon-rotate.rotated-135 {
+  transform: rotate(135deg);
+}
+
+/* Massive Outlined Brand Footer Wordmark */
+.footer-wordmark-container {
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  padding-top: 3.5rem;
+  padding-bottom: 0.5rem;
+  user-select: none;
+}
+
+.footer-wordmark-text {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 16vw, 16rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 0.82;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.25);
+  transition: color 600ms ease, -webkit-text-stroke 600ms ease, text-shadow 600ms ease;
+  will-change: color, -webkit-text-stroke;
+}
+
+/* Hover Fill Interaction: Hovering footer area smoothly fills text opacity (color: #FFFFFF) over 600ms ease */
+footer:hover .footer-wordmark-text,
+.footer-wordmark-container:hover .footer-wordmark-text {
+  color: #FFFFFF;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 1);
+  text-shadow: 0 0 50px rgba(255, 255, 255, 0.25);
+}
+
 
 
 

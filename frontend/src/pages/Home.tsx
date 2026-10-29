@@ -4,6 +4,7 @@ import { Product, Collection, LookbookData, CMSSection } from '../types';
 import { StoryCircles } from '../components/home/StoryCircles';
 import { CampaignHero } from '../components/home/CampaignHero';
 import { ProductTabs } from '../components/home/ProductTabs';
+import { PinnedStrengthSection } from '../components/home/PinnedStrengthSection';
 import { LookbookHotspots } from '../components/home/LookbookHotspots';
 import { EditorialSplit } from '../components/home/EditorialSplit';
 import { CuratedFeature } from '../components/home/CuratedFeature';
@@ -53,7 +54,10 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       {/* 3. Product Discovery Tabs */}
       <ProductTabs products={products} onNavigate={onNavigate} />
 
-      {/* 4. Shoppable Lookbook Hotspots */}
+      {/* 4. Section 6: Pinned Scroll Section & Horizontal Slide-In Card */}
+      <PinnedStrengthSection onNavigate={onNavigate} />
+
+      {/* 5. Shoppable Lookbook Hotspots & Section 7 Bundle Drawer */}
       <LookbookHotspots lookbookData={lookbookData} onNavigate={onNavigate} />
 
       {/* 5. Editorial Split Section */}

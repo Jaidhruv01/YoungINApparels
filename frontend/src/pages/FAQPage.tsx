@@ -90,23 +90,27 @@ export const FAQPage: React.FC<FAQPageProps> = ({ onNavigate }) => {
                   >
                     {item.q}
                   </span>
-                  {isOpen ? <ChevronUp size={20} color="#b51224" /> : <ChevronDown size={20} />}
+                  <span className={`accordion-icon-rotate ${isOpen ? 'rotated-180' : ''}`}>
+                    <ChevronDown size={20} color={isOpen ? 'var(--color-campaign-red)' : '#0a0a0a'} />
+                  </span>
                 </button>
 
-                {isOpen && (
-                  <div
-                    style={{
-                      padding: '0 1.5rem 1.5rem 1.5rem',
-                      color: '#555555',
-                      fontSize: '0.875rem',
-                      lineHeight: 1.8,
-                      borderTop: '1px solid #f0efed',
-                      paddingTop: '1rem',
-                    }}
-                  >
-                    {item.a}
+                <div className={`accordion-content ${isOpen ? 'open' : ''}`}>
+                  <div className="accordion-inner">
+                    <div
+                      style={{
+                        padding: '0 1.5rem 1.5rem 1.5rem',
+                        color: '#555555',
+                        fontSize: '0.875rem',
+                        lineHeight: 1.8,
+                        borderTop: '1px solid #f0efed',
+                        paddingTop: '1rem',
+                      }}
+                    >
+                      {item.a}
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             );
           })}
